@@ -1,0 +1,33 @@
+{
+  "originHash" : "043e73c7b12dd8b30a47fd1a610b2653f209ef77251fd25206607138aa96f291",
+  "pins" : [
+    {
+      "identity" : "r.swift",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/fthdgn/R.swift/",
+      "state" : {
+        "branch" : "xcstrings-7.5.0",
+        "revision" : "545b75c1848cc986513eb3429b7f42b984a884b8"
+      }
+    },
+    {
+      "identity" : "swift-argument-parser",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/apple/swift-argument-parser",
+      "state" : {
+        "revision" : "cdd0ef3755280949551dc26dee5de9ddeda89f54",
+        "version" : "1.6.2"
+      }
+    },
+    {
+      "identity" : "xcodeedit",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/tomlokhorst/XcodeEdit",
+      "state" : {
+        "revision" : "0e550cdee72844b35431afc3a1e176042be6d0f0",
+        "version" : "2.13.0"
+      }
+    }
+  ],
+  "version" : 3
+}
