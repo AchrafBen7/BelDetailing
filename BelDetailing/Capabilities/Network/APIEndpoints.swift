@@ -4,6 +4,12 @@
 //
 //  Created by Achraf Benali on 06/11/2025.
 //
+//
+//  APIEndpoints.swift
+//  BelDetailing
+//
+//  Created by Achraf Benali on 06/11/2025.
+//
 
 import Foundation
 
@@ -22,7 +28,7 @@ enum APIEndPoint {
     case register
     case login
     case refresh
-    case me
+    case profile
     case updateProfile
     
     // MARK: Providers
@@ -38,6 +44,18 @@ enum APIEndPoint {
     case bookingCancel(id: String)
     case bookingConfirm(id: String)
     case bookingDecline(id: String)
+    
+    // MARK: Offers (New)
+    case offersList
+    case offerDetail(id: String)
+    case offerCreate
+    case offerUpdate(id: String)
+    case offerDelete(id: String)
+    
+    // MARK: Offer Applications (Prestataire → Offre)
+    case offerApplications(offerId: String)
+    case applyToOffer(offerId: String)
+    case withdrawApplication(offerId: String, applicationId: String)
     
     // MARK: Catalog & Static
     case cities
@@ -65,8 +83,8 @@ struct BelDetailingEndpointMapper: EndpointMapper {
             return "api/v1/auth/login"
         case .refresh:
             return "api/v1/auth/refresh"
-        case .me, .updateProfile:
-            return "api/v1/me"
+        case .profile, .updateProfile:
+            return "api/v1/profile"
             
         // MARK: Providers
         case .providersList:
@@ -92,6 +110,26 @@ struct BelDetailingEndpointMapper: EndpointMapper {
         case .bookingDecline(let id):
             return "api/v1/bookings/\(id)/decline"
             
+        // MARK: Offers
+        case .offersList:
+            return "api/v1/offers"
+        case .offerDetail(let id):
+            return "api/v1/offers/\(id)"
+        case .offerCreate:
+            return "api/v1/offers"
+        case .offerUpdate(let id):
+            return "api/v1/offers/\(id)"
+        case .offerDelete(let id):
+            return "api/v1/offers/\(id)"
+            
+        // MARK: Offer Applications
+        case .offerApplications(let offerId):
+            return "api/v1/offers/\(offerId)/applications"
+        case .applyToOffer(let offerId):
+            return "api/v1/offers/\(offerId)/apply"
+        case .withdrawApplication(let offerId, let applicationId):
+            return "api/v1/offers/\(offerId)/applications/\(applicationId)/withdraw"
+            
         // MARK: Catalog
         case .cities:
             return "api/v1/cities"
@@ -112,7 +150,7 @@ struct BelDetailingEndpointMapper: EndpointMapper {
             return .post
         case .updateProfile:
             return .patch
-        case .me:
+        case .profile:
             return .get
             
         // Providers
@@ -128,6 +166,24 @@ struct BelDetailingEndpointMapper: EndpointMapper {
             return .patch
         case .bookingCancel, .bookingConfirm, .bookingDecline:
             return .post
+            
+        // Offers
+        case .offersList, .offerDetail:
+            return .get
+        case .offerCreate:
+            return .post
+        case .offerUpdate:
+            return .patch
+        case .offerDelete:
+            return .delete
+            
+        // Offer Applications
+        case .offerApplications:
+            return .get
+        case .applyToOffer:
+            return .post
+        case .withdrawApplication:
+            return .delete
             
         // Catalog
         case .cities, .serviceCategories:
