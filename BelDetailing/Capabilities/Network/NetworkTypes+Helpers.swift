@@ -5,7 +5,6 @@
 //  Created by Achraf Benali on 06/11/2025.
 //
 
-
 import Foundation
 
 enum Server: String {

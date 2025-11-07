@@ -1,0 +1,95 @@
+//
+//  OfferService.swift
+//  BelDetailing
+//
+//  Created by Achraf Benali on 06/11/2025.
+//
+
+
+import Foundation
+
+protocol OfferService {
+    func getOffers(status: OfferStatus?, type: OfferType?) async -> APIResponse<[Offer]>
+    func getOfferDetail(id: String) async -> APIResponse<Offer>
+    func createOffer(_ data: [String: Any]) async -> APIResponse<Offer>
+    func updateOffer(id: String, data: [String: Any]) async -> APIResponse<Offer>
+    func closeOffer(id: String) async -> APIResponse<Bool>
+    func deleteOffer(id: String) async -> APIResponse<Bool>
+}
+
+final class OfferServiceNetwork: OfferService {
+    private let networkClient: NetworkClient
+    init(networkClient: NetworkClient) { self.networkClient = networkClient }
+
+    func getOffers(status: OfferStatus? = nil, type: OfferType? = nil) async -> APIResponse<[Offer]> {
+        await networkClient.call(
+            endPoint: .offersList,
+            urlDict: [
+                "status": status?.rawValue,
+                "type": type?.rawValue
+            ]
+        )
+    }
+
+    func getOfferDetail(id: String) async -> APIResponse<Offer> {
+        await networkClient.call(endPoint: .offerDetail(id: id))
+    }
+
+    func createOffer(_ data: [String: Any]) async -> APIResponse<Offer> {
+        // data verwacht o.a.: title, category, description, vehicleCount, priceMin, priceMax, city, postalCode, type, attachments[]
+        await networkClient.call(endPoint: .offerCreate, dict: data)
+    }
+
+    func updateOffer(id: String, data: [String: Any]) async -> APIResponse<Offer> {
+        await networkClient.call(endPoint: .offerUpdate(id: id), dict: data)
+    }
+
+    func closeOffer(id: String) async -> APIResponse<Bool> {
+        await networkClient.call(endPoint: .offerClose(id: id))
+    }
+
+    func deleteOffer(id: String) async -> APIResponse<Bool> {
+        await networkClient.call(endPoint: .offerDelete(id: id))
+    }
+}
+
+final class OfferServiceMock: MockService, OfferService {
+    func getOffers(status: OfferStatus?, type: OfferType?) async -> APIResponse<[Offer]> {
+        await randomWait()
+        let items = Offer.sampleValues.filter { offer in
+            let statusOK = status == nil || offer.status == status
+            let typeOK = type == nil || offer.type == type
+            return statusOK && typeOK
+        }
+        return .success(items)
+    }
+
+    func getOfferDetail(id: String) async -> APIResponse<Offer> {
+        await randomWait()
+        guard let offer = Offer.sampleValues.first(where: { $0.id == id }) else {
+            return .failure(.serverError(statusCode: 404))
+        }
+        return .success(offer)
+    }
+
+    func createOffer(_ data: [String: Any]) async -> APIResponse<Offer> {
+        await randomWait()
+        // Simpele echo/mock
+        return .success(Offer.sampleValues.first!)
+    }
+
+    func updateOffer(id: String, data: [String: Any]) async -> APIResponse<Offer> {
+        await randomWait()
+        return .success(Offer.sampleValues.first!)
+    }
+
+    func closeOffer(id: String) async -> APIResponse<Bool> {
+        await randomWait()
+        return .success(true)
+    }
+
+    func deleteOffer(id: String) async -> APIResponse<Bool> {
+        await randomWait()
+        return .success(true)
+    }
+}

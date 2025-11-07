@@ -10,7 +10,6 @@ import SwiftUI
 import RswiftResources
 
 struct AppStyle {
-    
     enum TextStyle {
         case title
         case sectionTitle
@@ -18,8 +17,6 @@ struct AppStyle {
         case description
         case navigationAction
         case navigationTitle
-        
-        
         var size: CGFloat {
             switch self {
             case.title: return 37
@@ -36,18 +33,12 @@ struct AppStyle {
             case.description: return Font.custom(R.font.avenirNextLTProRegular, size: size)
             }
         }
-        
         var defaultColor: Color {
             switch self {
             case.title, .sectionTitle,.navigationTitle: return Color(R.color.primaryText)
             case.buttonCTA: return Color.white
             case.description: return Color(R.color.secondaryText)
-            case.navigationAction: return Color(R.color.primaryBlue)
-           
-            }
+            case.navigationAction: return Color(R.color.primaryBlue)}
         }
     }
 }
-
-
-

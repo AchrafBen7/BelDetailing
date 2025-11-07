@@ -16,7 +16,6 @@ public enum APIError: Error, LocalizedError {
   case unauthorized
   case unknownError
   case other(error: Error?)
-  
   public static func from(error: Error?) -> APIError {
     if let error = error as? APIError {
       return error
@@ -26,7 +25,6 @@ public enum APIError: Error, LocalizedError {
     }
     return .other(error: error)
   }
-  
   public var localizedDescription: String? {
     switch self {
     case .urlError:

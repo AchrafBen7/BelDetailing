@@ -5,7 +5,6 @@
 //  Created by Achraf Benali on 06/11/2025.
 //
 
-
 import Foundation
 
 final class NetworkClient {
@@ -21,15 +20,12 @@ final class NetworkClient {
     "content-type": "application/json",
     "Accept": "application/json"
   ]
-  
   let endpointMapperClass: EndpointMapper.Type
   let server: Server
-  
   init(server: Server, endpointMapperClass: EndpointMapper.Type = BelDetailingEndpointMapper.self) {
     self.endpointMapperClass = endpointMapperClass
     self.server = server
   }
-  
   // MARK: - Logging
   static func logRequest(request: URLRequest, urlResponse: HTTPURLResponse, data: Data) {
     print(
@@ -44,7 +40,6 @@ final class NetworkClient {
       """
     )
   }
-  
   // MARK: - URL builder with query params
   static func urlFor(url: URL, urlDict: [String: Any?]) -> URL {
     var urlComponents = URLComponents(string: url.absoluteString)

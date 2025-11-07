@@ -22,6 +22,19 @@
 		9B2E90672EBC4B0F00D76311 /* Colors.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9B2E90612EBC4B0F00D76311 /* Colors.xcassets */; };
 		9B2E90682EBC4B0F00D76311 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 9B2E90622EBC4B0F00D76311 /* Localizable.xcstrings */; };
 		9B2E906A2EBC4D1D00D76311 /* RswiftLibrary in Frameworks */ = {isa = PBXBuildFile; productRef = 9B2E90692EBC4D1D00D76311 /* RswiftLibrary */; };
+		9B2E90852EBCDDFD00D76311 /* Engine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B2E90832EBCDDF900D76311 /* Engine.swift */; };
+		9B2E90C02EBCE36F00D76311 /* Booking.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B2E90BE2EBCE36900D76311 /* Booking.swift */; };
+		9B2E90C92EBCE97B00D76311 /* PaymentIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B2E90C72EBCE97500D76311 /* PaymentIntent.swift */; };
+		9B2E90CD2EBD57B200D76311 /* City.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B2E90CB2EBD57A900D76311 /* City.swift */; };
+		9B2E90D62EBD5C9A00D76311 /* Offer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B2E90D42EBD5C9100D76311 /* Offer.swift */; };
+		9B2E90DB2EBD60A600D76311 /* ServiceCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B2E90D82EBD609F00D76311 /* ServiceCategory.swift */; };
+		9B2E90E92EBD654600D76311 /* ApplicationOffer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B2E90E72EBD652F00D76311 /* ApplicationOffer.swift */; };
+		9B2E90ED2EBD703200D76311 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B2E90EB2EBD702F00D76311 /* User.swift */; };
+		9B2E90F12EBD70C500D76311 /* CompanyType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B2E90EF2EBD70C000D76311 /* CompanyType.swift */; };
+		9B2E90FA2EBD7AD400D76311 /* Detailer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B2E90F82EBD7AD000D76311 /* Detailer.swift */; };
+		9B2E91052EBD7E4B00D76311 /* DetailerStats.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B2E91032EBD7E4800D76311 /* DetailerStats.swift */; };
+		9B2E91092EBD802F00D76311 /* Service.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B2E91072EBD802A00D76311 /* Service.swift */; };
+		9B2E910D2EBD818C00D76311 /* Review.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B2E910B2EBD818900D76311 /* Review.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -60,6 +73,19 @@
 		9B2E905F2EBC4B0F00D76311 /* Avenir Next LT Pro Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Avenir Next LT Pro Regular.otf"; sourceTree = "<group>"; };
 		9B2E90612EBC4B0F00D76311 /* Colors.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Colors.xcassets; sourceTree = "<group>"; };
 		9B2E90622EBC4B0F00D76311 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
+		9B2E90832EBCDDF900D76311 /* Engine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Engine.swift; sourceTree = "<group>"; };
+		9B2E90BE2EBCE36900D76311 /* Booking.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Booking.swift; sourceTree = "<group>"; };
+		9B2E90C72EBCE97500D76311 /* PaymentIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentIntent.swift; sourceTree = "<group>"; };
+		9B2E90CB2EBD57A900D76311 /* City.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = City.swift; sourceTree = "<group>"; };
+		9B2E90D42EBD5C9100D76311 /* Offer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Offer.swift; sourceTree = "<group>"; };
+		9B2E90D82EBD609F00D76311 /* ServiceCategory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceCategory.swift; sourceTree = "<group>"; };
+		9B2E90E72EBD652F00D76311 /* ApplicationOffer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApplicationOffer.swift; sourceTree = "<group>"; };
+		9B2E90EB2EBD702F00D76311 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
+		9B2E90EF2EBD70C000D76311 /* CompanyType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompanyType.swift; sourceTree = "<group>"; };
+		9B2E90F82EBD7AD000D76311 /* Detailer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Detailer.swift; sourceTree = "<group>"; };
+		9B2E91032EBD7E4800D76311 /* DetailerStats.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailerStats.swift; sourceTree = "<group>"; };
+		9B2E91072EBD802A00D76311 /* Service.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Service.swift; sourceTree = "<group>"; };
+		9B2E910B2EBD818900D76311 /* Review.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Review.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -71,6 +97,11 @@
 		9B2E8ED92EB9FE2D00D76311 /* BelDetailingUITests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = BelDetailingUITests;
+			sourceTree = "<group>";
+		};
+		9B2E90872EBCDE3500D76311 /* Services */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Services;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -132,6 +163,8 @@
 		9B2E8FA62EBA562200D76311 /* BelDetailing */ = {
 			isa = PBXGroup;
 			children = (
+				9B2E90BA2EBCE36100D76311 /* Models */,
+				9B2E90802EBCDDEA00D76311 /* Engine */,
 				9B2E8FDF2EBC236800D76311 /* Capabilities */,
 				9B2E8FC82EBACDAA00D76311 /* Helper */,
 				9B2E90632EBC4B0F00D76311 /* Resources */,
@@ -191,6 +224,42 @@
 			path = Resources;
 			sourceTree = "<group>";
 		};
+		9B2E90802EBCDDEA00D76311 /* Engine */ = {
+			isa = PBXGroup;
+			children = (
+				9B2E90872EBCDE3500D76311 /* Services */,
+				9B2E90832EBCDDF900D76311 /* Engine.swift */,
+			);
+			path = Engine;
+			sourceTree = "<group>";
+		};
+		9B2E90BA2EBCE36100D76311 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				9B2E910B2EBD818900D76311 /* Review.swift */,
+				9B2E91072EBD802A00D76311 /* Service.swift */,
+				9B2E91032EBD7E4800D76311 /* DetailerStats.swift */,
+				9B2E90F82EBD7AD000D76311 /* Detailer.swift */,
+				9B2E90EB2EBD702F00D76311 /* User.swift */,
+				9B2E90E72EBD652F00D76311 /* ApplicationOffer.swift */,
+				9B2E90E32EBD628100D76311 /* Enums */,
+				9B2E90D42EBD5C9100D76311 /* Offer.swift */,
+				9B2E90CB2EBD57A900D76311 /* City.swift */,
+				9B2E90C72EBCE97500D76311 /* PaymentIntent.swift */,
+				9B2E90BE2EBCE36900D76311 /* Booking.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		9B2E90E32EBD628100D76311 /* Enums */ = {
+			isa = PBXGroup;
+			children = (
+				9B2E90EF2EBD70C000D76311 /* CompanyType.swift */,
+				9B2E90D82EBD609F00D76311 /* ServiceCategory.swift */,
+			);
+			path = Enums;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -207,6 +276,9 @@
 			);
 			dependencies = (
 				9B2E90502EBC496C00D76311 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				9B2E90872EBCDE3500D76311 /* Services */,
 			);
 			name = BelDetailing;
 			packageProductDependencies = (
@@ -368,14 +440,27 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9B2E90DB2EBD60A600D76311 /* ServiceCategory.swift in Sources */,
+				9B2E90FA2EBD7AD400D76311 /* Detailer.swift in Sources */,
 				9B2E8FE62EBC258900D76311 /* APIEndpoints.swift in Sources */,
+				9B2E90C02EBCE36F00D76311 /* Booking.swift in Sources */,
+				9B2E90ED2EBD703200D76311 /* User.swift in Sources */,
+				9B2E910D2EBD818C00D76311 /* Review.swift in Sources */,
+				9B2E91052EBD7E4B00D76311 /* DetailerStats.swift in Sources */,
 				9B2E8FDD2EBAD30100D76311 /* String+Extension.swift in Sources */,
+				9B2E90E92EBD654600D76311 /* ApplicationOffer.swift in Sources */,
+				9B2E90CD2EBD57B200D76311 /* City.swift in Sources */,
+				9B2E91092EBD802F00D76311 /* Service.swift in Sources */,
 				9B2E8FF42EBC25C800D76311 /* NetworkTypes+Helpers.swift in Sources */,
 				9B2E8FD92EBACDF700D76311 /* AppStyle.swift in Sources */,
 				9B2E8FAE2EBA562200D76311 /* BelDetailingApp.swift in Sources */,
+				9B2E90F12EBD70C500D76311 /* CompanyType.swift in Sources */,
 				9B2E8FEF2EBC25AC00D76311 /* NetworkClient.swift in Sources */,
 				9B2E8FAF2EBA562200D76311 /* ContentView.swift in Sources */,
+				9B2E90852EBCDDFD00D76311 /* Engine.swift in Sources */,
+				9B2E90D62EBD5C9A00D76311 /* Offer.swift in Sources */,
 				9B2E8FEA2EBC259C00D76311 /* APIErrors.swift in Sources */,
+				9B2E90C92EBCE97B00D76311 /* PaymentIntent.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

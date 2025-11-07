@@ -1,10 +1,3 @@
-//
-//  APIEndpoints.swift
-//  BelDetailing
-//
-//  Created by Achraf Benali on 06/11/2025.
-//
-//
 //  APIEndpoints.swift
 //  BelDetailing
 //
@@ -30,12 +23,17 @@ enum APIEndPoint {
     case refresh
     case profile
     case updateProfile
-    
+
     // MARK: Providers
     case providersList
     case providerDetail(id: String)
     case providerReviews(providerId: String)
     case providerServices(providerId: String)
+    case providerStats(providerId: String)
+
+    // MARK: Reviews (nieuw voor creatie)
+    case providerReviewCreate
+
     
     // MARK: Bookings
     case bookingsList(scope: String?, status: String?)
@@ -45,19 +43,24 @@ enum APIEndPoint {
     case bookingConfirm(id: String)
     case bookingDecline(id: String)
     
-    // MARK: Offers (New)
+    // MARK: Offers
     case offersList
     case offerDetail(id: String)
     case offerCreate
     case offerUpdate(id: String)
+    case offerClose(id: String)    // ✅ ajouté
     case offerDelete(id: String)
-    
-    // MARK: Offer Applications (Prestataire → Offre)
+
+    // MARK: Offer Applications
     case offerApplications(offerId: String)
-    case applyToOffer(offerId: String)
-    case withdrawApplication(offerId: String, applicationId: String)
-    
-    // MARK: Catalog & Static
+    case offerApply(offerId: String)
+    case applicationWithdraw(id: String)
+    case applicationAccept(id: String)
+    case applicationRefuse(id: String)
+    // MARK: - Utilities
+    case vatValidate(number: String)
+   
+    // MARK: Catalog
     case cities
     case serviceCategories
     
@@ -95,7 +98,11 @@ struct BelDetailingEndpointMapper: EndpointMapper {
             return "api/v1/providers/\(providerId)/reviews"
         case .providerServices(let providerId):
             return "api/v1/providers/\(providerId)/services"
-            
+        case .providerStats(let providerId):
+            return "api/v1/providers/\(providerId)/stats"
+        case .providerReviewCreate:
+            return "api/v1/reviews" // of "api/v1/providers/:id/reviews" als je dat verkiest
+
         // MARK: Bookings
         case .bookingsList:
             return "api/v1/bookings"
@@ -119,16 +126,24 @@ struct BelDetailingEndpointMapper: EndpointMapper {
             return "api/v1/offers"
         case .offerUpdate(let id):
             return "api/v1/offers/\(id)"
+        case .offerClose(let id):                    // ✅ ici
+            return "api/v1/offers/\(id)/close"
         case .offerDelete(let id):
             return "api/v1/offers/\(id)"
-            
-        // MARK: Offer Applications
+        case .vatValidate(let number):
+            return "api/v1/utils/vat/validate?number=\(number)"
+
+        // MARK: Applications
         case .offerApplications(let offerId):
             return "api/v1/offers/\(offerId)/applications"
-        case .applyToOffer(let offerId):
+        case .offerApply(let offerId):
             return "api/v1/offers/\(offerId)/apply"
-        case .withdrawApplication(let offerId, let applicationId):
-            return "api/v1/offers/\(offerId)/applications/\(applicationId)/withdraw"
+        case .applicationWithdraw(let id):
+            return "api/v1/applications/\(id)/withdraw"
+        case .applicationAccept(let id):
+            return "api/v1/applications/\(id)/accept"
+        case .applicationRefuse(let id):
+            return "api/v1/applications/\(id)/refuse"
             
         // MARK: Catalog
         case .cities:
@@ -154,8 +169,11 @@ struct BelDetailingEndpointMapper: EndpointMapper {
             return .get
             
         // Providers
-        case .providersList, .providerDetail, .providerReviews, .providerServices:
+        case .providersList, .providerDetail, .providerReviews, .providerServices, .providerStats:
             return .get
+        case .providerReviewCreate:
+            return .post
+
             
         // Bookings
         case .bookingsList:
@@ -174,16 +192,20 @@ struct BelDetailingEndpointMapper: EndpointMapper {
             return .post
         case .offerUpdate:
             return .patch
+        case .offerClose:                // ✅ ajouté ici
+            return .post
         case .offerDelete:
             return .delete
-            
-        // Offer Applications
+        case .vatValidate:
+            return .get
+
+        // Applications
         case .offerApplications:
             return .get
-        case .applyToOffer:
+        case .offerApply:
             return .post
-        case .withdrawApplication:
-            return .delete
+        case .applicationWithdraw, .applicationAccept, .applicationRefuse:
+            return .post
             
         // Catalog
         case .cities, .serviceCategories:

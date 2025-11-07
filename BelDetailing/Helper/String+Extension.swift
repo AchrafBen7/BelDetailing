@@ -21,4 +21,3 @@ extension String {
             .multilineTextAlignment(multilineAlignment)
     }
 }
-
