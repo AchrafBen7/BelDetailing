@@ -413,6 +413,31 @@
         }
       }
     },
+      "tab.home" : { "localizations" : {
+        "en": { "stringUnit": { "state": "translated", "value": "Home" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Accueil" } },
+        "nl": { "stringUnit": { "state": "translated", "value": "Start" } }
+      }},
+      "tab.search" : { "localizations" : {
+        "en": { "stringUnit": { "state": "translated", "value": "Search" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Rechercher" } },
+        "nl": { "stringUnit": { "state": "translated", "value": "Zoeken" } }
+      }},
+      "tab.bookings" : { "localizations" : {
+        "en": { "stringUnit": { "state": "translated", "value": "Bookings" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Réservations" } },
+        "nl": { "stringUnit": { "state": "translated", "value": "Boekingen" } }
+      }},
+      "tab.profile" : { "localizations" : {
+        "en": { "stringUnit": { "state": "translated", "value": "Profile" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Profil" } },
+        "nl": { "stringUnit": { "state": "translated", "value": "Profiel" } }
+      }},
+      "tab.offers" : { "localizations" : {
+        "en": {"stringUnit":{"state":"translated","value":"Offers"}},
+        "fr": {"stringUnit":{"state":"translated","value":"Offres"}},
+        "nl": {"stringUnit":{"state":"translated","value":"Aanbiedingen"}}
+      }},
     "apiError.other" : {
       "extractionState" : "manual",
       "localizations" : {

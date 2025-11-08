@@ -20,6 +20,8 @@ final class Engine {
     let reviewService: ReviewService
     let paymentService: PaymentService
     let applicationService: ApplicationService
+    let searchService: SearchService
+    let mediaService: MediaService
     
     // MARK: - Init
     init(mock: Bool = false) {
@@ -35,6 +37,8 @@ final class Engine {
             self.reviewService = ReviewServiceMock()
             self.paymentService = PaymentServiceMock()
             self.applicationService = ApplicationServiceMock()
+            self.searchService = SearchServiceMock()
+            self.mediaService = MediaServiceMock()
             
         } else {
             // MODE LIVE → appels API réels
@@ -46,6 +50,8 @@ final class Engine {
             self.reviewService = ReviewServiceNetwork(networkClient: networkClient)
             self.paymentService = PaymentServiceNetwork(networkClient: networkClient)
             self.applicationService = ApplicationServiceNetwork(networkClient: networkClient)
+            self.searchService = SearchServiceNetwork(networkClient: networkClient)
+            self.mediaService = MediaServiceNetwork(networkClient: networkClient)
         }
     }
 }

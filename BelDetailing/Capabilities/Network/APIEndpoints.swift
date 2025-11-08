@@ -50,6 +50,9 @@ enum APIEndPoint {
     case offerUpdate(id: String)
     case offerClose(id: String)    // ✅ ajouté
     case offerDelete(id: String)
+    // MARK: Search
+    case searchProviders
+    case searchOffers
 
     // MARK: Offer Applications
     case offerApplications(offerId: String)
@@ -63,7 +66,15 @@ enum APIEndPoint {
     // MARK: Catalog
     case cities
     case serviceCategories
-    
+    // MARK: Media
+    case mediaUpload
+    case mediaDelete(id: String)
+
+    // MARK: Notifications
+    case notificationsList
+    case notificationRead(id: String)
+    case notificationSubscribe(topic: String)
+
     // MARK: Payments
     case paymentIntent
 }
@@ -144,13 +155,25 @@ struct BelDetailingEndpointMapper: EndpointMapper {
             return "api/v1/applications/\(id)/accept"
         case .applicationRefuse(let id):
             return "api/v1/applications/\(id)/refuse"
-            
+        // MARK: Search
+        case .searchProviders:
+            return "api/v1/search/providers"
+        case .searchOffers:
+            return "api/v1/search/offers"
+
         // MARK: Catalog
         case .cities:
             return "api/v1/cities"
         case .serviceCategories:
             return "api/v1/service-categories"
-            
+            // MARK: Media
+        case .mediaUpload: return "api/v1/media/upload"
+        case .mediaDelete(let id): return "api/v1/media/\(id)"
+            // MARK: Notifications
+        case .notificationsList: return "api/v1/notifications"
+        case .notificationRead(let id): return "api/v1/notifications/\(id)/read"
+        case .notificationSubscribe(let topic): return "api/v1/notifications/subscribe?topic=\(topic)"
+
         // MARK: Payments
         case .paymentIntent:
             return "api/v1/payments/intent"
@@ -160,7 +183,7 @@ struct BelDetailingEndpointMapper: EndpointMapper {
     static func method(for endPoint: APIEndPoint) -> HTTPVerb {
         switch endPoint {
             
-        // Auth
+        // MARK: Auth
         case .register, .login, .refresh:
             return .post
         case .updateProfile:
@@ -168,14 +191,13 @@ struct BelDetailingEndpointMapper: EndpointMapper {
         case .profile:
             return .get
             
-        // Providers
+        // MARK: Providers
         case .providersList, .providerDetail, .providerReviews, .providerServices, .providerStats:
             return .get
         case .providerReviewCreate:
             return .post
-
             
-        // Bookings
+        // MARK: Bookings
         case .bookingsList:
             return .get
         case .bookingCreate:
@@ -184,36 +206,54 @@ struct BelDetailingEndpointMapper: EndpointMapper {
             return .patch
         case .bookingCancel, .bookingConfirm, .bookingDecline:
             return .post
-            
-        // Offers
+        // MARK: Search
+        case .searchProviders, .searchOffers:
+            return .get
+
+        // MARK: Offers
         case .offersList, .offerDetail:
             return .get
         case .offerCreate:
             return .post
         case .offerUpdate:
             return .patch
-        case .offerClose:                // ✅ ajouté ici
+        case .offerClose:
             return .post
         case .offerDelete:
             return .delete
         case .vatValidate:
             return .get
 
-        // Applications
+        // MARK: Applications
         case .offerApplications:
             return .get
         case .offerApply:
             return .post
         case .applicationWithdraw, .applicationAccept, .applicationRefuse:
             return .post
-            
-        // Catalog
+
+        // MARK: Catalog
         case .cities, .serviceCategories:
             return .get
             
-        // Payments
+        // MARK: Payments
         case .paymentIntent:
+            return .post
+
+        // MARK: Media
+        case .mediaUpload:
+            return .post
+        case .mediaDelete:
+            return .delete
+
+        // MARK: Notifications
+        case .notificationsList:
+            return .get
+        case .notificationRead:
+            return .patch
+        case .notificationSubscribe:
             return .post
         }
     }
+
 }

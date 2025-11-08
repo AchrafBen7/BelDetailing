@@ -1,0 +1,55 @@
+//
+//  SearchService.swift
+//  BelDetailing
+//
+//  Created by Achraf Benali on 07/11/2025.
+//
+
+
+import Foundation
+
+protocol SearchService {
+    func searchProviders(query: String?, city: String?, lat: Double?, lng: Double?, radius: Double?) async -> APIResponse<[Detailer]>
+    func searchOffers(query: String?, city: String?, category: String?) async -> APIResponse<[Offer]>
+}
+
+final class SearchServiceNetwork: SearchService {
+    private let networkClient: NetworkClient
+    init(networkClient: NetworkClient) { self.networkClient = networkClient }
+
+    func searchProviders(query: String?, city: String?, lat: Double?, lng: Double?, radius: Double?) async -> APIResponse<[Detailer]> {
+        await networkClient.call(
+            endPoint: .searchProviders,
+            urlDict: [
+                "q": query,
+                "city": city,
+                "lat": lat?.description,
+                "lng": lng?.description,
+                "radius": radius?.description
+            ]
+        )
+    }
+
+    func searchOffers(query: String?, city: String?, category: String?) async -> APIResponse<[Offer]> {
+        await networkClient.call(
+            endPoint: .searchOffers,
+            urlDict: [
+                "q": query,
+                "city": city,
+                "category": category
+            ]
+        )
+    }
+}
+
+final class SearchServiceMock: MockService, SearchService {
+    func searchProviders(query: String?, city: String?, lat: Double?, lng: Double?, radius: Double?) async -> APIResponse<[Detailer]> {
+        await randomWait()
+        return .success(Detailer.sampleValues)
+    }
+
+    func searchOffers(query: String?, city: String?, category: String?) async -> APIResponse<[Offer]> {
+        await randomWait()
+        return .success(Offer.sampleValues)
+    }
+}
