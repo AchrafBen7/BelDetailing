@@ -4,12 +4,6 @@
 //
 //  Created by Achraf Benali on 08/11/2025.
 //
-//
-//  ProviderCard.swift
-//  BelDetailing
-//
-//  Created by Achraf Benali on 08/11/2025.
-//
 
 import SwiftUI
 import RswiftResources
@@ -32,7 +26,6 @@ struct ProviderCard: View {
             "\(provider.city) • ⭐️ \(String(format: "%.1f", provider.rating)) • \(provider.reviewCount))"
               .textView(style: AppStyle.TextStyle.description, overrideColor: .secondary)
           }
-
 
         Spacer()
 

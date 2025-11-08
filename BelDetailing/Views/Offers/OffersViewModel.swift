@@ -32,7 +32,7 @@ final class OffersViewModel: ObservableObject {
       let cache = StorageManager.shared.getCachedOffers()
       if !cache.isEmpty {
         offers = cache
-        errorText = R.string.localizable.apiErrorOfflineFallback()
+          errorText = R.string.localizable.apiErrorOfflineFallback()
       } else {
         errorText = err.localizedDescription
       }

@@ -24,15 +24,18 @@ final class BookingsViewModel: ObservableObject {
     isLoading = true; defer { isLoading = false }
     let res = await engine.bookingService.getBookings(scope: nil, status: nil)
     switch res {
-    case .success(let list):
+    case .success(let bookings):
       let now = Date()
-      let df = ISO8601DateFormatter()
-      self.upcoming = list.filter { b in
-        if let d = df.date(from: b.date + "T" + b.startTime + ":00Z") { return d >= now }
+      let formatter = ISO8601DateFormatter()
+      self.upcoming = bookings.filter { booking in
+        if let bookingDate = formatter.date(from: booking.date + "T" + booking.startTime + ":00Z") {
+          return bookingDate >= now
+        }
         return false
       }
-      self.history = list.filter { !upcoming.contains($0) }
-      StorageManager.shared.saveCachedBookings(list)
+      self.history = bookings.filter { !upcoming.contains($0) }
+
+      StorageManager.shared.saveCachedBookings(bookings)
     case .failure(let err):
       let cache = StorageManager.shared.getCachedBookings()
       if !cache.isEmpty {

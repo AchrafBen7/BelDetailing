@@ -53,6 +53,9 @@
 		9B9DA2A82EBEC144006BB3C1 /* ProviderCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B9DA2A62EBEC141006BB3C1 /* ProviderCard.swift */; };
 		9B9DA2B92EBEC17B006BB3C1 /* OfferCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B9DA2B82EBEC17B006BB3C1 /* OfferCard.swift */; };
 		9B9DA2D02EBED531006BB3C1 /* OfferFilterSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B9DA2CE2EBED52A006BB3C1 /* OfferFilterSheet.swift */; };
+		9B9DA2F12EBF7703006BB3C1 /* Array+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B9DA2EE2EBF76FA006BB3C1 /* Array+Extension.swift */; };
+		9B9DA2F52EBF7726006BB3C1 /* ButtonsStyles.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B9DA2F32EBF7719006BB3C1 /* ButtonsStyles.swift */; };
+		9B9DA2F92EBF7A38006BB3C1 /* NotificationsConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B9DA2F72EBF7A29006BB3C1 /* NotificationsConstants.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -122,6 +125,9 @@
 		9B9DA2A62EBEC141006BB3C1 /* ProviderCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProviderCard.swift; sourceTree = "<group>"; };
 		9B9DA2B82EBEC17B006BB3C1 /* OfferCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OfferCard.swift; sourceTree = "<group>"; };
 		9B9DA2CE2EBED52A006BB3C1 /* OfferFilterSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OfferFilterSheet.swift; sourceTree = "<group>"; };
+		9B9DA2EE2EBF76FA006BB3C1 /* Array+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+Extension.swift"; sourceTree = "<group>"; };
+		9B9DA2F32EBF7719006BB3C1 /* ButtonsStyles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonsStyles.swift; sourceTree = "<group>"; };
+		9B9DA2F72EBF7A29006BB3C1 /* NotificationsConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationsConstants.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -217,6 +223,9 @@
 		9B2E8FC82EBACDAA00D76311 /* Helper */ = {
 			isa = PBXGroup;
 			children = (
+				9B9DA2F72EBF7A29006BB3C1 /* NotificationsConstants.swift */,
+				9B9DA2F32EBF7719006BB3C1 /* ButtonsStyles.swift */,
+				9B9DA2EE2EBF76FA006BB3C1 /* Array+Extension.swift */,
 				9B2E8FD62EBACDEF00D76311 /* AppStyle.swift */,
 				9B2E8FDC2EBAD30100D76311 /* String+Extension.swift */,
 			);
@@ -567,7 +576,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				9B2E90DB2EBD60A600D76311 /* ServiceCategory.swift in Sources */,
+				9B9DA2F52EBF7726006BB3C1 /* ButtonsStyles.swift in Sources */,
 				9B9DA2D02EBED531006BB3C1 /* OfferFilterSheet.swift in Sources */,
+				9B9DA2F12EBF7703006BB3C1 /* Array+Extension.swift in Sources */,
+				9B9DA2F92EBF7A38006BB3C1 /* NotificationsConstants.swift in Sources */,
 				9B9DA25F2EBEC067006BB3C1 /* MainTabView.swift in Sources */,
 				9B2E90FA2EBD7AD400D76311 /* Detailer.swift in Sources */,
 				9B9DA29F2EBEC12C006BB3C1 /* LoadingView.swift in Sources */,

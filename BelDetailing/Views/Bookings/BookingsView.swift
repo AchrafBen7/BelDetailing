@@ -10,32 +10,36 @@ import RswiftResources
 import Combine
 
 struct BookingsView: View {
-  @StateObject private var vm: BookingsViewModel
+  @StateObject private var viewModel: BookingsViewModel
 
   init(engine: Engine) {
-    _vm = StateObject(wrappedValue: BookingsViewModel(engine: engine))
+    _viewModel = StateObject(wrappedValue: BookingsViewModel(engine: engine))
   }
 
   var body: some View {
     NavigationView {
       Group {
-        if vm.isLoading {
+        if viewModel.isLoading {
           LoadingView()
-        } else if vm.upcoming.isEmpty, vm.history.isEmpty {
+        } else if viewModel.upcoming.isEmpty, viewModel.history.isEmpty {
           EmptyStateView(
             title: R.string.localizable.bookingsEmptyTitle(),
             message: R.string.localizable.bookingsEmptyMessage()
           )
         } else {
           List {
-            if !vm.upcoming.isEmpty {
+            if !viewModel.upcoming.isEmpty {
               Section(R.string.localizable.bookingsUpcoming()) {
-                ForEach(vm.upcoming) { b in bookingCell(b) }
+                ForEach(viewModel.upcoming) { booking in
+                  bookingCell(booking)
+                }
               }
             }
-            if !vm.history.isEmpty {
+            if !viewModel.history.isEmpty {
               Section(R.string.localizable.bookingsHistory()) {
-                ForEach(vm.history) { b in bookingCell(b) }
+                ForEach(viewModel.history) { booking in
+                  bookingCell(booking)
+                }
               }
             }
           }
@@ -44,29 +48,33 @@ struct BookingsView: View {
       }
       .navigationTitle(R.string.localizable.tabBookings())
     }
-    .task { await vm.load() }
-    .alert(vm.errorText ?? "", isPresented: .constant(vm.errorText != nil)) {
-      Button(R.string.localizable.commonOk(), role: .cancel) { vm.errorText = nil }
+    .task { await viewModel.load() }
+    .alert(viewModel.errorText ?? "", isPresented: .constant(viewModel.errorText != nil)) {
+      Button(R.string.localizable.commonOk(), role: .cancel) {
+        viewModel.errorText = nil
+      }
     }
   }
 
-  private func bookingCell(_ b: Booking) -> some View {
+  // MARK: - Row
+  private func bookingCell(_ booking: Booking) -> some View {
     VStack(alignment: .leading, spacing: 6) {
-      "\(b.providerName) • \(b.serviceName)"
+      "\(booking.providerName) • \(booking.serviceName)"
         .textView(style: AppStyle.TextStyle.sectionTitle)
 
-      "\(b.date) • \(b.startTime)–\(b.endTime)"
+      "\(booking.date) • \(booking.startTime)–\(booking.endTime)"
         .textView(style: AppStyle.TextStyle.description)
 
       HStack {
-        String(format: "€ %.2f", b.price)
+        String(format: "€ %.2f", booking.price)
           .textView(style: AppStyle.TextStyle.description)
 
         Spacer()
 
-        Text(b.status.rawValue.capitalized)
+        Text(booking.status.rawValue.capitalized)
           .font(.system(size: 12, weight: .semibold))
-          .padding(.horizontal, 10).padding(.vertical, 4)
+          .padding(.horizontal, 10)
+          .padding(.vertical, 4)
           .background(Color(R.color.secondaryOrange))
           .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
           .foregroundStyle(.white)
@@ -76,4 +84,6 @@ struct BookingsView: View {
   }
 }
 
-#Preview { BookingsView(engine: Engine(mock: true)) }
+#Preview {
+  BookingsView(engine: Engine(mock: true))
+}

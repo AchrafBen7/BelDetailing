@@ -1,5 +1,5 @@
 //
-//  OfferFilterSheet.swift
+//  OfferFiltersSheet.swift
 //  BelDetailing
 //
 //  Created by Achraf Benali on 08/11/2025.
@@ -25,24 +25,14 @@ struct OfferFiltersSheet: View {
   var body: some View {
     NavigationView {
       Form {
+        // MARK: - Status Picker
         Section(R.string.localizable.filterStatus()) {
-          Picker("Status", selection: $status) {
-            Text(R.string.localizable.all()).tag(OfferStatus?.none)
-            ForEach(OfferStatus.allCases, id: \.self) { s in
-              Text(s.rawValue.capitalized).tag(OfferStatus?.some(s))
-            }
-          }
-          .pickerStyle(.menu)
+          OfferStatusPicker(status: $status)
         }
 
+        // MARK: - Type Picker
         Section(R.string.localizable.filterType()) {
-          Picker("Type", selection: $type) {
-            Text(R.string.localizable.all()).tag(OfferType?.none)
-            ForEach(OfferType.allCases, id: \.self) { t in
-              Text(t.rawValue.capitalized).tag(OfferType?.some(t))
-            }
-          }
-          .pickerStyle(.menu)
+          OfferTypePicker(type: $type)
         }
       }
       .navigationTitle(R.string.localizable.offersFiltersTitle())
@@ -54,7 +44,9 @@ struct OfferFiltersSheet: View {
           }
         }
         ToolbarItem(placement: .cancellationAction) {
-          Button(R.string.localizable.cancel()) { dismiss() }
+          Button(R.string.localizable.cancel()) {
+            dismiss()
+          }
         }
       }
     }
@@ -62,5 +54,37 @@ struct OfferFiltersSheet: View {
 }
 
 #Preview {
-  OfferFiltersSheet(selectedStatus: nil, selectedType: nil) { _,_ in }
+  OfferFiltersSheet(selectedStatus: nil, selectedType: nil) { _, _ in }
+}
+
+// MARK: - OfferStatusPicker
+struct OfferStatusPicker: View {
+  @Binding var status: OfferStatus?
+
+  var body: some View {
+    Picker("Status", selection: $status) {
+      Text(R.string.localizable.all()).tag(nil as OfferStatus?)
+      ForEach(OfferStatus.allCases, id: \.self) { statusCase in
+        Text(statusCase.rawValue.capitalized)
+          .tag(Optional(statusCase))
+      }
+    }
+    .pickerStyle(.menu)
+  }
+}
+
+// MARK: - OfferTypePicker
+struct OfferTypePicker: View {
+  @Binding var type: OfferType?
+
+  var body: some View {
+    Picker("Type", selection: $type) {
+      Text(R.string.localizable.all()).tag(nil as OfferType?)
+        ForEach(OfferType.allCases, id: \.self) { typeCase in
+          Text(typeCase.rawValue.capitalized)
+            .tag(Optional(typeCase))
+        }
+    }
+    .pickerStyle(.menu)
+  }
 }

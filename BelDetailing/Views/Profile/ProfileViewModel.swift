@@ -25,11 +25,11 @@ final class ProfileViewModel: ObservableObject {
     }
     let res = await engine.userService.me()
     switch res {
-    case .success(let u):
-      self.user = u
-      StorageManager.shared.saveUser(u)
-    case .failure(let err):
-      if user == nil { errorText = err.localizedDescription }
+    case .success(let userData):
+      self.user = userData
+      StorageManager.shared.saveUser(userData)
+    case .failure(let error):
+      if user == nil { errorText = error.localizedDescription }
     }
   }
 

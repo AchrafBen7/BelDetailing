@@ -22,13 +22,19 @@ struct ProfileView: View {
           LoadingView()
         } else if let user = vm.user {
           List {
-            Section(R.string.localizable.profileSectionAccount()) {
-              Text(user.email).textView(style: .description)
-              Text(user.role.rawValue.capitalized).textView(style: .description)
-              if let vat = user.vatNumber {
-                Text("TVA: \(vat)").textView(style: .description)
+              Section(R.string.localizable.profileSectionAccount()) {
+                user.email
+                  .textView(style: AppStyle.TextStyle.description)
+
+                user.role.rawValue.capitalized
+                  .textView(style: AppStyle.TextStyle.description)
+
+                if let vat = user.vatNumber {
+                  "TVA: \(vat)"
+                    .textView(style: AppStyle.TextStyle.description)
+                }
               }
-            }
+
             Section(R.string.localizable.profileSectionSettings()) {
               NavigationLink(R.string.localizable.profilePayments()) { Text("Payments WIP") }
               NavigationLink(R.string.localizable.profileNotifications()) { Text("Notifications WIP") }
@@ -50,7 +56,7 @@ struct ProfileView: View {
     }
     .task { await vm.load() }
     .alert(vm.errorText ?? "", isPresented: .constant(vm.errorText != nil)) {
-      Button(R.string.localizable.ok(), role: .cancel) { vm.errorText = nil }
+      Button(R.string.localizable.commonOk(), role: .cancel) { vm.errorText = nil }
     }
   }
 }

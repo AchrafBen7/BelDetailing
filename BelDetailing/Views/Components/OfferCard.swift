@@ -26,27 +26,32 @@ struct OfferCard: View {
           .foregroundStyle(.white)
       }
 
-      Text(offer.city)
-        .textView(style: .description, overrideColor: .secondary)
+        offer.city.textView(
+            style: AppStyle.TextStyle.description,
+            overrideColor: Color.secondary
+        )
 
-      HStack(spacing: 6) {
-        ForEach(offer.tags.prefix(4), id: \.self) { tag in
-          Text(tag)
-            .font(.system(size: 11, weight: .medium))
-            .padding(.horizontal, 8).padding(.vertical, 4)
-            .background(Color.gray.opacity(0.12))
-            .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
+        HStack(spacing: 6) {
+          ForEach([offer.type.rawValue.capitalized, offer.status.rawValue.capitalized], id: \.self) { tag in
+            Text(tag)
+              .font(.system(size: 11, weight: .medium))
+              .padding(.horizontal, 8)
+              .padding(.vertical, 4)
+              .background(Color.gray.opacity(0.12))
+              .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
+          }
         }
-      }
 
       Divider().padding(.vertical, 4)
 
       HStack {
-        Image(systemName: offer.status == .active ? "bolt.fill" : "pause.circle")
-          .foregroundStyle(offer.status == .active ? .green : .gray)
-        Text(offer.status.rawValue.capitalized)
-          .font(.system(size: 13, weight: .semibold))
-          .foregroundStyle(offer.status == .active ? .green : .gray)
+          Image(systemName: offer.status == .open ? "bolt.fill" : "pause.circle")
+            .foregroundStyle(offer.status == .open ? .green : .gray)
+
+          Text(offer.status.rawValue.capitalized)
+            .font(.system(size: 13, weight: .semibold))
+            .foregroundStyle(offer.status == .open ? .green : .gray)
+
         Spacer()
         Text(offer.type.rawValue.capitalized)
           .font(.system(size: 13))

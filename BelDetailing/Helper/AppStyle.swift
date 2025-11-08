@@ -10,6 +10,12 @@ import SwiftUI
 import RswiftResources
 
 struct AppStyle {
+    enum Padding: CGFloat {
+       case verySmall8 = 8
+       case small16 = 16
+       case medium24 = 24
+       case big32 = 32
+     }
     enum TextStyle {
         case title
         case sectionTitle
@@ -25,6 +31,7 @@ struct AppStyle {
             case.description: return 20
             case.navigationAction: return 18
             case.navigationTitle: return 28
+                
             }
         }
         var font: Font {
@@ -33,6 +40,7 @@ struct AppStyle {
             case.description: return Font.custom(R.font.avenirNextLTProRegular, size: size)
             }
         }
+        
         var defaultColor: Color {
             switch self {
             case.title, .sectionTitle,.navigationTitle: return Color(R.color.primaryText)

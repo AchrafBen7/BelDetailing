@@ -32,11 +32,12 @@ struct Offer: Codable, Identifiable, Hashable {
     let applications: [Application]?
 }
 
-enum OfferStatus: String, Codable {
+enum OfferStatus: String, Codable, CaseIterable {
     case open
     case closed
     case archived
 }
+
 
 /// ✅ Nieuw
 enum OfferType: String, Codable, CaseIterable {

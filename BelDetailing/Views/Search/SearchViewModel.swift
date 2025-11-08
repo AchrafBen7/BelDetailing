@@ -30,16 +30,17 @@ final class SearchViewModel: ObservableObject {
       lat: nil, lng: nil,
       radius: nil
     )
-    switch res {
-    case .success(let list):
-      // simple filtrage client pour l’exemple (prix, service à domicile)
-      self.results = list.filter { d in
-        let priceOK = maxPrice == nil || d.minPrice <= (maxPrice ?? .greatestFiniteMagnitude)
-        let mobileOK = !atHome || d.hasMobileService
-        return priceOK && mobileOK
+      switch res {
+      case .success(let list):
+        // simpele client-side filtering (prijs, service aan huis)
+        self.results = list.filter { detailer in
+          let priceOK = maxPrice == nil || detailer.minPrice <= (maxPrice ?? .greatestFiniteMagnitude)
+          let mobileOK = !atHome || detailer.hasMobileService
+          return priceOK && mobileOK
+        }
+      case .failure(let err):
+        self.errorText = err.localizedDescription
       }
-    case .failure(let err):
-      self.errorText = err.localizedDescription
-    }
+
   }
 }
