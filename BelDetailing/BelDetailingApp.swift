@@ -12,7 +12,7 @@ struct BelDetailingApp: App {
     let test = "A" + "B"
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            MainTabView(engine: Engine(mock: true))
         }
     }
 }

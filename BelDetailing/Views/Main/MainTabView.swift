@@ -10,13 +10,13 @@ import RswiftResources
 
 struct MainTabView: View {
   enum Tab: CaseIterable {
-    case home, search, offers, bookings, profile   // ✅ Ajout du cas "offers"
+    case home, search, offers, bookings, profile
 
     var title: String {
       switch self {
       case .home:     return R.string.localizable.tabHome()
       case .search:   return R.string.localizable.tabSearch()
-      case .offers:   return R.string.localizable.tabOffers()    // ✅
+      case .offers:   return R.string.localizable.tabOffers()
       case .bookings: return R.string.localizable.tabBookings()
       case .profile:  return R.string.localizable.tabProfile()
       }
@@ -26,7 +26,7 @@ struct MainTabView: View {
       switch self {
       case .home:     return "house.fill"
       case .search:   return "magnifyingglass.circle.fill"
-      case .offers:   return "briefcase.fill"                    // ✅ Icône adaptée
+      case .offers:   return "briefcase.fill"
       case .bookings: return "calendar.badge.clock"
       case .profile:  return "person.crop.circle.fill"
       }
@@ -37,7 +37,7 @@ struct MainTabView: View {
   @State private var selection: Tab = .home
   @State private var bounceHome = false
   @State private var bounceSearch = false
-  @State private var bounceOffers = false          // ✅
+  @State private var bounceOffers = false
   @State private var bounceBookings = false
   @State private var bounceProfile = false
 
@@ -47,7 +47,7 @@ struct MainTabView: View {
         switch selection {
         case .home:     HomeView(engine: engine)
         case .search:   SearchView(engine: engine)
-        case .offers:   OffersView(engine: engine)               // ✅
+        case .offers:   OffersView(engine: engine)               
         case .bookings: BookingsView(engine: engine)
         case .profile:  ProfileView(engine: engine)
         }

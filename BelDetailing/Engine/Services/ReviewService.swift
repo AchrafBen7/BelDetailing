@@ -5,14 +5,13 @@
 //  Created by Achraf Benali on 06/11/2025.
 //
 
-
 import Foundation
 
 // MARK: - Protocol
 protocol ReviewService {
-    /// Lijst van reviews voor een prestataire
-    func getReviews(providerId: String) async -> APIResponse<[Review>]
-    /// Nieuwe review posten (na een booking)
+    /// Liste des avis pour un prestataire
+    func getReviews(providerId: String) async -> APIResponse<[Review]>
+    /// Crée un nouvel avis (après une réservation)
     func createReview(_ data: [String: Any]) async -> APIResponse<Review>
 }
 
@@ -25,8 +24,8 @@ final class ReviewServiceNetwork: ReviewService {
         await networkClient.call(endPoint: .providerReviews(providerId: providerId))
     }
 
-    func createReview(_ data: [String: Any]) async -> APIResponse[Review] {
-        // Verwacht payload: { providerId, bookingId?, rating, comment }
+    func createReview(_ data: [String: Any]) async -> APIResponse<Review> {   
+        // Payload attendu : { providerId, bookingId?, rating, comment }
         await networkClient.call(endPoint: .providerReviewCreate, dict: data)
     }
 }
@@ -41,7 +40,7 @@ final class ReviewServiceMock: MockService, ReviewService {
 
     func createReview(_ data: [String: Any]) async -> APIResponse<Review> {
         await randomWait()
-        // Echo naar eerste sample (mock)
+        // Echo du premier sample (mock)
         return .success(Review.sampleValues.first!)
     }
 }

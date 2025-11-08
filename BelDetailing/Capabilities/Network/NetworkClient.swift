@@ -20,12 +20,15 @@ final class NetworkClient {
     "content-type": "application/json",
     "Accept": "application/json"
   ]
+
   let endpointMapperClass: EndpointMapper.Type
   let server: Server
+
   init(server: Server, endpointMapperClass: EndpointMapper.Type = BelDetailingEndpointMapper.self) {
     self.endpointMapperClass = endpointMapperClass
     self.server = server
   }
+
   // MARK: - Logging
   static func logRequest(request: URLRequest, urlResponse: HTTPURLResponse, data: Data) {
     print(
@@ -40,6 +43,7 @@ final class NetworkClient {
       """
     )
   }
+
   // MARK: - URL builder with query params
   static func urlFor(url: URL, urlDict: [String: Any?]) -> URL {
     var urlComponents = URLComponents(string: url.absoluteString)
@@ -57,7 +61,7 @@ final class NetworkClient {
     URL(string: server.rawValue + endpointMapperClass.path(for: endPoint))
   }
 
-  // MARK: - Async call
+  // MARK: - JSON call (classique)
   func call<T: Decodable>(endPoint: APIEndPoint,
                           dict: [String: Any?]? = nil,
                           urlDict: [String: Any?]? = nil,
@@ -75,6 +79,55 @@ final class NetworkClient {
     request.httpBody = dict != nil ? try? JSONSerialization.data(withJSONObject: dict ?? [:]) : nil
     request.timeoutInterval = timeout
     request.allHTTPHeaderFields = NetworkClient.defaultHeaders.merging(additionalHeaders ?? [:], uniquingKeysWith: { _, new in new })
+
+    do {
+      let (data, response) = try await URLSession.shared.data(for: request)
+      guard let httpResponse = response as? HTTPURLResponse else {
+        return .failure(.unknownError)
+      }
+      NetworkClient.logRequest(request: request, urlResponse: httpResponse, data: data)
+      if (200...299).contains(httpResponse.statusCode) {
+        do {
+          let decoded = try NetworkClient.defaultDecoder.decode(T.self, from: data)
+          return .success(decoded)
+        } catch let error {
+          return .failure(.decodingError(decodingError: error))
+        }
+      } else if httpResponse.statusCode == 401 {
+        return .failure(.unauthorized)
+      }
+      return .failure(.serverError(statusCode: httpResponse.statusCode))
+    } catch let error {
+      return .failure(.from(error: error))
+    }
+  }
+
+  // MARK: - File Upload (multipart/form-data)
+  func call<T: Decodable>(endPoint: APIEndPoint,
+                          fileData: Data,
+                          fileName: String,
+                          mimeType: String,
+                          timeout: TimeInterval = 60) async -> APIResponse<T> {
+    guard let url = url(endPoint: endPoint) else {
+      return .failure(.urlError)
+    }
+
+    var request = URLRequest(url: url)
+    request.httpMethod = endpointMapperClass.method(for: endPoint).rawValue
+
+    let boundary = "Boundary-\(UUID().uuidString)"
+    request.setValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
+    request.setValue("application/json", forHTTPHeaderField: "Accept")
+    request.timeoutInterval = timeout
+
+    // Corps multipart
+    var body = Data()
+    body.append("--\(boundary)\r\n".data(using: .utf8)!)
+    body.append("Content-Disposition: form-data; name=\"file\"; filename=\"\(fileName)\"\r\n".data(using: .utf8)!)
+    body.append("Content-Type: \(mimeType)\r\n\r\n".data(using: .utf8)!)
+    body.append(fileData)
+    body.append("\r\n--\(boundary)--\r\n".data(using: .utf8)!)
+    request.httpBody = body
 
     do {
       let (data, response) = try await URLSession.shared.data(for: request)

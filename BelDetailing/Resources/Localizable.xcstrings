@@ -438,6 +438,150 @@
         "fr": {"stringUnit":{"state":"translated","value":"Offres"}},
         "nl": {"stringUnit":{"state":"translated","value":"Aanbiedingen"}}
       }},
+      
+        "loader.description" : { "localizations" : {
+          "en": {"stringUnit":{"state":"translated","value":"Loading..."}},
+          "fr": {"stringUnit":{"state":"translated","value":"Chargement..."}},
+          "nl": {"stringUnit":{"state":"translated","value":"Laden..."}}
+        }},
+        "home.title" : { "localizations" : {
+          "en":{"stringUnit":{"state":"translated","value":"Discover nearby offers"}},
+          "fr":{"stringUnit":{"state":"translated","value":"Découvrez les offres autour de vous"}},
+          "nl":{"stringUnit":{"state":"translated","value":"Ontdek aanbiedingen in de buurt"}}
+        }},
+        "home.city.subtitle" : { "localizations" : {
+          "en":{"stringUnit":{"state":"translated","value":"Around %@"}},
+          "fr":{"stringUnit":{"state":"translated","value":"Autour de %@"}},
+          "nl":{"stringUnit":{"state":"translated","value":"Rond %@"}}
+        }},
+        "home.empty.title" : { "localizations" : {
+          "en":{"stringUnit":{"state":"translated","value":"No offers nearby"}},
+          "fr":{"stringUnit":{"state":"translated","value":"Aucune offre à proximité"}},
+          "nl":{"stringUnit":{"state":"translated","value":"Geen aanbiedingen in de buurt"}}
+        }},
+        "home.empty.message" : { "localizations" : {
+          "en":{"stringUnit":{"state":"translated","value":"Try adjusting your filters or refresh later."}},
+          "fr":{"stringUnit":{"state":"translated","value":"Essayez d’ajuster vos filtres ou revenez plus tard."}},
+          "nl":{"stringUnit":{"state":"translated","value":"Pas je filters aan of probeer het later opnieuw."}}
+        }},
+        "search" : { "localizations" : {
+          "en":{"stringUnit":{"state":"translated","value":"Search"}},
+          "fr":{"stringUnit":{"state":"translated","value":"Rechercher"}},
+          "nl":{"stringUnit":{"state":"translated","value":"Zoeken"}}
+        }},
+        "search.placeholder" : { "localizations" : {
+          "en":{"stringUnit":{"state":"translated","value":"Search by city, service, or provider"}},
+          "fr":{"stringUnit":{"state":"translated","value":"Recherchez par ville, service ou prestataire"}},
+          "nl":{"stringUnit":{"state":"translated","value":"Zoek op stad, dienst of aanbieder"}}
+        }},
+        "filter.at.home" : { "localizations" : {
+          "en":{"stringUnit":{"state":"translated","value":"At home"}},
+          "fr":{"stringUnit":{"state":"translated","value":"À domicile"}},
+          "nl":{"stringUnit":{"state":"translated","value":"Aan huis"}}
+        }},
+        "filter.price" : { "localizations" : {
+          "en":{"stringUnit":{"state":"translated","value":"Price"}},
+          "fr":{"stringUnit":{"state":"translated","value":"Prix"}},
+          "nl":{"stringUnit":{"state":"translated","value":"Prijs"}}
+        }},
+        "all" : { "localizations" : {
+          "en":{"stringUnit":{"state":"translated","value":"All"}},
+          "fr":{"stringUnit":{"state":"translated","value":"Tous"}},
+          "nl":{"stringUnit":{"state":"translated","value":"Alle"}}
+        }},
+        "bookings.empty.title" : { "localizations" : {
+          "en":{"stringUnit":{"state":"translated","value":"No bookings yet"}},
+          "fr":{"stringUnit":{"state":"translated","value":"Aucune réservation"}},
+          "nl":{"stringUnit":{"state":"translated","value":"Nog geen boekingen"}}
+        }},
+        "bookings.empty.message" : { "localizations" : {
+          "en":{"stringUnit":{"state":"translated","value":"Your future and past bookings will appear here."}},
+          "fr":{"stringUnit":{"state":"translated","value":"Vos réservations à venir et passées apparaîtront ici."}},
+          "nl":{"stringUnit":{"state":"translated","value":"Je toekomstige en vorige boekingen verschijnen hier."}}
+        }},
+        "bookings.upcoming" : { "localizations" : {
+          "en":{"stringUnit":{"state":"translated","value":"Upcoming"}},
+          "fr":{"stringUnit":{"state":"translated","value":"À venir"}},
+          "nl":{"stringUnit":{"state":"translated","value":"Komend"}}
+        }},
+        "bookings.history" : { "localizations" : {
+          "en":{"stringUnit":{"state":"translated","value":"History"}},
+          "fr":{"stringUnit":{"state":"translated","value":"Historique"}},
+          "nl":{"stringUnit":{"state":"translated","value":"Geschiedenis"}}
+        }},
+        "profile.section.account" : { "localizations" : {
+          "en":{"stringUnit":{"state":"translated","value":"Account"}},
+          "fr":{"stringUnit":{"state":"translated","value":"Compte"}},
+          "nl":{"stringUnit":{"state":"translated","value":"Account"}}
+        }},
+        "profile.section.settings" : { "localizations" : {
+          "en":{"stringUnit":{"state":"translated","value":"Settings"}},
+          "fr":{"stringUnit":{"state":"translated","value":"Paramètres"}},
+          "nl":{"stringUnit":{"state":"translated","value":"Instellingen"}}
+        }},
+        "profile.payments" : { "localizations" : {
+          "en":{"stringUnit":{"state":"translated","value":"Payments"}},
+          "fr":{"stringUnit":{"state":"translated","value":"Paiements"}},
+          "nl":{"stringUnit":{"state":"translated","value":"Betalingen"}}
+        }},
+        "profile.notifications" : { "localizations" : {
+          "en":{"stringUnit":{"state":"translated","value":"Notifications"}},
+          "fr":{"stringUnit":{"state":"translated","value":"Notifications"}},
+          "nl":{"stringUnit":{"state":"translated","value":"Meldingen"}}
+        }},
+        "profile.help.support" : { "localizations" : {
+          "en":{"stringUnit":{"state":"translated","value":"Help & Support"}},
+          "fr":{"stringUnit":{"state":"translated","value":"Aide et assistance"}},
+          "nl":{"stringUnit":{"state":"translated","value":"Hulp en ondersteuning"}}
+        }},
+        "logout" : { "localizations" : {
+          "en":{"stringUnit":{"state":"translated","value":"Log out"}},
+          "fr":{"stringUnit":{"state":"translated","value":"Se déconnecter"}},
+          "nl":{"stringUnit":{"state":"translated","value":"Afmelden"}}
+        }},
+        "profile.not.logged.title" : { "localizations" : {
+          "en":{"stringUnit":{"state":"translated","value":"Not connected"}},
+          "fr":{"stringUnit":{"state":"translated","value":"Non connecté"}},
+          "nl":{"stringUnit":{"state":"translated","value":"Niet ingelogd"}}
+        }},
+        "profile.not.logged.message" : { "localizations" : {
+          "en":{"stringUnit":{"state":"translated","value":"Please log in to access your profile and settings."}},
+          "fr":{"stringUnit":{"state":"translated","value":"Veuillez vous connecter pour accéder à votre profil et à vos paramètres."}},
+          "nl":{"stringUnit":{"state":"translated","value":"Log in om toegang te krijgen tot je profiel en instellingen."}}
+        }},
+        "api.error.offline.fallback" : { "localizations" : {
+          "en":{"stringUnit":{"state":"translated","value":"Offline mode – displaying last saved data."}},
+          "fr":{"stringUnit":{"state":"translated","value":"Mode hors ligne – affichage des dernières données sauvegardées."}},
+          "nl":{"stringUnit":{"state":"translated","value":"Offline modus – laatste opgeslagen gegevens worden getoond."}}
+        }},
+          "search.empty.title" : { "localizations" : {
+            "en": { "stringUnit": { "state": "translated", "value": "No results" } },
+            "fr": { "stringUnit": { "state": "translated", "value": "Aucun résultat" } },
+            "nl": { "stringUnit": { "state": "translated", "value": "Geen resultaten" } }
+          }},
+          "search.empty.message" : { "localizations" : {
+            "en": { "stringUnit": { "state": "translated", "value": "Try different keywords or adjust your filters." } },
+            "fr": { "stringUnit": { "state": "translated", "value": "Essayez d’autres mots-clés ou ajustez vos filtres." } },
+            "nl": { "stringUnit": { "state": "translated", "value": "Probeer andere trefwoorden of pas je filters aan." } }
+          }},
+            "offers.empty.title" : { "localizations" : {
+              "en": { "stringUnit": { "state": "translated", "value": "No offers yet" } },
+              "fr": { "stringUnit": { "state": "translated", "value": "Aucune offre pour l’instant" } },
+              "nl": { "stringUnit": { "state": "translated", "value": "Nog geen aanbiedingen" } }
+            }},
+            "offers.empty.message" : { "localizations" : {
+              "en": { "stringUnit": { "state": "translated", "value": "Try adjusting filters or check back later." } },
+              "fr": { "stringUnit": { "state": "translated", "value": "Essaie d’ajuster les filtres ou reviens plus tard." } },
+              "nl": { "stringUnit": { "state": "translated", "value": "Pas je filters aan of kom later terug." } }
+            }},
+            
+              "apiErrorOfflineFallback" : { "localizations" : {
+                "en": { "stringUnit": { "state": "translated", "value": "You're offline. Showing the last saved data." } },
+                "fr": { "stringUnit": { "state": "translated", "value": "Tu es hors ligne. Affichage des dernières données enregistrées." } },
+                "nl": { "stringUnit": { "state": "translated", "value": "Je bent offline. Laatste opgeslagen gegevens worden getoond." } }
+              }},
+            
+
     "apiError.other" : {
       "extractionState" : "manual",
       "localizations" : {
