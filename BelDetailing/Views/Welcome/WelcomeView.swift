@@ -11,55 +11,59 @@ import RswiftResources
 struct WelcomeView: View {
   var onStart: () -> Void = {}
   var onLogin: () -> Void = {}
-
+  
   @State private var contentVisible = false
 
   var body: some View {
     ScrollView(showsIndicators: false) {
       VStack(spacing: 0) {
-        // MARK: - Image de couverture
-        ZStack(alignment: .bottom) {
+        // MARK: - Fullscreen Header Image
+        GeometryReader { geometry in
           Image("launchImage")
             .resizable()
             .scaledToFill()
-            .frame(height: 280)
+            .frame(width: geometry.size.width,
+                   height: max(geometry.size.height, 420)) // plus haut = immersion
             .clipped()
-          
-          // Dégradé blanc pour fondre vers la section suivante
-          LinearGradient(
-            gradient: Gradient(colors: [.clear, .white]),
-            startPoint: .top,
-            endPoint: .bottom
-          )
-          .frame(height: 140)
+            .overlay(
+              LinearGradient(
+                gradient: Gradient(colors: [.clear, .white]),
+                startPoint: .center,
+                endPoint: .bottom
+              )
+              .frame(height: 220)
+              .padding(.top, 200),
+              alignment: .bottom
+            )
+            .offset(y: geometry.frame(in: .global).minY > 0 ? -geometry.frame(in: .global).minY : 0)
         }
+        .frame(height: 420)
+        .ignoresSafeArea(edges: .top)
 
-        // MARK: - Contenu principal
-        VStack(spacing: 24) {
+        // MARK: - Main Content
+        VStack(spacing: 28) {
           // Titre principal
-          VStack(spacing: 6) {
+          VStack(spacing: 8) {
             R.string.localizable.welcomeTitle()
               .textView(style: .title, multilineAlignment: .center)
             R.string.localizable.welcomeSubtitle()
               .textView(style: .description, multilineAlignment: .center)
           }
-          .padding(.horizontal, 24)
-          .padding(.top, 8)
+          .padding(.horizontal, 28)
+          .padding(.top, -20)
 
-          // MARK: - Avantages
+          // MARK: - Avantages (3 cartes)
           VStack(spacing: 16) {
             WelcomeFeatureRow(
               icon: "sparkles",
-              title: R.string.localizable.welcomeTitle(),
-              subtitle: R.string.localizable.welcomeSubtitle()
+              title: R.string.localizable.welcomeProsTitle(),
+              subtitle: R.string.localizable.welcomeProsSubtitle()
             )
-
             WelcomeFeatureRow(
               icon: "shield",
               title: R.string.localizable.welcomeSecureTitle(),
               subtitle: R.string.localizable.welcomeSecureSubtitle()
             )
-
             WelcomeFeatureRow(
               icon: "clock",
               title: R.string.localizable.welcomeFastTitle(),
@@ -69,42 +73,46 @@ struct WelcomeView: View {
           .padding(.horizontal, 24)
 
           // MARK: - Statistiques
-            // MARK: - Statistiques
-            HStack(spacing: 24) {
-              WelcomeStat(title: R.string.localizable.welcomeStatsProfessionals(), value: "500+")
-              WelcomeStat(title: R.string.localizable.welcomeStatsRating(),
-                          value: "4.9",
-                          systemIcon: "star.fill",
-                          iconColor: Color(R.color.secondaryOrange))
-              WelcomeStat(title: R.string.localizable.welcomeStatsBookings(), value: "10k+")
-            }
-            .padding(.top, 8)
-
-          // MARK: - Boutons
-          VStack(spacing: 12) {
-            Button(action: onStart) {
-              R.string.localizable.commonStart()
-                .textView(style: .buttonCTA, multilineAlignment: .center)
-                .frame(maxWidth: .infinity)
-            }
-            .buttonStyle(PrimaryButton())
-
-            Button(action: onLogin) {
-              R.string.localizable.authLogin()
-                .textView(style: .buttonCTA, overrideColor: .black, multilineAlignment: .center)
-                .frame(maxWidth: .infinity)
-            }
-            .buttonStyle(SecondaryButton())
+          HStack(spacing: 32) {
+            WelcomeStat(
+              title: R.string.localizable.welcomeStatsProfessionals(),
+              value: "500+"
+            )
+            WelcomeStat(
+              title: R.string.localizable.welcomeStatsRating(),
+              value: "4.9",
+              systemIcon: "star.fill",
+              iconColor: Color(R.color.secondaryOrange)
+            )
+            WelcomeStat(
+              title: R.string.localizable.welcomeStatsBookings(),
+              value: "10k+"
+            )
           }
+          .padding()
+          .frame(maxWidth: .infinity)
+          .background(.ultraThinMaterial)
+          .clipShape(RoundedRectangle(cornerRadius: 22))
+          .shadow(color: .black.opacity(0.05), radius: 5, y: 3)
           .padding(.horizontal, 24)
-          .padding(.bottom, 32)
+            // MARK: - Boutons
+            VStack(spacing: 14) {
+              Button(action: onStart) {
+                R.string.localizable.commonStart()
+                  .textView(style: .buttonCTA, multilineAlignment: .center)
+              }
+              .buttonStyle(WelcomePrimaryButton())
+
+                Button(action: onLogin) {
+                  R.string.localizable.authLogin()
+                    .textView(style: .buttonSecondary, multilineAlignment: .center)
+                }
+                .buttonStyle(WelcomeSecondaryButton())
+            }
+
+          .padding(.horizontal, 28)
+          .padding(.bottom, 60)
         }
-        .background(
-          RoundedRectangle(cornerRadius: 24)
-            .fill(Color.white)
-            .shadow(color: .black.opacity(0.05), radius: 10, x: 0, y: -4)
-        )
-        .offset(y: -20)
         .opacity(contentVisible ? 1 : 0)
         .animation(.easeOut(duration: 0.9), value: contentVisible)
       }
@@ -114,38 +122,40 @@ struct WelcomeView: View {
   }
 }
 
-// MARK: - Sous-composants
+// MARK: - Feature Card
 struct WelcomeFeatureRow: View {
   let icon: String
   let title: String
   let subtitle: String
 
   var body: some View {
-    HStack(alignment: .center, spacing: 12) {
+    HStack(spacing: 14) {
       Image(systemName: icon)
         .font(.system(size: 22))
         .foregroundColor(.black)
-        .frame(width: 40, height: 40)
+        .frame(width: 46, height: 46)
         .background(Color.gray.opacity(0.1))
         .clipShape(Circle())
 
-      VStack(alignment: .leading, spacing: 2) {
+      VStack(alignment: .leading, spacing: 3) {
         Text(title)
-          .font(.system(size: 16, weight: .semibold))
+          .font(.system(size: 17, weight: .semibold))
         Text(subtitle)
-          .font(.system(size: 14))
+          .font(.system(size: 15))
           .foregroundColor(.secondary)
       }
 
       Spacer()
     }
-    .padding()
-    .background(Color.white)
-    .clipShape(RoundedRectangle(cornerRadius: 16))
-    .shadow(color: .black.opacity(0.05), radius: 3, x: 0, y: 2)
+    .padding(.vertical, 14)
+    .padding(.horizontal, 16)
+    .background(.ultraThinMaterial)
+    .clipShape(RoundedRectangle(cornerRadius: 18))
+    .shadow(color: .black.opacity(0.05), radius: 4, y: 2)
   }
 }
 
+// MARK: - Stats
 struct WelcomeStat: View {
   let title: String
   let value: String
@@ -153,15 +163,15 @@ struct WelcomeStat: View {
   var iconColor: Color = Color(R.color.secondaryOrange)
 
   var body: some View {
-    VStack(spacing: 4) {
-      HStack(spacing: 6) {
+    VStack(spacing: 6) {
+      HStack(spacing: 5) {
         if let systemIcon {
           Image(systemName: systemIcon)
-            .font(.system(size: 14, weight: .semibold))
+            .font(.system(size: 15, weight: .semibold))
             .foregroundStyle(iconColor)
         }
         Text(value)
-          .font(.system(size: 20, weight: .bold))
+          .font(.system(size: 21, weight: .bold))
       }
       Text(title)
         .font(.system(size: 14))
@@ -169,7 +179,6 @@ struct WelcomeStat: View {
     }
   }
 }
-
 
 #Preview {
   WelcomeView()

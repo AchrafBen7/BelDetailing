@@ -12,31 +12,8 @@
     "€150" : {
 
     },
-    "all" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "All"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Tous"
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Alle"
-          }
-        }
-      }
-    },
     "api.error.offline.fallback" : {
-      "extractionState" : "stale",
+      "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -177,236 +154,6 @@
         }
       }
     },
-    "apply" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Apply"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Appliquer"
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Toepassen"
-          }
-        }
-      }
-    },
-    "auth.login" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sign in"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Se connecter"
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Inloggen"
-          }
-        }
-      }
-    },
-    "booking.cancel.success" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Booking cancelled."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Réservation annulée."
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Reservatie geannuleerd."
-          }
-        }
-      }
-    },
-    "booking.confirm.success" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Booking confirmed."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Réservation confirmée."
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Reservatie bevestigd."
-          }
-        }
-      }
-    },
-    "booking.create.failure" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Could not create booking. Please try again."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Impossible de créer la réservation. Veuillez réessayer."
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Reservatie kon niet worden aangemaakt. Probeer opnieuw."
-          }
-        }
-      }
-    },
-    "booking.create.success" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Booking created."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Réservation créée."
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Reservatie aangemaakt."
-          }
-        }
-      }
-    },
-    "booking.decline.success" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Booking declined."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Réservation refusée."
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Reservatie geweigerd."
-          }
-        }
-      }
-    },
-    "booking.noSlotsForDate" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "No available slots for this date."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Aucun créneau disponible pour cette date."
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Geen tijdsloten beschikbaar voor deze datum."
-          }
-        }
-      }
-    },
-    "booking.select.date" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Select a date"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sélectionnez une date"
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Kies een datum"
-          }
-        }
-      }
-    },
-    "booking.select.slot" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Select a time slot"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sélectionnez un créneau"
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Kies een tijdslot"
-          }
-        }
-      }
-    },
     "booking.status.cancelled" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -492,190 +239,6 @@
         }
       }
     },
-    "booking.update.success" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Booking updated."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Réservation mise à jour."
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Reservatie bijgewerkt."
-          }
-        }
-      }
-    },
-    "bookings.empty.message" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Your future and past bookings will appear here."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Vos réservations à venir et passées apparaîtront ici."
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Je toekomstige en vorige boekingen verschijnen hier."
-          }
-        }
-      }
-    },
-    "bookings.empty.title" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "No bookings yet"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Aucune réservation"
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Nog geen boekingen"
-          }
-        }
-      }
-    },
-    "bookings.history" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "History"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Historique"
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Geschiedenis"
-          }
-        }
-      }
-    },
-    "bookings.upcoming" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Upcoming"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "À venir"
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Komend"
-          }
-        }
-      }
-    },
-    "cancel" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Cancel"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Annuler"
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Annuleren"
-          }
-        }
-      }
-    },
-    "city.noResults" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "No city found for this search."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Aucune ville trouvée pour cette recherche."
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Geen stad gevonden voor deze zoekopdracht."
-          }
-        }
-      }
-    },
-    "city.search.placeholder" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Search city or commune"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Rechercher une ville ou commune"
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Zoek stad of gemeente"
-          }
-        }
-      }
-    },
     "common.cancel" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -689,29 +252,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Annuler"
-          }
-        }
-      }
-    },
-    "common.next" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Next"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Suivant"
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Volgende"
           }
         }
       }
@@ -733,8 +273,592 @@
         }
       }
     },
+      "offersFiltersTitle": {
+        "extractionState": "manual",
+        "localizations": {
+          "en": { "stringUnit": { "state": "translated", "value": "Offer filters" } },
+          "fr": { "stringUnit": { "state": "translated", "value": "Filtres des offres" } },
+          "nl": { "stringUnit": { "state": "translated", "value": "Filters voor aanbiedingen" } }
+        }
+      },
+
+      "filterStatus": {
+        "extractionState": "manual",
+        "localizations": {
+          "en": { "stringUnit": { "state": "translated", "value": "Status" } },
+          "fr": { "stringUnit": { "state": "translated", "value": "Statut" } },
+          "nl": { "stringUnit": { "state": "translated", "value": "Status" } }
+        }
+      },
+
+      "filterType": {
+        "extractionState": "manual",
+        "localizations": {
+          "en": { "stringUnit": { "state": "translated", "value": "Type" } },
+          "fr": { "stringUnit": { "state": "translated", "value": "Type" } },
+          "nl": { "stringUnit": { "state": "translated", "value": "Type" } }
+        }
+      },
+
+      "apply": {
+        "extractionState": "manual",
+        "localizations": {
+          "en": { "stringUnit": { "state": "translated", "value": "Apply" } },
+          "fr": { "stringUnit": { "state": "translated", "value": "Appliquer" } },
+          "nl": { "stringUnit": { "state": "translated", "value": "Toepassen" } }
+        }
+      },
+
+      "cancel": {
+        "extractionState": "manual",
+        "localizations": {
+          "en": { "stringUnit": { "state": "translated", "value": "Cancel" } },
+          "fr": { "stringUnit": { "state": "translated", "value": "Annuler" } },
+          "nl": { "stringUnit": { "state": "translated", "value": "Annuleren" } }
+        }
+      },
+
+      "all": {
+        "extractionState": "manual",
+        "localizations": {
+          "en": { "stringUnit": { "state": "translated", "value": "All" } },
+          "fr": { "stringUnit": { "state": "translated", "value": "Tous" } },
+          "nl": { "stringUnit": { "state": "translated", "value": "Alles" } }
+        }
+      },
+
+      "serviceCategoryCarCleaning": {
+        "extractionState": "manual",
+        "localizations": {
+          "en": { "stringUnit": { "state": "translated", "value": "Car cleaning" } },
+          "fr": { "stringUnit": { "state": "translated", "value": "Nettoyage auto" } },
+          "nl": { "stringUnit": { "state": "translated", "value": "Autoreiniging" } }
+        }
+      },
+
+      "serviceCategoryCarPolishing": {
+        "extractionState": "manual",
+        "localizations": {
+          "en": { "stringUnit": { "state": "translated", "value": "Car polishing" } },
+          "fr": { "stringUnit": { "state": "translated", "value": "Polissage" } },
+          "nl": { "stringUnit": { "state": "translated", "value": "Auto polijsten" } }
+        }
+      },
+
+      "serviceCategoryInteriorDetailing": {
+        "extractionState": "manual",
+        "localizations": {
+          "en": { "stringUnit": { "state": "translated", "value": "Interior detailing" } },
+          "fr": { "stringUnit": { "state": "translated", "value": "Nettoyage intérieur" } },
+          "nl": { "stringUnit": { "state": "translated", "value": "Interieur detailing" } }
+        }
+      },
+
+      "serviceCategoryCeramicCoating": {
+        "extractionState": "manual",
+        "localizations": {
+          "en": { "stringUnit": { "state": "translated", "value": "Ceramic coating" } },
+          "fr": { "stringUnit": { "state": "translated", "value": "Traitement céramique" } },
+          "nl": { "stringUnit": { "state": "translated", "value": "Keramische coating" } }
+        }
+      },
+
+      "serviceCategoryFleetMaintenance": {
+        "extractionState": "manual",
+        "localizations": {
+          "en": { "stringUnit": { "state": "translated", "value": "Fleet maintenance" } },
+          "fr": { "stringUnit": { "state": "translated", "value": "Entretien de flotte" } },
+          "nl": { "stringUnit": { "state": "translated", "value": "Vlootonderhoud" } }
+        }
+      },
+      "onboardingNext": {
+          "extractionState": "manual",
+          "localizations": {
+            "en": { "stringUnit": { "state": "translated", "value": "Next" } },
+            "fr": { "stringUnit": { "state": "translated", "value": "Suivant" } },
+            "nl": { "stringUnit": { "state": "translated", "value": "Volgende" } }
+          }
+        },
+
+        "onboardingStart": {
+          "extractionState": "manual",
+          "localizations": {
+            "en": { "stringUnit": { "state": "translated", "value": "Get started" } },
+            "fr": { "stringUnit": { "state": "translated", "value": "Commencer" } },
+            "nl": { "stringUnit": { "state": "translated", "value": "Beginnen" } }
+          }
+        },
+        "search": {
+            "extractionState": "manual",
+            "localizations": {
+              "en": { "stringUnit": { "state": "translated", "value": "Search" } },
+              "fr": { "stringUnit": { "state": "translated", "value": "Rechercher" } },
+              "nl": { "stringUnit": { "state": "translated", "value": "Zoeken" } }
+            }
+          },
+
+          "searchPlaceholder": {
+            "extractionState": "manual",
+            "localizations": {
+              "en": {
+                "stringUnit": { "state": "translated", "value": "Search for a professional or service" }
+              },
+              "fr": {
+                "stringUnit": { "state": "translated", "value": "Recherchez un professionnel ou un service" }
+              },
+              "nl": {
+                "stringUnit": { "state": "translated", "value": "Zoek een professional of dienst" }
+              }
+            }
+          },
+
+          "searchEmptyTitle": {
+            "extractionState": "manual",
+            "localizations": {
+              "en": { "stringUnit": { "state": "translated", "value": "No results found" } },
+              "fr": { "stringUnit": { "state": "translated", "value": "Aucun résultat trouvé" } },
+              "nl": { "stringUnit": { "state": "translated", "value": "Geen resultaten gevonden" } }
+            }
+          },
+
+          "searchEmptyMessage": {
+            "extractionState": "manual",
+            "localizations": {
+              "en": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Try adjusting your filters or search terms to find professionals near you."
+                }
+              },
+              "fr": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Essayez d’ajuster vos filtres ou votre recherche pour trouver des professionnels près de chez vous."
+                }
+              },
+              "nl": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Pas je filters of zoekwoorden aan om professionals in jouw buurt te vinden."
+                }
+              }
+            }
+          },
+
+          "filterAtHome": {
+            "extractionState": "manual",
+            "localizations": {
+              "en": { "stringUnit": { "state": "translated", "value": "At home" } },
+              "fr": { "stringUnit": { "state": "translated", "value": "À domicile" } },
+              "nl": { "stringUnit": { "state": "translated", "value": "Aan huis" } }
+            }
+          },
+
+          "filterPrice": {
+            "extractionState": "manual",
+            "localizations": {
+              "en": { "stringUnit": { "state": "translated", "value": "Price" } },
+              "fr": { "stringUnit": { "state": "translated", "value": "Prix" } },
+              "nl": { "stringUnit": { "state": "translated", "value": "Prijs" } }
+            }
+          },
+
+          "all": {
+            "extractionState": "manual",
+            "localizations": {
+              "en": { "stringUnit": { "state": "translated", "value": "All" } },
+              "fr": { "stringUnit": { "state": "translated", "value": "Tous" } },
+              "nl": { "stringUnit": { "state": "translated", "value": "Alles" } }
+            }
+          },
+          
+            "commonStart": {
+              "extractionState": "manual",
+              "localizations": {
+                "en": { "stringUnit": { "state": "translated", "value": "Start" } },
+                "fr": { "stringUnit": { "state": "translated", "value": "Commencer" } },
+                "nl": { "stringUnit": { "state": "translated", "value": "Beginnen" } }
+              }
+            },
+
+            "commonNext": {
+              "extractionState": "manual",
+              "localizations": {
+                "en": { "stringUnit": { "state": "translated", "value": "Next" } },
+                "fr": { "stringUnit": { "state": "translated", "value": "Suivant" } },
+                "nl": { "stringUnit": { "state": "translated", "value": "Volgende" } }
+              }
+            },
+              "offersEmptyTitle": {
+                "extractionState": "manual",
+                "localizations": {
+                  "en": { "stringUnit": { "state": "translated", "value": "No offers available" } },
+                  "fr": { "stringUnit": { "state": "translated", "value": "Aucune offre disponible" } },
+                  "nl": { "stringUnit": { "state": "translated", "value": "Geen aanbiedingen beschikbaar" } }
+                }
+              },
+
+              "offersEmptyMessage": {
+                "extractionState": "manual",
+                "localizations": {
+                  "en": {
+                    "stringUnit": {
+                      "state": "translated",
+                      "value": "Try adjusting your filters or check back later for new offers."
+                    }
+                  },
+                  "fr": {
+                    "stringUnit": {
+                      "state": "translated",
+                      "value": "Essayez d’ajuster vos filtres ou revenez plus tard pour découvrir de nouvelles offres."
+                    }
+                  },
+                  "nl": {
+                    "stringUnit": {
+                      "state": "translated",
+                      "value": "Pas je filters aan of kom later terug voor nieuwe aanbiedingen."
+                    }
+                  }
+                }
+              },
+                "companyTypeGarage": {
+                  "extractionState": "manual",
+                  "localizations": {
+                    "en": { "stringUnit": { "state": "translated", "value": "Garage" } },
+                    "fr": { "stringUnit": { "state": "translated", "value": "Garage" } },
+                    "nl": { "stringUnit": { "state": "translated", "value": "Garage" } }
+                  }
+                },
+
+                "companyTypeLeasing": {
+                  "extractionState": "manual",
+                  "localizations": {
+                    "en": { "stringUnit": { "state": "translated", "value": "Leasing company" } },
+                    "fr": { "stringUnit": { "state": "translated", "value": "Société de leasing" } },
+                    "nl": { "stringUnit": { "state": "translated", "value": "Leasemaatschappij" } }
+                  }
+                },
+
+                "companyTypeFleet": {
+                  "extractionState": "manual",
+                  "localizations": {
+                    "en": { "stringUnit": { "state": "translated", "value": "Fleet manager" } },
+                    "fr": { "stringUnit": { "state": "translated", "value": "Gestionnaire de flotte" } },
+                    "nl": { "stringUnit": { "state": "translated", "value": "Vlootbeheerder" } }
+                  }
+                },
+
+                "companyTypeCarDealer": {
+                  "extractionState": "manual",
+                  "localizations": {
+                    "en": { "stringUnit": { "state": "translated", "value": "Car dealer" } },
+                    "fr": { "stringUnit": { "state": "translated", "value": "Concessionnaire" } },
+                    "nl": { "stringUnit": { "state": "translated", "value": "Autohandelaar" } }
+                  }
+                },
+
+                "companyTypeCarWash": {
+                  "extractionState": "manual",
+                  "localizations": {
+                    "en": { "stringUnit": { "state": "translated", "value": "Car wash" } },
+                    "fr": { "stringUnit": { "state": "translated", "value": "Car wash" } },
+                    "nl": { "stringUnit": { "state": "translated", "value": "Autowasstraat" } }
+                  }
+                },
+
+                "companyTypeTransport": {
+                  "extractionState": "manual",
+                  "localizations": {
+                    "en": { "stringUnit": { "state": "translated", "value": "Transport company" } },
+                    "fr": { "stringUnit": { "state": "translated", "value": "Entreprise de transport" } },
+                    "nl": { "stringUnit": { "state": "translated", "value": "Transportbedrijf" } }
+                  }
+                },
+
+                "companyTypeConstruction": {
+                  "extractionState": "manual",
+                  "localizations": {
+                    "en": { "stringUnit": { "state": "translated", "value": "Construction company" } },
+                    "fr": { "stringUnit": { "state": "translated", "value": "Entreprise de construction" } },
+                    "nl": { "stringUnit": { "state": "translated", "value": "Bouwbedrijf" } }
+                  }
+                },
+
+                "companyTypeMunicipality": {
+                  "extractionState": "manual",
+                  "localizations": {
+                    "en": { "stringUnit": { "state": "translated", "value": "Municipality" } },
+                    "fr": { "stringUnit": { "state": "translated", "value": "Commune" } },
+                    "nl": { "stringUnit": { "state": "translated", "value": "Gemeente" } }
+                  }
+                },
+
+                "companyTypeLogistics": {
+                  "extractionState": "manual",
+                  "localizations": {
+                    "en": { "stringUnit": { "state": "translated", "value": "Logistics company" } },
+                    "fr": { "stringUnit": { "state": "translated", "value": "Entreprise logistique" } },
+                    "nl": { "stringUnit": { "state": "translated", "value": "Logistiek bedrijf" } }
+                  }
+                },
+
+                "companyTypeOther": {
+                  "extractionState": "manual",
+                  "localizations": {
+                    "en": { "stringUnit": { "state": "translated", "value": "Other" } },
+                    "fr": { "stringUnit": { "state": "translated", "value": "Autre" } },
+                    "nl": { "stringUnit": { "state": "translated", "value": "Anders" } }
+                  }
+                },
+                  "bookingsEmptyTitle": {
+                    "extractionState": "manual",
+                    "localizations": {
+                      "en": { "stringUnit": { "state": "translated", "value": "No bookings yet" } },
+                      "fr": { "stringUnit": { "state": "translated", "value": "Aucune réservation pour le moment" } },
+                      "nl": { "stringUnit": { "state": "translated", "value": "Nog geen boekingen" } }
+                    }
+                  },
+                  "bookingsEmptyMessage": {
+                    "extractionState": "manual",
+                    "localizations": {
+                      "en": { "stringUnit": { "state": "translated", "value": "Your upcoming and past bookings will appear here." } },
+                      "fr": { "stringUnit": { "state": "translated", "value": "Vos réservations à venir et passées apparaîtront ici." } },
+                      "nl": { "stringUnit": { "state": "translated", "value": "Je toekomstige en vorige boekingen verschijnen hier." } }
+                    }
+                  },
+                  "bookingsUpcoming": {
+                    "extractionState": "manual",
+                    "localizations": {
+                      "en": { "stringUnit": { "state": "translated", "value": "Upcoming" } },
+                      "fr": { "stringUnit": { "state": "translated", "value": "À venir" } },
+                      "nl": { "stringUnit": { "state": "translated", "value": "Binnenkort" } }
+                    }
+                  },
+                  "bookingsHistory": {
+                    "extractionState": "manual",
+                    "localizations": {
+                      "en": { "stringUnit": { "state": "translated", "value": "History" } },
+                      "fr": { "stringUnit": { "state": "translated", "value": "Historique" } },
+                      "nl": { "stringUnit": { "state": "translated", "value": "Historiek" } }
+                    }
+                  },
+                    "homeEmptyTitle": {
+                      "extractionState": "manual",
+                      "localizations": {
+                        "en": { "stringUnit": { "state": "translated", "value": "No recommendations yet" } },
+                        "fr": { "stringUnit": { "state": "translated", "value": "Aucune recommandation pour le moment" } },
+                        "nl": { "stringUnit": { "state": "translated", "value": "Nog geen aanbevelingen" } }
+                      }
+                    },
+
+                    "homeEmptyMessage": {
+                      "extractionState": "manual",
+                      "localizations": {
+                        "en": {
+                          "stringUnit": {
+                            "state": "translated",
+                            "value": "We couldn’t find any recommended professionals near you. Try refreshing or adjusting your preferences."
+                          }
+                        },
+                        "fr": {
+                          "stringUnit": {
+                            "state": "translated",
+                            "value": "Aucun professionnel recommandé n’a été trouvé près de chez vous. Essayez d’actualiser ou d’ajuster vos préférences."
+                          }
+                        },
+                        "nl": {
+                          "stringUnit": {
+                            "state": "translated",
+                            "value": "We konden geen aanbevolen professionals in jouw buurt vinden. Probeer te vernieuwen of je voorkeuren aan te passen."
+                          }
+                        }
+                      }
+                    },
+                      "homeTitle": {
+                        "extractionState": "manual",
+                        "localizations": {
+                          "en": { "stringUnit": { "state": "translated", "value": "Recommended for you" } },
+                          "fr": { "stringUnit": { "state": "translated", "value": "Recommandés pour vous" } },
+                          "nl": { "stringUnit": { "state": "translated", "value": "Aanbevolen voor jou" } }
+                        }
+                      },
+
+                      "homeCitySubtitle": {
+                        "extractionState": "manual",
+                        "localizations": {
+                          "en": {
+                            "stringUnit": { "state": "translated", "value": "Near %@" }
+                          },
+                          "fr": {
+                            "stringUnit": { "state": "translated", "value": "Près de %@" }
+                          },
+                          "nl": {
+                            "stringUnit": { "state": "translated", "value": "In de buurt van %@" }
+                          }
+                        }
+                      },
+                        "welcomeSubtitle": {
+                          "extractionState": "manual",
+                          "localizations": {
+                            "en": { "stringUnit": { "state": "translated", "value": "Find, book and pay trusted car detailing near you." } },
+                            "fr": { "stringUnit": { "state": "translated", "value": "Trouvez, réservez et payez des services de detailing de confiance près de chez vous." } },
+                            "nl": { "stringUnit": { "state": "translated", "value": "Vind, boek en betaal betrouwbare car detailing bij jou in de buurt." } }
+                          }
+                        },
+
+                        "welcomeProsTitle": {
+                          "extractionState": "manual",
+                          "localizations": {
+                            "en": { "stringUnit": { "state": "translated", "value": "Top professionals" } },
+                            "fr": { "stringUnit": { "state": "translated", "value": "Des pros de confiance" } },
+                            "nl": { "stringUnit": { "state": "translated", "value": "Topprofessionals" } }
+                          }
+                        },
+                        "welcomeProsSubtitle": {
+                          "extractionState": "manual",
+                          "localizations": {
+                            "en": { "stringUnit": { "state": "translated", "value": "Verified experts, trusted by drivers." } },
+                            "fr": { "stringUnit": { "state": "translated", "value": "Experts vérifiés, approuvés par les conducteurs." } },
+                            "nl": { "stringUnit": { "state": "translated", "value": "Geverifieerde experts, vertrouwd door bestuurders." } }
+                          }
+                        },
+
+                        "welcomeSecureTitle": {
+                          "extractionState": "manual",
+                          "localizations": {
+                            "en": { "stringUnit": { "state": "translated", "value": "Secure payment" } },
+                            "fr": { "stringUnit": { "state": "translated", "value": "Paiement sécurisé" } },
+                            "nl": { "stringUnit": { "state": "translated", "value": "Veilige betaling" } }
+                          }
+                        },
+                        "welcomeSecureSubtitle": {
+                          "extractionState": "manual",
+                          "localizations": {
+                            "en": { "stringUnit": { "state": "translated", "value": "Protected transactions and buyer guarantee." } },
+                            "fr": { "stringUnit": { "state": "translated", "value": "Transactions protégées et garantie client." } },
+                            "nl": { "stringUnit": { "state": "translated", "value": "Beveiligde transacties en kopersgarantie." } }
+                          }
+                        },
+
+                        "welcomeFastTitle": {
+                          "extractionState": "manual",
+                          "localizations": {
+                            "en": { "stringUnit": { "state": "translated", "value": "Fast booking" } },
+                            "fr": { "stringUnit": { "state": "translated", "value": "Réservation rapide" } },
+                            "nl": { "stringUnit": { "state": "translated", "value": "Snel boeken" } }
+                          }
+                        },
+                        "welcomeFastSubtitle": {
+                          "extractionState": "manual",
+                          "localizations": {
+                            "en": { "stringUnit": { "state": "translated", "value": "Pick a time and confirm in seconds." } },
+                            "fr": { "stringUnit": { "state": "translated", "value": "Choisissez un créneau et confirmez en quelques secondes." } },
+                            "nl": { "stringUnit": { "state": "translated", "value": "Kies een tijd en bevestig in seconden." } }
+                          }
+                        },
+
+                        "welcomeStatsProfessionals": {
+                          "extractionState": "manual",
+                          "localizations": {
+                            "en": { "stringUnit": { "state": "translated", "value": "Professionals" } },
+                            "fr": { "stringUnit": { "state": "translated", "value": "Professionnels" } },
+                            "nl": { "stringUnit": { "state": "translated", "value": "Vakmensen" } }
+                          }
+                        },
+                        "welcomeStatsRating": {
+                          "extractionState": "manual",
+                          "localizations": {
+                            "en": { "stringUnit": { "state": "translated", "value": "Average rating" } },
+                            "fr": { "stringUnit": { "state": "translated", "value": "Note moyenne" } },
+                            "nl": { "stringUnit": { "state": "translated", "value": "Gemiddelde score" } }
+                          }
+                        },
+                        "welcomeStatsBookings": {
+                          "extractionState": "manual",
+                          "localizations": {
+                            "en": { "stringUnit": { "state": "translated", "value": "Bookings" } },
+                            "fr": { "stringUnit": { "state": "translated", "value": "Réservations" } },
+                            "nl": { "stringUnit": { "state": "translated", "value": "Boekingen" } }
+                          }
+                        },
+
+                        "authLogin": {
+                          "extractionState": "manual",
+                          "localizations": {
+                            "en": { "stringUnit": { "state": "translated", "value": "Log in" } },
+                            "fr": { "stringUnit": { "state": "translated", "value": "Se connecter" } },
+                            "nl": { "stringUnit": { "state": "translated", "value": "Inloggen" } }
+                          }
+                        },
+
+                        "profileSectionAccount": {
+                          "extractionState": "manual",
+                          "localizations": {
+                            "en": { "stringUnit": { "state": "translated", "value": "Account" } },
+                            "fr": { "stringUnit": { "state": "translated", "value": "Compte" } },
+                            "nl": { "stringUnit": { "state": "translated", "value": "Account" } }
+                          }
+                        },
+                        "profileSectionSettings": {
+                          "extractionState": "manual",
+                          "localizations": {
+                            "en": { "stringUnit": { "state": "translated", "value": "Settings" } },
+                            "fr": { "stringUnit": { "state": "translated", "value": "Paramètres" } },
+                            "nl": { "stringUnit": { "state": "translated", "value": "Instellingen" } }
+                          }
+                        },
+                        "profilePayments": {
+                          "extractionState": "manual",
+                          "localizations": {
+                            "en": { "stringUnit": { "state": "translated", "value": "Payments" } },
+                            "fr": { "stringUnit": { "state": "translated", "value": "Paiements" } },
+                            "nl": { "stringUnit": { "state": "translated", "value": "Betalingen" } }
+                          }
+                        },
+                        "profileNotifications": {
+                          "extractionState": "manual",
+                          "localizations": {
+                            "en": { "stringUnit": { "state": "translated", "value": "Notifications" } },
+                            "fr": { "stringUnit": { "state": "translated", "value": "Notifications" } },
+                            "nl": { "stringUnit": { "state": "translated", "value": "Meldingen" } }
+                          }
+                        },
+                        "profileHelpSupport": {
+                          "extractionState": "manual",
+                          "localizations": {
+                            "en": { "stringUnit": { "state": "translated", "value": "Help & Support" } },
+                            "fr": { "stringUnit": { "state": "translated", "value": "Aide & support" } },
+                            "nl": { "stringUnit": { "state": "translated", "value": "Hulp & ondersteuning" } }
+                          }
+                        },
+
+                        "profileNotLoggedTitle": {
+                          "extractionState": "manual",
+                          "localizations": {
+                            "en": { "stringUnit": { "state": "translated", "value": "You’re not logged in" } },
+                            "fr": { "stringUnit": { "state": "translated", "value": "Vous n’êtes pas connecté" } },
+                            "nl": { "stringUnit": { "state": "translated", "value": "Je bent niet aangemeld" } }
+                          }
+                        },
+                        "profileNotLoggedMessage": {
+                          "extractionState": "manual",
+                          "localizations": {
+                            "en": { "stringUnit": { "state": "translated", "value": "Sign in to manage your account and bookings." } },
+                            "fr": { "stringUnit": { "state": "translated", "value": "Connectez-vous pour gérer votre compte et vos réservations." } },
+                            "nl": { "stringUnit": { "state": "translated", "value": "Meld je aan om je account en boekingen te beheren." } }
+                          }
+                        },
+
+                        "logout": {
+                          "extractionState": "manual",
+                          "localizations": {
+                            "en": { "stringUnit": { "state": "translated", "value": "Log out" } },
+                            "fr": { "stringUnit": { "state": "translated", "value": "Se déconnecter" } },
+                            "nl": { "stringUnit": { "state": "translated", "value": "Afmelden" } }
+                          }
+                        },
     "common.skip" : {
-      "extractionState" : "stale",
+      "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -746,265 +870,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Passer"
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Overslaan"
-          }
-        }
-      }
-    },
-    "common.start" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Get started"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Commencer"
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Starten"
-          }
-        }
-      }
-    },
-    "companyType.carDealer" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Car dealer"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Concessionnaire automobile"
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Autohandelaar"
-          }
-        }
-      }
-    },
-    "companyType.carWash" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Car wash center"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Station de lavage"
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Carwashcentrum"
-          }
-        }
-      }
-    },
-    "companyType.construction" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Construction company"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Entreprise de construction"
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Bouwbedrijf"
-          }
-        }
-      }
-    },
-    "companyType.fleet" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Fleet manager"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Gestionnaire de flotte"
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Vlootbeheerder"
-          }
-        }
-      }
-    },
-    "companyType.garage" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Garage"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Garage"
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Garage"
-          }
-        }
-      }
-    },
-    "companyType.leasing" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Leasing company"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Société de leasing"
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Leasingbedrijf"
-          }
-        }
-      }
-    },
-    "companyType.logistics" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Logistics company"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Entreprise logistique"
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Logistiek bedrijf"
-          }
-        }
-      }
-    },
-    "companyType.municipality" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Municipality"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Commune"
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Gemeente"
-          }
-        }
-      }
-    },
-    "companyType.other" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Other"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Autre"
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ander"
-          }
-        }
-      }
-    },
-    "companyType.transport" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Transport company"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Entreprise de transport"
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Transportbedrijf"
           }
         }
       }
@@ -1101,236 +966,23 @@
         }
       }
     },
-    "filter.at.home" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "At home"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "À domicile"
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Aan huis"
-          }
-        }
-      }
-    },
-    "filter.price" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Price"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Prix"
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Prijs"
-          }
-        }
-      }
-    },
-    "filterStatus" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Status"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Statut"
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Status"
-          }
-        }
-      }
-    },
-    "filterType" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Type"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Type"
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Type"
-          }
-        }
-      }
-    },
     "Help & Support WIP" : {
       "comment" : "A link in the profile settings section that leads to a \"Help & Support WIP\" screen.",
       "isCommentAutoGenerated" : true
     },
-    "home.city.subtitle" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Around %@"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Autour de %@"
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Rond %@"
-          }
-        }
-      }
-    },
-    "home.empty.message" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Try adjusting your filters or refresh later."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Essayez d’ajuster vos filtres ou revenez plus tard."
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Pas je filters aan of probeer het later opnieuw."
-          }
-        }
-      }
-    },
-    "home.empty.title" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "No offers nearby"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Aucune offre à proximité"
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Geen aanbiedingen in de buurt"
-          }
-        }
-      }
-    },
-    "home.title" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Discover nearby offers"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Découvrez les offres autour de vous"
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ontdek aanbiedingen in de buurt"
-          }
-        }
-      }
-    },
     "loader.description" : {
-      "extractionState" : "stale",
+      "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Loading..."
+            "value" : "Loading data, please wait..."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Chargement..."
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Laden..."
-          }
-        }
-      }
-    },
-    "logout" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Log out"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Se déconnecter"
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Afmelden"
+            "value" : "Chargement des données, veuillez patienter..."
           }
         }
       }
@@ -1389,29 +1041,6 @@
         }
       }
     },
-    "offer.attachments.title" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Attachments"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Pièces jointes"
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Bijlagen"
-          }
-        }
-      }
-    },
     "offer.create.failure" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1463,167 +1092,6 @@
         }
       }
     },
-    "offer.type.longTerm" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Long-term contract"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Contrat long terme"
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Langetermijncontract"
-          }
-        }
-      }
-    },
-    "offer.type.oneTime" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "One-time"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ponctuelle"
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Eenmalig"
-          }
-        }
-      }
-    },
-    "offer.type.recurring" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Recurring"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Récurrente"
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Herhalend"
-          }
-        }
-      }
-    },
-    "offers.empty.message" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Try adjusting filters or check back later."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Essaie d’ajuster les filtres ou reviens plus tard."
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Pas je filters aan of kom later terug."
-          }
-        }
-      }
-    },
-    "offers.empty.title" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "No offers yet"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Aucune offre pour l’instant"
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Nog geen aanbiedingen"
-          }
-        }
-      }
-    },
-    "offersFiltersTitle" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Filter offers"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Filtrer les offres"
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Aanbiedingen filteren"
-          }
-        }
-      }
-    },
-    "offlineFallback" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "You're offline. Showing the last saved data."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Tu es hors ligne. Affichage des dernières données enregistrées."
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Je bent offline. Laatste opgeslagen gegevens worden getoond."
-          }
-        }
-      }
-    },
     "ommon.retry" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1641,584 +1109,9 @@
         }
       }
     },
-    "onboarding.bookFast.description" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Pick a time slot, compare prices, and book your service in seconds."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Choisissez votre créneau horaire, comparez les tarifs et réservez votre service en quelques secondes."
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Kies een tijdslot, vergelijk prijzen en boek je service in enkele seconden."
-          }
-        }
-      }
-    },
-    "onboarding.bookFast.title" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Book in one click"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Réservez en un clic"
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Boek met één klik"
-          }
-        }
-      }
-    },
-    "onboarding.findPros.description" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Discover hundreds of verified car-detailing professionals near you, rated by the community."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Découvrez des centaines de professionnels du detailing automobile vérifiés et notés par la communauté près de chez vous."
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ontdek honderden geverifieerde autodetailing-professionals bij jou in de buurt, beoordeeld door de community."
-          }
-        }
-      }
-    },
-    "onboarding.findPros.title" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Find professionals"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Trouvez des professionnels"
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Vind professionals"
-          }
-        }
-      }
-    },
-    "onboarding.securePayment.description" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Enjoy 100% secure transactions with our satisfaction guarantee. Your car deserves the best."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Profitez de transactions 100 % sécurisées avec notre garantie satisfaction. Votre voiture mérite le meilleur."
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Geniet van 100% veilige transacties met onze tevredenheidsgarantie. Je auto verdient het beste."
-          }
-        }
-      }
-    },
-    "onboarding.securePayment.title" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Secure payment"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Paiement sécurisé"
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Veilige betaling"
-          }
-        }
-      }
-    },
-    "payment.capture.failed" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Payment capture failed. Please contact support."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Échec de la capture du paiement. Contactez le support."
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Incasso mislukt. Neem contact op met support."
-          }
-        }
-      }
-    },
-    "payment.capture.success" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Payment captured."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Paiement capturé."
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Betaling geïncasseerd."
-          }
-        }
-      }
-    },
-    "payment.intent.created" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Payment pre-authorized."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Paiement préautorisé."
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Betaling vooraf geautoriseerd."
-          }
-        }
-      }
-    },
-    "payment.intent.failed" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Unable to pre-authorize the payment. Please check your card."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Impossible de préautoriser le paiement. Veuillez vérifier votre carte."
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Pre-autorisatie mislukt. Controleer je kaart."
-          }
-        }
-      }
-    },
-    "payment.refund.failed" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Refund failed. Please contact support."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Le remboursement a échoué. Contactez le support."
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Terugbetaling mislukt. Neem contact op met support."
-          }
-        }
-      }
-    },
-    "payment.refund.partial" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Partial refund issued."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Remboursement partiel effectué."
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Gedeeltelijke terugbetaling uitgevoerd."
-          }
-        }
-      }
-    },
-    "payment.refund.success" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Payment refunded."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Paiement remboursé."
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Betaling terugbetaald."
-          }
-        }
-      }
-    },
-    "payment.status.failed" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Failed"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Échec"
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Mislukt"
-          }
-        }
-      }
-    },
-    "payment.status.paid" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Paid"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Payé"
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Betaald"
-          }
-        }
-      }
-    },
-    "payment.status.pending" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Pending"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "En attente"
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "In afwachting"
-          }
-        }
-      }
-    },
-    "payment.status.preauthorized" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Pre-authorized"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Préautorisé"
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Vooraf geautoriseerd"
-          }
-        }
-      }
-    },
-    "payment.status.refunded" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Refunded"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Remboursé"
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Terugbetaald"
-          }
-        }
-      }
-    },
     "Payments WIP" : {
       "comment" : "A link to the \"Payments\" section of the user's profile.",
       "isCommentAutoGenerated" : true
-    },
-    "profile.help.support" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Help & Support"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Aide et assistance"
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Hulp en ondersteuning"
-          }
-        }
-      }
-    },
-    "profile.not.logged.message" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Please log in to access your profile and settings."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Veuillez vous connecter pour accéder à votre profil et à vos paramètres."
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Log in om toegang te krijgen tot je profiel en instellingen."
-          }
-        }
-      }
-    },
-    "profile.not.logged.title" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Not connected"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Non connecté"
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Niet ingelogd"
-          }
-        }
-      }
-    },
-    "profile.notifications" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Notifications"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Notifications"
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Meldingen"
-          }
-        }
-      }
-    },
-    "profile.payments" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Payments"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Paiements"
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Betalingen"
-          }
-        }
-      }
-    },
-    "profile.section.account" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Account"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Compte"
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Account"
-          }
-        }
-      }
-    },
-    "profile.section.settings" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Settings"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Paramètres"
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Instellingen"
-          }
-        }
-      }
     },
     "role.company" : {
       "extractionState" : "manual",
@@ -2254,6 +1147,104 @@
         }
       }
     },
+    "onboardingFindProsTitle": {
+        "extractionState": "manual",
+        "localizations": {
+          "en": { "stringUnit": { "state": "translated", "value": "Find professionals" } },
+          "fr": { "stringUnit": { "state": "translated", "value": "Trouvez des professionnels" } },
+          "nl": { "stringUnit": { "state": "translated", "value": "Vind professionals" } }
+        }
+      },
+
+      "onboardingFindProsDescription": {
+        "extractionState": "manual",
+        "localizations": {
+          "en": {
+            "stringUnit": {
+              "state": "translated",
+              "value": "Discover hundreds of vetted car detailing professionals, rated by the community near you."
+            }
+          },
+          "fr": {
+            "stringUnit": {
+              "state": "translated",
+              "value": "Découvrez des centaines de professionnels du detailing automobile vérifiés et notés par la communauté près de chez vous."
+            }
+          },
+          "nl": {
+            "stringUnit": {
+              "state": "translated",
+              "value": "Ontdek honderden erkende car detailing professionals, beoordeeld door de community bij jou in de buurt."
+            }
+          }
+        }
+      },
+
+      "onboardingBookFastTitle": {
+        "extractionState": "manual",
+        "localizations": {
+          "en": { "stringUnit": { "state": "translated", "value": "Book in one tap" } },
+          "fr": { "stringUnit": { "state": "translated", "value": "Réservez en un clic" } },
+          "nl": { "stringUnit": { "state": "translated", "value": "Boek met één tik" } }
+        }
+      },
+
+      "onboardingBookFastDescription": {
+        "extractionState": "manual",
+        "localizations": {
+          "en": {
+            "stringUnit": {
+              "state": "translated",
+              "value": "Pick a time slot, compare prices, and book your service in just a few seconds."
+            }
+          },
+          "fr": {
+            "stringUnit": {
+              "state": "translated",
+              "value": "Choisissez votre créneau horaire, comparez les tarifs et réservez votre service en quelques secondes seulement."
+            }
+          },
+          "nl": {
+            "stringUnit": {
+              "state": "translated",
+              "value": "Kies een tijdslot, vergelijk prijzen en boek je service in slechts enkele seconden."
+            }
+          }
+        }
+      },
+
+      "onboardingSecurePaymentTitle": {
+        "extractionState": "manual",
+        "localizations": {
+          "en": { "stringUnit": { "state": "translated", "value": "Secure payment" } },
+          "fr": { "stringUnit": { "state": "translated", "value": "Paiement sécurisé" } },
+          "nl": { "stringUnit": { "state": "translated", "value": "Veilige betaling" } }
+        }
+      },
+
+      "onboardingSecurePaymentDescription": {
+        "extractionState": "manual",
+        "localizations": {
+          "en": {
+            "stringUnit": {
+              "state": "translated",
+              "value": "Enjoy 100% secure transactions with our satisfaction guarantee. Your car deserves the best."
+            }
+          },
+          "fr": {
+            "stringUnit": {
+              "state": "translated",
+              "value": "Profitez de transactions 100% sécurisées avec notre garantie satisfaction. Votre voiture mérite le meilleur."
+            }
+          },
+          "nl": {
+            "stringUnit": {
+              "state": "translated",
+              "value": "Geniet van 100% veilige transacties met onze tevredenheidsgarantie. Jouw auto verdient het beste."
+            }
+          }
+        }
+      },
     "role.provider" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -2271,219 +1262,12 @@
         }
       }
     },
-    "search" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Search"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Rechercher"
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Zoeken"
-          }
-        }
-      }
-    },
-    "search.empty.message" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Try different keywords or adjust your filters."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Essayez d'autres mots-clés ou ajustez vos filtres."
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Probeer andere zoekwoorden of pas uw filters aan."
-          }
-        }
-      }
-    },
-    "search.empty.title" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "No results"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Aucun résultat"
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Geen resultaten"
-          }
-        }
-      }
-    },
-    "search.placeholder" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Search by city, service, or provider"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Recherchez par ville, service ou prestataire"
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Zoek op stad, dienst of aanbieder"
-          }
-        }
-      }
-    },
-    "serviceCategory.carCleaning" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Exterior cleaning"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Nettoyage extérieur"
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Buitenreiniging"
-          }
-        }
-      }
-    },
-    "serviceCategory.carPolishing" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Polishing"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Polissage"
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Polijsten"
-          }
-        }
-      }
-    },
-    "serviceCategory.ceramicCoating" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ceramic coating"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Céramique"
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Keramische coating"
-          }
-        }
-      }
-    },
-    "serviceCategory.fleetMaintenance" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Fleet maintenance"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Entretien de flotte"
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Vlootonderhoud"
-          }
-        }
-      }
-    },
-    "serviceCategory.interiorDetailing" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Interior detailing"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Nettoyage intérieur"
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Interieurreiniging"
-          }
-        }
-      }
-    },
     "Status" : {
       "comment" : "A label for a picker that lets the user select the status of an offer.",
       "isCommentAutoGenerated" : true
     },
     "tab.bookings" : {
-      "extractionState" : "stale",
+      "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -2496,17 +1280,11 @@
             "state" : "translated",
             "value" : "Réservations"
           }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Boekingen"
-          }
         }
       }
     },
     "tab.home" : {
-      "extractionState" : "stale",
+      "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -2519,17 +1297,11 @@
             "state" : "translated",
             "value" : "Accueil"
           }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Start"
-          }
         }
       }
     },
     "tab.offers" : {
-      "extractionState" : "stale",
+      "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -2542,17 +1314,11 @@
             "state" : "translated",
             "value" : "Offres"
           }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Aanbiedingen"
-          }
         }
       }
     },
     "tab.profile" : {
-      "extractionState" : "stale",
+      "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -2565,17 +1331,11 @@
             "state" : "translated",
             "value" : "Profil"
           }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Profiel"
-          }
         }
       }
     },
     "tab.search" : {
-      "extractionState" : "stale",
+      "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -2586,13 +1346,7 @@
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Rechercher"
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Zoeken"
+            "value" : "Recherche"
           }
         }
       }
@@ -2711,255 +1465,19 @@
         }
       }
     },
-    "welcome.prosSubtitle" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Verified experts rated by the community"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Des experts vérifiés et notés par la communauté"
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Geverifieerde experts, beoordeeld door de community"
-          }
-        }
-      }
-    },
-    "welcome.prosTitle" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Qualified professionals"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Professionnels qualifiés"
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Gekwalificeerde professionals"
-          }
-        }
-      }
-    },
-    "welcome.subtitle" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Your car deserves the best"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Votre voiture mérite le meilleur"
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Uw auto verdient het beste"
-          }
-        }
-      }
-    },
     "welcome.title" : {
-      "extractionState" : "stale",
+      "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "BelDetail"
+            "value" : "Welcome to BelDetailing"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "BelDetail"
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "BelDetail"
-          }
-        }
-      }
-    },
-    "welcomeFastSubtitle" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Pick a slot and confirm in seconds."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Choisissez un créneau et confirmez en quelques secondes."
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Kies een tijdslot en bevestig in seconden."
-          }
-        }
-      }
-    },
-    "welcomeFastTitle" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Fast booking"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Réservation rapide"
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Boeken in 1 minuut"
-          }
-        }
-      }
-    },
-    "welcomeSecureSubtitle" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Stripe protection and dispute assistance."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Protection Stripe et aide en cas de litige."
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Stripe-bescherming en hulp bij geschillen."
-          }
-        }
-      }
-    },
-    "welcomeSecureTitle" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Secure payments"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Paiements sécurisés"
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Veilige betalingen"
-          }
-        }
-      }
-    },
-    "welcomeStatsBookings" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Bookings"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Réservations"
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Boekingen"
-          }
-        }
-      }
-    },
-    "welcomeStatsProfessionals" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Professionals"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Professionnels"
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Professionals"
-          }
-        }
-      }
-    },
-    "welcomeStatsRating" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Average rating"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Note moyenne"
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Gemiddelde score"
+            "value" : "Bienvenue sur BelDetailing"
           }
         }
       }

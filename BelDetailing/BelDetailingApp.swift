@@ -3,38 +3,25 @@
 //  BelDetailing
 //
 //  Created by Achraf Benali on 04/11/2025.
-//
+//// BelDetailingApp.swift
 import SwiftUI
-
 @main
 struct BelDetailingApp: App {
-    @AppStorage("hasSeenOnboarding") private var hasSeenOnboarding: Bool = false
-    @AppStorage("hasSeenWelcome") private var hasSeenWelcome: Bool = false
+  @AppStorage("hasSeenOnboarding") private var hasSeenOnboarding = false
+  @AppStorage("forceWelcome") private var forceWelcome = true  // toujours à true pour tests
+  let engine = Engine(mock: true)
 
-    let engine = Engine(mock: true)
-
-    var body: some Scene {
-        WindowGroup {
-            Group {
-                if !hasSeenOnboarding {
-                    // Étape 1️⃣ : Onboarding
-                    OnboardingView()
-                } else if !hasSeenWelcome {
-                    // Étape 2️⃣ : Welcome
-                    WelcomeView(
-                        onStart: {
-                            hasSeenWelcome = true
-                        },
-                        onLogin: {
-                            hasSeenWelcome = true
-                            // ici tu pourras ouvrir ta future AuthView
-                        }
-                    )
-                } else {
-                    // Étape 3️⃣ : Application principale
-                    MainTabView(engine: engine)
-                }
-            }
+  var body: some Scene {
+    WindowGroup {
+      WelcomeView(
+        onStart: {
+          hasSeenOnboarding = false   // ✅ toujours relancer l’onboarding
+          forceWelcome = false         // ✅ toujours afficher le Welcome
+        },
+        onLogin: {
+          // pas encore actif
         }
+      )
     }
+  }
 }

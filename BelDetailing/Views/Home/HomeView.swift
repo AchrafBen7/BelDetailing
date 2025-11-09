@@ -16,7 +16,7 @@ struct HomeView: View {
 
   var body: some View {
     NavigationView {
-      Group {
+        VStack(spacing: 0) {
         if vm.isLoading {
           LoadingView()
         } else if vm.recommended.isEmpty {
