@@ -60,6 +60,8 @@
 		9B9DA3252EC037A4006BB3C1 /* OnboardingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B9DA3242EC037A4006BB3C1 /* OnboardingViewModel.swift */; };
 		9B9DA32B2EC03DE8006BB3C1 /* OnboardingPageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B9DA32A2EC03DE8006BB3C1 /* OnboardingPageView.swift */; };
 		9B9DA3392EC04A3D006BB3C1 /* WelcomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B9DA3372EC04A2B006BB3C1 /* WelcomeView.swift */; };
+		9B9DA3912EC1607D006BB3C1 /* SignupRoleSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B9DA38E2EC16069006BB3C1 /* SignupRoleSelectionView.swift */; };
+		9B9DA3962EC160FB006BB3C1 /* SignupViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B9DA3942EC160E4006BB3C1 /* SignupViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -136,6 +138,8 @@
 		9B9DA3242EC037A4006BB3C1 /* OnboardingViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingViewModel.swift; sourceTree = "<group>"; };
 		9B9DA32A2EC03DE8006BB3C1 /* OnboardingPageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingPageView.swift; sourceTree = "<group>"; };
 		9B9DA3372EC04A2B006BB3C1 /* WelcomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeView.swift; sourceTree = "<group>"; };
+		9B9DA38E2EC16069006BB3C1 /* SignupRoleSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignupRoleSelectionView.swift; sourceTree = "<group>"; };
+		9B9DA3942EC160E4006BB3C1 /* SignupViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignupViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -327,6 +331,7 @@
 		9B9DA2462EBEBE90006BB3C1 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				9B9DA38B2EC1605D006BB3C1 /* Signup */,
 				9B9DA3342EC04A25006BB3C1 /* Welcome */,
 				9B9DA30D2EC03720006BB3C1 /* Onboarding */,
 				9B9DA2732EBEC0B5006BB3C1 /* Search */,
@@ -421,6 +426,15 @@
 				9B9DA3372EC04A2B006BB3C1 /* WelcomeView.swift */,
 			);
 			path = Welcome;
+			sourceTree = "<group>";
+		};
+		9B9DA38B2EC1605D006BB3C1 /* Signup */ = {
+			isa = PBXGroup;
+			children = (
+				9B9DA3942EC160E4006BB3C1 /* SignupViewModel.swift */,
+				9B9DA38E2EC16069006BB3C1 /* SignupRoleSelectionView.swift */,
+			);
+			path = Signup;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -606,6 +620,7 @@
 				9B2E90DB2EBD60A600D76311 /* ServiceCategory.swift in Sources */,
 				9B9DA2F52EBF7726006BB3C1 /* ButtonsStyles.swift in Sources */,
 				9B9DA2D02EBED531006BB3C1 /* OfferFilterSheet.swift in Sources */,
+				9B9DA3962EC160FB006BB3C1 /* SignupViewModel.swift in Sources */,
 				9B9DA2F12EBF7703006BB3C1 /* Array+Extension.swift in Sources */,
 				9B9DA2F92EBF7A38006BB3C1 /* NotificationsConstants.swift in Sources */,
 				9B9DA32B2EC03DE8006BB3C1 /* OnboardingPageView.swift in Sources */,
@@ -614,6 +629,7 @@
 				9B2E90FA2EBD7AD400D76311 /* Detailer.swift in Sources */,
 				9B9DA29F2EBEC12C006BB3C1 /* LoadingView.swift in Sources */,
 				9B2E8FE62EBC258900D76311 /* APIEndpoints.swift in Sources */,
+				9B9DA3912EC1607D006BB3C1 /* SignupRoleSelectionView.swift in Sources */,
 				9B2E90C02EBCE36F00D76311 /* Booking.swift in Sources */,
 				9B2E90ED2EBD703200D76311 /* User.swift in Sources */,
 				9B2E910D2EBD818C00D76311 /* Review.swift in Sources */,

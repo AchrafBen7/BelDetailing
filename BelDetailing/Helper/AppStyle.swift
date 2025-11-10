@@ -28,8 +28,8 @@ struct AppStyle {
             switch self {
             case.title: return 37
             case.sectionTitle: return 22
-            case.buttonCTA: return 16
-            case.buttonSecondary: return 16
+            case.buttonCTA: return 18
+            case.buttonSecondary: return 18
             case.description: return 20
             case.navigationAction: return 18
             case.navigationTitle: return 28
