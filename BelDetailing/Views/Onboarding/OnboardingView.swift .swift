@@ -10,6 +10,7 @@ import RswiftResources
 
 struct OnboardingView: View {
     @StateObject private var vm = OnboardingViewModel()
+    var onFinish: (() -> Void)? = nil  // ✅ Ajout d’un callback optionnel
 
     var body: some View {
         VStack {
@@ -18,6 +19,7 @@ struct OnboardingView: View {
                 Spacer()
                 Button(action: {
                     vm.skipOnboarding()
+                    onFinish?() // ✅ Quitte vers la prochaine étape
                 }) {
                     R.string.localizable.commonSkip()
                         .textView(
@@ -51,18 +53,20 @@ struct OnboardingView: View {
 
             // MARK: - Action Button
             Button(action: {
-                vm.nextPage()
+                if vm.currentPage == vm.totalPages - 1 {
+                    vm.skipOnboarding()
+                    onFinish?() // ✅ Passe à l’étape suivante (signup)
+                } else {
+                    vm.nextPage()
+                }
             }) {
-                Text(
-                    vm.currentPage == vm.totalPages - 1
-                    ? R.string.localizable.commonStart()
-                    : R.string.localizable.commonNext()
-                )
-                .font(.system(size: 18, weight: .semibold))
+                (vm.currentPage == vm.totalPages - 1
+                 ? R.string.localizable.commonStart()
+                 : R.string.localizable.commonNext())
+                .textView(style: .buttonCTA, multilineAlignment: .center)
                 .frame(maxWidth: .infinity)
                 .padding()
                 .background(Color.black)
-                .foregroundColor(.white)
                 .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
                 .padding(.horizontal, 24)
             }
@@ -73,5 +77,5 @@ struct OnboardingView: View {
 }
 
 #Preview {
-    OnboardingView()
+    OnboardingView(onFinish: {})
 }

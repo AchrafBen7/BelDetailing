@@ -62,6 +62,10 @@
 		9B9DA3392EC04A3D006BB3C1 /* WelcomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B9DA3372EC04A2B006BB3C1 /* WelcomeView.swift */; };
 		9B9DA3912EC1607D006BB3C1 /* SignupRoleSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B9DA38E2EC16069006BB3C1 /* SignupRoleSelectionView.swift */; };
 		9B9DA3962EC160FB006BB3C1 /* SignupViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B9DA3942EC160E4006BB3C1 /* SignupViewModel.swift */; };
+		9B9DA3B22EC16F50006BB3C1 /* SignupFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B9DA3B02EC16F46006BB3C1 /* SignupFormView.swift */; };
+		9B9DA3B62EC16F9D006BB3C1 /* CustomInputField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B9DA3B42EC16F8C006BB3C1 /* CustomInputField.swift */; };
+		9B9DA3BD2EC173C1006BB3C1 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B9DA3BB2EC173BD006BB3C1 /* RootView.swift */; };
+		9B9DA4552EC2D05D006BB3C1 /* SignupHeroHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B9DA4532EC2D04D006BB3C1 /* SignupHeroHeader.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -140,6 +144,10 @@
 		9B9DA3372EC04A2B006BB3C1 /* WelcomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeView.swift; sourceTree = "<group>"; };
 		9B9DA38E2EC16069006BB3C1 /* SignupRoleSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignupRoleSelectionView.swift; sourceTree = "<group>"; };
 		9B9DA3942EC160E4006BB3C1 /* SignupViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignupViewModel.swift; sourceTree = "<group>"; };
+		9B9DA3B02EC16F46006BB3C1 /* SignupFormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignupFormView.swift; sourceTree = "<group>"; };
+		9B9DA3B42EC16F8C006BB3C1 /* CustomInputField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomInputField.swift; sourceTree = "<group>"; };
+		9B9DA3BB2EC173BD006BB3C1 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
+		9B9DA4532EC2D04D006BB3C1 /* SignupHeroHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignupHeroHeader.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -226,6 +234,7 @@
 				9B2E90632EBC4B0F00D76311 /* Resources */,
 				9B2E8FA22EBA562200D76311 /* Assets.xcassets */,
 				9B2E8FA32EBA562200D76311 /* BelDetailingApp.swift */,
+				9B9DA3BB2EC173BD006BB3C1 /* RootView.swift */,
 				9B2E8FA42EBA562200D76311 /* ContentView.swift */,
 				9B2E8FA52EBA562200D76311 /* Info.plist */,
 			);
@@ -431,6 +440,9 @@
 		9B9DA38B2EC1605D006BB3C1 /* Signup */ = {
 			isa = PBXGroup;
 			children = (
+				9B9DA4532EC2D04D006BB3C1 /* SignupHeroHeader.swift */,
+				9B9DA3B42EC16F8C006BB3C1 /* CustomInputField.swift */,
+				9B9DA3B02EC16F46006BB3C1 /* SignupFormView.swift */,
 				9B9DA3942EC160E4006BB3C1 /* SignupViewModel.swift */,
 				9B9DA38E2EC16069006BB3C1 /* SignupRoleSelectionView.swift */,
 			);
@@ -618,6 +630,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				9B2E90DB2EBD60A600D76311 /* ServiceCategory.swift in Sources */,
+				9B9DA3B22EC16F50006BB3C1 /* SignupFormView.swift in Sources */,
 				9B9DA2F52EBF7726006BB3C1 /* ButtonsStyles.swift in Sources */,
 				9B9DA2D02EBED531006BB3C1 /* OfferFilterSheet.swift in Sources */,
 				9B9DA3962EC160FB006BB3C1 /* SignupViewModel.swift in Sources */,
@@ -637,6 +650,7 @@
 				9B9DA23F2EBEADFF006BB3C1 /* StorageManager.swift in Sources */,
 				9B9DA2702EBEC09C006BB3C1 /* HomeViewModel.swift in Sources */,
 				9B2E91052EBD7E4B00D76311 /* DetailerStats.swift in Sources */,
+				9B9DA3BD2EC173C1006BB3C1 /* RootView.swift in Sources */,
 				9B2E8FDD2EBAD30100D76311 /* String+Extension.swift in Sources */,
 				9B9DA2832EBEC0E2006BB3C1 /* OffersView.swift in Sources */,
 				9B2E90E92EBD654600D76311 /* ApplicationOffer.swift in Sources */,
@@ -662,8 +676,10 @@
 				9B9DA2792EBEC0C2006BB3C1 /* SearchView.swift in Sources */,
 				9B2E90852EBCDDFD00D76311 /* Engine.swift in Sources */,
 				9B2E90D62EBD5C9A00D76311 /* Offer.swift in Sources */,
+				9B9DA3B62EC16F9D006BB3C1 /* CustomInputField.swift in Sources */,
 				9B2E8FEA2EBC259C00D76311 /* APIErrors.swift in Sources */,
 				9B9DA2B92EBEC17B006BB3C1 /* OfferCard.swift in Sources */,
+				9B9DA4552EC2D05D006BB3C1 /* SignupHeroHeader.swift in Sources */,
 				9B2E90C92EBCE97B00D76311 /* PaymentIntent.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -74,6 +74,52 @@ struct WelcomeSecondaryButton: ButtonStyle {
       )
       .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
       .shadow(color: .black.opacity(0.05), radius: 3, y: 2)
-      .foregroundStyle(.black) // ✅ la couleur du texte forcée ici
+      .foregroundStyle(.black) 
   }
 }
+
+struct AppleHoverButton: ButtonStyle {
+  var fontSize: CGFloat = 17
+
+  func makeBody(configuration: Configuration) -> some View {
+    configuration.label
+      .font(.system(size: fontSize, weight: .semibold))
+      .frame(maxWidth: .infinity, minHeight: 56)
+      .foregroundColor(configuration.isPressed ? .white : .black)
+      .background(
+        RoundedRectangle(cornerRadius: 16)
+          .stroke(Color.gray.opacity(0.25), lineWidth: 1)
+          .background(
+            RoundedRectangle(cornerRadius: 16)
+              .fill(configuration.isPressed ? Color.black : Color.white)
+          )
+      )
+      .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+      .animation(.easeInOut(duration: 0.15), value: configuration.isPressed)
+  }
+}
+
+struct SeparatorChip: View {
+  let text: String
+
+  var body: some View {
+    HStack(spacing: 12) {
+      Rectangle()
+        .fill(Color.gray.opacity(0.25))
+        .frame(height: 1)
+
+      Text(text.uppercased())
+        .font(.system(size: 13, weight: .medium))
+        .foregroundColor(.gray)
+        .fixedSize() // ✅ garde le texte sur une seule ligne
+        .padding(.horizontal, 8)
+        .background(Color.white)
+
+      Rectangle()
+        .fill(Color.gray.opacity(0.25))
+        .frame(height: 1)
+    }
+    .frame(maxWidth: .infinity)
+  }
+}
+
