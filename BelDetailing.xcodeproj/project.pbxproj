@@ -35,6 +35,16 @@
 		9B2E91052EBD7E4B00D76311 /* DetailerStats.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B2E91032EBD7E4800D76311 /* DetailerStats.swift */; };
 		9B2E91092EBD802F00D76311 /* Service.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B2E91072EBD802A00D76311 /* Service.swift */; };
 		9B2E910D2EBD818C00D76311 /* Review.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B2E910B2EBD818900D76311 /* Review.swift */; };
+		9B306B522EC42303003EB87F /* InfoPlist.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 9B306B512EC42303003EB87F /* InfoPlist.xcstrings */; };
+		9B306B5F2EC4B29C003EB87F /* DashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B306B5D2EC4B296003EB87F /* DashboardView.swift */; };
+		9B306B672EC4B9A4003EB87F /* MainTabFixedBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B306B652EC4B99A003EB87F /* MainTabFixedBar.swift */; };
+		9B306BB02EC4CDF1003EB87F /* HomeHeroSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B306BAE2EC4CDEA003EB87F /* HomeHeroSection.swift */; };
+		9B306BB42EC4CE04003EB87F /* HomeFiltersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B306BB22EC4CDF5003EB87F /* HomeFiltersView.swift */; };
+		9B306BB82EC4CE12003EB87F /* HomeNearbySection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B306BB62EC4CE07003EB87F /* HomeNearbySection.swift */; };
+		9B306BCB2EC5188A003EB87F /* DetailingFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B306BC92EC5187E003EB87F /* DetailingFilter.swift */; };
+		9B306C152EC52AC1003EB87F /* HomeAllProvidersSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B306C132EC52ABE003EB87F /* HomeAllProvidersSection.swift */; };
+		9B306C192EC52B1C003EB87F /* ProviderCardVertical.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B306C172EC52B17003EB87F /* ProviderCardVertical.swift */; };
+		9B306C272EC53AA9003EB87F /* Typography+TextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B306C252EC53AA6003EB87F /* Typography+TextView.swift */; };
 		9B9DA23F2EBEADFF006BB3C1 /* StorageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B9DA23D2EBEADFD006BB3C1 /* StorageManager.swift */; };
 		9B9DA2442EBEAECF006BB3C1 /* UserDefaultsKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B9DA2422EBEAEBF006BB3C1 /* UserDefaultsKeys.swift */; };
 		9B9DA25F2EBEC067006BB3C1 /* MainTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B9DA25D2EBEC064006BB3C1 /* MainTabView.swift */; };
@@ -65,7 +75,10 @@
 		9B9DA3B22EC16F50006BB3C1 /* SignupFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B9DA3B02EC16F46006BB3C1 /* SignupFormView.swift */; };
 		9B9DA3B62EC16F9D006BB3C1 /* CustomInputField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B9DA3B42EC16F8C006BB3C1 /* CustomInputField.swift */; };
 		9B9DA3BD2EC173C1006BB3C1 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B9DA3BB2EC173BD006BB3C1 /* RootView.swift */; };
-		9B9DA4552EC2D05D006BB3C1 /* SignupHeroHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B9DA4532EC2D04D006BB3C1 /* SignupHeroHeader.swift */; };
+		9B9DA4672EC2E01A006BB3C1 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B9DA4652EC2E012006BB3C1 /* LoginView.swift */; };
+		9B9DA4752EC2E88D006BB3C1 /* EmailLoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B9DA4732EC2E880006BB3C1 /* EmailLoginView.swift */; };
+		9B9DA4AA2EC4181C006BB3C1 /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B9DA4A82EC41816006BB3C1 /* LocationManager.swift */; };
+		9B9DA4AF2EC41AE1006BB3C1 /* ProvidedCardHorizontal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B9DA4AD2EC41AD3006BB3C1 /* ProvidedCardHorizontal.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -117,6 +130,16 @@
 		9B2E91032EBD7E4800D76311 /* DetailerStats.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailerStats.swift; sourceTree = "<group>"; };
 		9B2E91072EBD802A00D76311 /* Service.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Service.swift; sourceTree = "<group>"; };
 		9B2E910B2EBD818900D76311 /* Review.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Review.swift; sourceTree = "<group>"; };
+		9B306B512EC42303003EB87F /* InfoPlist.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = InfoPlist.xcstrings; sourceTree = "<group>"; };
+		9B306B5D2EC4B296003EB87F /* DashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardView.swift; sourceTree = "<group>"; };
+		9B306B652EC4B99A003EB87F /* MainTabFixedBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabFixedBar.swift; sourceTree = "<group>"; };
+		9B306BAE2EC4CDEA003EB87F /* HomeHeroSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeHeroSection.swift; sourceTree = "<group>"; };
+		9B306BB22EC4CDF5003EB87F /* HomeFiltersView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeFiltersView.swift; sourceTree = "<group>"; };
+		9B306BB62EC4CE07003EB87F /* HomeNearbySection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeNearbySection.swift; sourceTree = "<group>"; };
+		9B306BC92EC5187E003EB87F /* DetailingFilter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailingFilter.swift; sourceTree = "<group>"; };
+		9B306C132EC52ABE003EB87F /* HomeAllProvidersSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeAllProvidersSection.swift; sourceTree = "<group>"; };
+		9B306C172EC52B17003EB87F /* ProviderCardVertical.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProviderCardVertical.swift; sourceTree = "<group>"; };
+		9B306C252EC53AA6003EB87F /* Typography+TextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Typography+TextView.swift"; sourceTree = "<group>"; };
 		9B9DA23D2EBEADFD006BB3C1 /* StorageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageManager.swift; sourceTree = "<group>"; };
 		9B9DA2422EBEAEBF006BB3C1 /* UserDefaultsKeys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsKeys.swift; sourceTree = "<group>"; };
 		9B9DA25D2EBEC064006BB3C1 /* MainTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabView.swift; sourceTree = "<group>"; };
@@ -147,7 +170,10 @@
 		9B9DA3B02EC16F46006BB3C1 /* SignupFormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignupFormView.swift; sourceTree = "<group>"; };
 		9B9DA3B42EC16F8C006BB3C1 /* CustomInputField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomInputField.swift; sourceTree = "<group>"; };
 		9B9DA3BB2EC173BD006BB3C1 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
-		9B9DA4532EC2D04D006BB3C1 /* SignupHeroHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignupHeroHeader.swift; sourceTree = "<group>"; };
+		9B9DA4652EC2E012006BB3C1 /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
+		9B9DA4732EC2E880006BB3C1 /* EmailLoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmailLoginView.swift; sourceTree = "<group>"; };
+		9B9DA4A82EC41816006BB3C1 /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
+		9B9DA4AD2EC41AD3006BB3C1 /* ProvidedCardHorizontal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProvidedCardHorizontal.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -237,6 +263,7 @@
 				9B9DA3BB2EC173BD006BB3C1 /* RootView.swift */,
 				9B2E8FA42EBA562200D76311 /* ContentView.swift */,
 				9B2E8FA52EBA562200D76311 /* Info.plist */,
+				9B306B512EC42303003EB87F /* InfoPlist.xcstrings */,
 			);
 			path = BelDetailing;
 			sourceTree = "<group>";
@@ -244,6 +271,7 @@
 		9B2E8FC82EBACDAA00D76311 /* Helper */ = {
 			isa = PBXGroup;
 			children = (
+				9B306C252EC53AA6003EB87F /* Typography+TextView.swift */,
 				9B9DA2F72EBF7A29006BB3C1 /* NotificationsConstants.swift */,
 				9B9DA2F32EBF7719006BB3C1 /* ButtonsStyles.swift */,
 				9B9DA2EE2EBF76FA006BB3C1 /* Array+Extension.swift */,
@@ -328,6 +356,26 @@
 			path = Enums;
 			sourceTree = "<group>";
 		};
+		9B306B5A2EC4B290003EB87F /* Dashboard */ = {
+			isa = PBXGroup;
+			children = (
+				9B306B5D2EC4B296003EB87F /* DashboardView.swift */,
+			);
+			path = Dashboard;
+			sourceTree = "<group>";
+		};
+		9B306BAB2EC4CDDB003EB87F /* HomeComponents */ = {
+			isa = PBXGroup;
+			children = (
+				9B306C132EC52ABE003EB87F /* HomeAllProvidersSection.swift */,
+				9B306BC92EC5187E003EB87F /* DetailingFilter.swift */,
+				9B306BB62EC4CE07003EB87F /* HomeNearbySection.swift */,
+				9B306BB22EC4CDF5003EB87F /* HomeFiltersView.swift */,
+				9B306BAE2EC4CDEA003EB87F /* HomeHeroSection.swift */,
+			);
+			path = HomeComponents;
+			sourceTree = "<group>";
+		};
 		9B9DA2342EBEA81C006BB3C1 /* Storage */ = {
 			isa = PBXGroup;
 			children = (
@@ -340,6 +388,8 @@
 		9B9DA2462EBEBE90006BB3C1 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				9B306B5A2EC4B290003EB87F /* Dashboard */,
+				9B9DA4622EC2E009006BB3C1 /* Login */,
 				9B9DA38B2EC1605D006BB3C1 /* Signup */,
 				9B9DA3342EC04A25006BB3C1 /* Welcome */,
 				9B9DA30D2EC03720006BB3C1 /* Onboarding */,
@@ -365,6 +415,8 @@
 		9B9DA24C2EBEBFF6006BB3C1 /* Home */ = {
 			isa = PBXGroup;
 			children = (
+				9B306BAB2EC4CDDB003EB87F /* HomeComponents */,
+				9B9DA4A82EC41816006BB3C1 /* LocationManager.swift */,
 				9B9DA26E2EBEC097006BB3C1 /* HomeViewModel.swift */,
 				9B9DA2622EBEC07F006BB3C1 /* HomeView.swift */,
 			);
@@ -401,6 +453,9 @@
 		9B9DA25A2EBEC030006BB3C1 /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				9B306C172EC52B17003EB87F /* ProviderCardVertical.swift */,
+				9B306B652EC4B99A003EB87F /* MainTabFixedBar.swift */,
+				9B9DA4AD2EC41AD3006BB3C1 /* ProvidedCardHorizontal.swift */,
 				9B9DA2CE2EBED52A006BB3C1 /* OfferFilterSheet.swift */,
 				9B9DA2A62EBEC141006BB3C1 /* ProviderCard.swift */,
 				9B9DA2A12EBEC136006BB3C1 /* EmptyStateView.swift */,
@@ -440,13 +495,21 @@
 		9B9DA38B2EC1605D006BB3C1 /* Signup */ = {
 			isa = PBXGroup;
 			children = (
-				9B9DA4532EC2D04D006BB3C1 /* SignupHeroHeader.swift */,
 				9B9DA3B42EC16F8C006BB3C1 /* CustomInputField.swift */,
 				9B9DA3B02EC16F46006BB3C1 /* SignupFormView.swift */,
 				9B9DA3942EC160E4006BB3C1 /* SignupViewModel.swift */,
 				9B9DA38E2EC16069006BB3C1 /* SignupRoleSelectionView.swift */,
 			);
 			path = Signup;
+			sourceTree = "<group>";
+		};
+		9B9DA4622EC2E009006BB3C1 /* Login */ = {
+			isa = PBXGroup;
+			children = (
+				9B9DA4732EC2E880006BB3C1 /* EmailLoginView.swift */,
+				9B9DA4652EC2E012006BB3C1 /* LoginView.swift */,
+			);
+			path = Login;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -578,6 +641,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				9B2E8FAC2EBA562200D76311 /* Assets.xcassets in Resources */,
+				9B306B522EC42303003EB87F /* InfoPlist.xcstrings in Resources */,
 				9B2E90642EBC4B0F00D76311 /* Avenir Next LT Pro Bold.otf in Resources */,
 				9B2E90652EBC4B0F00D76311 /* Avenir Next LT Pro It.otf in Resources */,
 				9B2E90662EBC4B0F00D76311 /* Avenir Next LT Pro Regular.otf in Resources */,
@@ -634,28 +698,37 @@
 				9B9DA2F52EBF7726006BB3C1 /* ButtonsStyles.swift in Sources */,
 				9B9DA2D02EBED531006BB3C1 /* OfferFilterSheet.swift in Sources */,
 				9B9DA3962EC160FB006BB3C1 /* SignupViewModel.swift in Sources */,
+				9B9DA4AA2EC4181C006BB3C1 /* LocationManager.swift in Sources */,
+				9B306BB02EC4CDF1003EB87F /* HomeHeroSection.swift in Sources */,
 				9B9DA2F12EBF7703006BB3C1 /* Array+Extension.swift in Sources */,
+				9B9DA4AF2EC41AE1006BB3C1 /* ProvidedCardHorizontal.swift in Sources */,
 				9B9DA2F92EBF7A38006BB3C1 /* NotificationsConstants.swift in Sources */,
 				9B9DA32B2EC03DE8006BB3C1 /* OnboardingPageView.swift in Sources */,
 				9B9DA25F2EBEC067006BB3C1 /* MainTabView.swift in Sources */,
 				9B9DA31A2EC03740006BB3C1 /* OnboardingView.swift .swift in Sources */,
 				9B2E90FA2EBD7AD400D76311 /* Detailer.swift in Sources */,
 				9B9DA29F2EBEC12C006BB3C1 /* LoadingView.swift in Sources */,
+				9B9DA4672EC2E01A006BB3C1 /* LoginView.swift in Sources */,
 				9B2E8FE62EBC258900D76311 /* APIEndpoints.swift in Sources */,
 				9B9DA3912EC1607D006BB3C1 /* SignupRoleSelectionView.swift in Sources */,
 				9B2E90C02EBCE36F00D76311 /* Booking.swift in Sources */,
+				9B9DA4752EC2E88D006BB3C1 /* EmailLoginView.swift in Sources */,
 				9B2E90ED2EBD703200D76311 /* User.swift in Sources */,
+				9B306C192EC52B1C003EB87F /* ProviderCardVertical.swift in Sources */,
 				9B2E910D2EBD818C00D76311 /* Review.swift in Sources */,
 				9B9DA2912EBEC108006BB3C1 /* BookingsViewModel.swift in Sources */,
 				9B9DA23F2EBEADFF006BB3C1 /* StorageManager.swift in Sources */,
 				9B9DA2702EBEC09C006BB3C1 /* HomeViewModel.swift in Sources */,
 				9B2E91052EBD7E4B00D76311 /* DetailerStats.swift in Sources */,
+				9B306BCB2EC5188A003EB87F /* DetailingFilter.swift in Sources */,
 				9B9DA3BD2EC173C1006BB3C1 /* RootView.swift in Sources */,
 				9B2E8FDD2EBAD30100D76311 /* String+Extension.swift in Sources */,
+				9B306BB42EC4CE04003EB87F /* HomeFiltersView.swift in Sources */,
 				9B9DA2832EBEC0E2006BB3C1 /* OffersView.swift in Sources */,
 				9B2E90E92EBD654600D76311 /* ApplicationOffer.swift in Sources */,
 				9B9DA3252EC037A4006BB3C1 /* OnboardingViewModel.swift in Sources */,
 				9B2E90CD2EBD57B200D76311 /* City.swift in Sources */,
+				9B306BB82EC4CE12003EB87F /* HomeNearbySection.swift in Sources */,
 				9B9DA2642EBEC081006BB3C1 /* HomeView.swift in Sources */,
 				9B9DA28C2EBEC0FC006BB3C1 /* BookingsView.swift in Sources */,
 				9B9DA2A82EBEC144006BB3C1 /* ProviderCard.swift in Sources */,
@@ -666,6 +739,7 @@
 				9B9DA2882EBEC0EF006BB3C1 /* OffersViewModel.swift in Sources */,
 				9B9DA3392EC04A3D006BB3C1 /* WelcomeView.swift in Sources */,
 				9B2E8FD92EBACDF700D76311 /* AppStyle.swift in Sources */,
+				9B306C152EC52AC1003EB87F /* HomeAllProvidersSection.swift in Sources */,
 				9B2E8FAE2EBA562200D76311 /* BelDetailingApp.swift in Sources */,
 				9B2E90F12EBD70C500D76311 /* CompanyType.swift in Sources */,
 				9B9DA2962EBEC116006BB3C1 /* ProfileView.swift in Sources */,
@@ -674,12 +748,14 @@
 				9B2E8FAF2EBA562200D76311 /* ContentView.swift in Sources */,
 				9B9DA2A32EBEC138006BB3C1 /* EmptyStateView.swift in Sources */,
 				9B9DA2792EBEC0C2006BB3C1 /* SearchView.swift in Sources */,
+				9B306B5F2EC4B29C003EB87F /* DashboardView.swift in Sources */,
 				9B2E90852EBCDDFD00D76311 /* Engine.swift in Sources */,
+				9B306B672EC4B9A4003EB87F /* MainTabFixedBar.swift in Sources */,
 				9B2E90D62EBD5C9A00D76311 /* Offer.swift in Sources */,
 				9B9DA3B62EC16F9D006BB3C1 /* CustomInputField.swift in Sources */,
 				9B2E8FEA2EBC259C00D76311 /* APIErrors.swift in Sources */,
 				9B9DA2B92EBEC17B006BB3C1 /* OfferCard.swift in Sources */,
-				9B9DA4552EC2D05D006BB3C1 /* SignupHeroHeader.swift in Sources */,
+				9B306C272EC53AA9003EB87F /* Typography+TextView.swift in Sources */,
 				9B2E90C92EBCE97B00D76311 /* PaymentIntent.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -854,6 +930,7 @@
 				INFOPLIST_FILE = BelDetailing/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = BelDetail;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "We use your location to show nearby services.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -895,6 +972,7 @@
 				INFOPLIST_FILE = BelDetailing/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = BelDetail;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "We use your location to show nearby services.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;

@@ -2,8 +2,6 @@
 //  ProviderCard.swift
 //  BelDetailing
 //
-//  Created by Achraf Benali on 08/11/2025.
-//
 
 import SwiftUI
 import RswiftResources
@@ -17,21 +15,23 @@ struct ProviderCard: View {
         Circle()
           .fill(Color(R.color.secondaryOrange))
           .frame(width: 44, height: 44)
-          .overlay(Text(provider.displayName.prefix(1)))
-
+          // ✅ cast en String
+          .overlay(Text(String(provider.displayName.prefix(1))).foregroundColor(.white))
           VStack(alignment: .leading, spacing: 2) {
-            provider.displayName
+            Text(provider.displayName)
               .textView(style: AppStyle.TextStyle.sectionTitle)
 
-            "\(provider.city) • ⭐️ \(String(format: "%.1f", provider.rating)) • \(provider.reviewCount))"
+            Text("\(provider.city) • ⭐️ \(String(format: "%.1f", provider.rating)) • \(provider.reviewCount)")
               .textView(style: AppStyle.TextStyle.description, overrideColor: .secondary)
           }
+
 
         Spacer()
 
         Text(String(format: "€ %.0f+", provider.minPrice))
           .font(.system(size: 14, weight: .semibold))
-          .padding(.horizontal, 10).padding(.vertical, 6)
+          .padding(.horizontal, 10)
+          .padding(.vertical, 6)
           .background(Color(R.color.primaryBlue))
           .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
           .foregroundStyle(.white)
@@ -39,9 +39,11 @@ struct ProviderCard: View {
 
       HStack(spacing: 6) {
         ForEach(provider.serviceCategories.prefix(4), id: \.self) { cat in
-          Text(cat.displayName)
+          // ✅ utilise le titre localisé (réutilise les clés des filtres)
+          Text(cat.localizedTitle)
             .font(.system(size: 11, weight: .medium))
-            .padding(.horizontal, 8).padding(.vertical, 4)
+            .padding(.horizontal, 8)
+            .padding(.vertical, 4)
             .background(Color.gray.opacity(0.12))
             .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
         }

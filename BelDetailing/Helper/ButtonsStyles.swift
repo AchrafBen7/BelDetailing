@@ -123,3 +123,24 @@ struct SeparatorChip: View {
   }
 }
 
+struct AppleHoverButtonStrongerBorder: ButtonStyle {
+  var fontSize: CGFloat = 17
+
+  func makeBody(configuration: Configuration) -> some View {
+    configuration.label
+      .font(.system(size: fontSize, weight: .semibold))
+      .frame(maxWidth: .infinity, minHeight: 56)
+      .foregroundColor(configuration.isPressed ? .white : .black)
+      .background(
+        RoundedRectangle(cornerRadius: 16)
+          .stroke(Color.gray.opacity(configuration.isPressed ? 0.8 : 0.6), lineWidth: 1.8) // 👈 bordure plus visible
+          .background(
+            RoundedRectangle(cornerRadius: 16)
+              .fill(configuration.isPressed ? Color.black : Color.white)
+          )
+      )
+      .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+      .animation(.easeInOut(duration: 0.15), value: configuration.isPressed)
+  }
+}
+

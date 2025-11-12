@@ -4,18 +4,13 @@
 //
 //  Created by Achraf Benali on 10/11/2025.
 //
-//
-//  SignupRoleSelectionView.swift
-//  BelDetailing
-//
-//  Created by Achraf Benali on 10/11/2025.
-//
 
 import SwiftUI
 import RswiftResources
 
-// MARK: - View
+
 struct SignupRoleSelectionView: View {
+  @Environment(\.dismiss) private var dismiss
   @StateObject private var vm: SignupViewModel
   var onContinue: (UserRole) -> Void = { _ in }
 
@@ -25,26 +20,37 @@ struct SignupRoleSelectionView: View {
   }
 
   var body: some View {
-    VStack(alignment: .leading, spacing: 40) {
-      // MARK: - Header
-      VStack(spacing: 10) {
-        Text("BelDetail")
-          .font(.system(size: 40, weight: .bold))
-          .foregroundColor(.black)
+    VStack(alignment: .leading, spacing: 36) {
 
-        Text(R.string.localizable.signupSubtitle())
-          .font(.system(size: 20))
-          .foregroundColor(.gray)
+      // ← Bouton retour (localizable)
+      Button(action: { dismiss() }) {
+        HStack(spacing: 6) {
+          Image(systemName: "chevron.left")
+            .font(.system(size: 17, weight: .semibold))
+          Text(R.string.localizable.commonBack()) // ← garde le localizable générique
+            .font(.system(size: 17))
+        }
+        .foregroundColor(.gray)
       }
-      .frame(maxWidth: .infinity, alignment: .center)
-      .padding(.top, 50)
+      .padding(.top, 8)
+      .padding(.horizontal, 24)
 
-      // MARK: - Question
-      R.string.localizable.signupRoleQuestion()
-        .textView(style: AppStyle.TextStyle.sectionTitle)
-        .padding(.horizontal, 30)
+      // MARK: - Titre + description
+      VStack(alignment: .leading, spacing: 8) {
+        // utilise ton style sectionTitle déjà présent
+        R.string.localizable.signupRoleQuestion()
+          .textView(style: AppStyle.TextStyle.sectionTitle)
 
-      // MARK: - Role Cards
+        Text(R.string.localizable.signupRoleSubtitle()) // ex: "Select the type of user that best matches you."
+          .font(.system(size: 17))
+          .foregroundColor(.gray)
+          .fixedSize(horizontal: false, vertical: true)
+      }
+      .padding(.horizontal, 30)
+      .padding(.top, 10)
+        
+
+      // MARK: - Cartes de rôle
       VStack(spacing: 22) {
         ForEach(UserRole.allCases, id: \.self) { role in
           SignupRoleCard(role: role, isSelected: vm.selectedRole == role)
@@ -53,17 +59,15 @@ struct SignupRoleSelectionView: View {
         }
       }
       .padding(.horizontal, 30)
+      .padding(.top, 10)
 
       Spacer()
 
-      // MARK: - Continue Button
+      // MARK: - Bouton Continuer
       Button {
-        if let selectedRole = vm.selectedRole {
-          onContinue(selectedRole)
-        }
+        if let selectedRole = vm.selectedRole { onContinue(selectedRole) }
       } label: {
-        R.string.localizable.commonContinue()
-          .textView(style: AppStyle.TextStyle.buttonCTA)
+        R.string.localizable.commonContinue().textView(style: .buttonCTA)
       }
       .buttonStyle(WelcomePrimaryButton())
       .disabled(vm.selectedRole == nil)
@@ -71,10 +75,12 @@ struct SignupRoleSelectionView: View {
       .padding(.horizontal, 30)
       .padding(.bottom, 60)
     }
+    .padding(.horizontal, 24)
     .background(Color.white.ignoresSafeArea())
-    .navigationBarBackButtonHidden(false)
+    .navigationBarBackButtonHidden(true)
   }
 }
+
 
 // MARK: - Role Card
 struct SignupRoleCard: View {
@@ -113,7 +119,7 @@ struct SignupRoleCard: View {
     .shadow(color: .black.opacity(0.06), radius: 4, y: 3)
   }
 
-  // MARK: - Text helpers
+  // MARK: - Helpers
   private func icon(for role: UserRole) -> String {
     switch role {
     case .customer: return "person"

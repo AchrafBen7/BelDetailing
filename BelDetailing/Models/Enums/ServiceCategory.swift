@@ -2,35 +2,35 @@
 //  ServiceCategory.swift
 //  BelDetailing
 //
-//  Created by Achraf Benali on 07/11/2025.
-//
 
 import Foundation
 import RswiftResources
 
-/// Catégories statiques de base (fallback + clé backend)
-enum ServiceCategory: String, Codable, CaseIterable, Identifiable {
-    var id: String { rawValue }
-    
-    case carCleaning = "car_cleaning"
-    case carPolishing = "car_polishing"
-    case interiorDetailing = "interior_detailing"
-    case ceramicCoating = "ceramic_coating"
-    case fleetMaintenance = "fleet_maintenance"
-    
-    /// Nom localisé (via Localizable.xcstrings + R.swift)
-    var displayName: String {
-            switch self {
-            case .carCleaning:
-                return R.string.localizable.serviceCategoryCarCleaning()
-            case .carPolishing:
-                return R.string.localizable.serviceCategoryCarPolishing()
-            case .interiorDetailing:
-                return R.string.localizable.serviceCategoryInteriorDetailing()
-            case .ceramicCoating:
-                return R.string.localizable.serviceCategoryCeramicCoating()
-            case .fleetMaintenance:
-                return R.string.localizable.serviceCategoryFleetMaintenance()
-            }
+enum ServiceCategory: String, Codable, CaseIterable, Hashable {
+  case carCleaning
+  case carPolishing
+  case interiorDetailing
+  case exteriorDetailing
+  case ceramicCoating
+  case paintCorrection
+  case headlightRestoration
+  case engineBay
+  case wheelsTires
+  case waxSealant
+
+  /// 🔁 Réutilise les localisables des filtres (mêmes libellés)
+  var localizedTitle: String {
+    switch self {
+    case .carCleaning:          return R.string.localizable.filterCarCleaning()
+    case .carPolishing:         return R.string.localizable.filterPolishing()
+    case .interiorDetailing:    return R.string.localizable.filterInterior()
+    case .exteriorDetailing:    return R.string.localizable.filterExterior()
+    case .ceramicCoating:       return R.string.localizable.filterCeramic()
+    case .paintCorrection:      return R.string.localizable.filterPaintCorrection()
+    case .headlightRestoration: return R.string.localizable.filterHeadlight()
+    case .engineBay:            return R.string.localizable.filterEngineBay()
+    case .wheelsTires:          return R.string.localizable.filterWheelsTires()
+    case .waxSealant:           return R.string.localizable.filterWaxSealant()
     }
+  }
 }

@@ -2,62 +2,81 @@
 //  HomeView.swift
 //  BelDetailing
 //
-//  Created by Achraf Benali on 08/11/2025.
-//
 
 import SwiftUI
 import RswiftResources
+import CoreLocation
 
 struct HomeView: View {
-  @StateObject private var vm: HomeViewModel
-  init(engine: Engine) {
-    _vm = StateObject(wrappedValue: HomeViewModel(engine: engine))
-  }
+    @StateObject private var vm: HomeViewModel
+    @StateObject private var locationManager = LocationManager()
 
-  var body: some View {
-    NavigationView {
+    // ✅ filtre typé (plus de String)
+    @State private var selectedFilter: DetailingFilter = .all
+
+    init(engine: Engine) {
+        _vm = StateObject(wrappedValue: HomeViewModel(engine: engine))
+    }
+
+    // ✅ toutes les options depuis l'enum (localisable via .title)
+    private var filters: [DetailingFilter] { DetailingFilter.allCases }
+
+    var body: some View {
         VStack(spacing: 0) {
-        if vm.isLoading {
-          LoadingView()
-        } else if vm.recommended.isEmpty {
-          EmptyStateView(
-            title: R.string.localizable.homeEmptyTitle(),
-            message: R.string.localizable.homeEmptyMessage()
-          )
-        } else {
-            ScrollView {
-              VStack(alignment: .leading, spacing: 16) {
+            ScrollView(showsIndicators: false) {
+                VStack(alignment: .leading, spacing: 28) {
 
-                // Titel (geen params)
-                R.string.localizable.homeTitle()
-                  .textView(style: AppStyle.TextStyle.title)
+                    // === HERO SECTION ===
+                    HomeHeroSection(
+                        cityName: locationManager.cityName ?? R.string.localizable.defaultCityName(),
+                        heroImageName: R.image.heroMain.name,
+                        title: R.string.localizable.homeHeroTitle(),
+                        subtitle: R.string.localizable.homeHeroSubtitle(),
+                        onLocationTap: {
+                            if locationManager.authorizationStatus == .notDetermined {
+                                locationManager.requestPermission()
+                            }
+                        },
+                        onProfileTap: { /* TODO: nav profile */ }
+                    )
 
-                // Subtitel (met 1 param: city)
-                if let city = vm.cityName {
-                  R.string.localizable.homeCitySubtitle(city)
-                    .textView(style: AppStyle.TextStyle.description)
+                    // === FILTERS ===
+                    HomeFiltersView(
+                        filters: filters,
+                        selected: $selectedFilter
+                    )
+                    .padding(.top, -6)
+
+                    // === À proximité / Nearby ===
+                    HomeNearbySection(
+                        title: R.string.localizable.homeNearbyTitle(),
+                        providers: vm.recommended
+                    )
+
+                    // === TOUS LES PRESTATAIRES ===
+                    HomeAllProvidersSection(
+                        title: R.string.localizable.homeAllProvidersTitle(),
+                        providers: vm.filtered(by: selectedFilter)
+                    )
+                    .padding(.bottom, 90)
+
+                    .padding(.bottom, 90)
                 }
-
-                ForEach(vm.recommended) { provider in
-                  ProviderCard(provider: provider)
-                }
-              }
-              .padding(.horizontal, 16)
-              .padding(.top, 12)
             }
 
-
+            Divider()
+            MainTabFixedBar()
+                .padding(.bottom, 8)
+                .background(Color.white.ignoresSafeArea(edges: .bottom))
         }
-      }
-      .navigationBarTitleDisplayMode(.inline)
+        .ignoresSafeArea(edges: .top)
+        .task {
+            await vm.load()
+            locationManager.requestPermission()
+        }
     }
-    .task { await vm.load() }
-    .alert(vm.errorText ?? "", isPresented: .constant(vm.errorText != nil)) {
-      Button(R.string.localizable.commonOk(), role: .cancel) { vm.errorText = nil }
-    }
-  }
 }
 
 #Preview {
-  HomeView(engine: Engine(mock: true))
+    HomeView(engine: Engine(mock: true))
 }

@@ -5,8 +5,6 @@
 //  Created by Achraf Benali on 07/11/2025.
 //
 
-// Model/User.swift
-
 import Foundation
 
 enum UserRole: String, Codable, CaseIterable { case customer, company, provider }
@@ -17,8 +15,8 @@ struct User: Codable, Identifiable, Hashable {
     let phone: String?
     let role: UserRole
 
-    let vatNumber: String?          // TVA requise si company/provider
-    let isVatValid: Bool?           // résultat de la vérif TVA
+    let vatNumber: String?
+    let isVatValid: Bool?
 
     let createdAt: String
     let updatedAt: String
@@ -28,6 +26,7 @@ struct User: Codable, Identifiable, Hashable {
     let providerProfile: ProviderProfile?
 }
 
+// MARK: - Profiles
 struct CustomerProfile: Codable, Hashable {
     let firstName: String
     let lastName: String
@@ -35,11 +34,9 @@ struct CustomerProfile: Codable, Hashable {
     let preferredCityId: String?
 }
 
-// ⚠️ companyTypeId = identifiant “libre” (ex: "garage", "leasing", …)
-// Le nom affiché est LOCALISÉ via Localizable: "companyType.garage", etc.
 struct CompanyProfile: Codable, Hashable {
     let legalName: String
-    let companyTypeId: String              // pas d'enum figée
+    let companyTypeId: String
     let city: String?
     let postalCode: String?
     let contactName: String?
@@ -53,9 +50,10 @@ struct ProviderProfile: Codable, Hashable {
     let hasMobileService: Bool
     let minPrice: Double?
     let rating: Double?
-    let services: [String]?                // ex: ServiceCategory rawValues
+    let services: [String]?
 }
 
+// MARK: - Sample Data
 extension User {
     static let sampleCustomer = User(
         id: "usr_001",
@@ -74,5 +72,48 @@ extension User {
         ),
         companyProfile: nil,
         providerProfile: nil
+    )
+
+    static let sampleCompany = User(
+        id: "usr_company001",
+        email: "garage@elitecar.be",
+        phone: "+32470123456",
+        role: .company,
+        vatNumber: "BE0456123456",
+        isVatValid: true,
+        createdAt: "2025-11-07T10:00:00Z",
+        updatedAt: "2025-11-07T10:00:00Z",
+        customerProfile: nil,
+        companyProfile: CompanyProfile(
+            legalName: "EliteCar Detailing SRL",
+            companyTypeId: "garage",
+            city: "Bruxelles",
+            postalCode: "1000",
+            contactName: "Yassine"
+        ),
+        providerProfile: nil
+    )
+
+    static let sampleProvider = User(
+        id: "usr_provider001",
+        email: "pro@example.com",
+        phone: "+32470123456",
+        role: .provider,
+        vatNumber: "BE0123456789",
+        isVatValid: true,
+        createdAt: "2025-11-07T10:00:00Z",
+        updatedAt: "2025-11-07T10:00:00Z",
+        customerProfile: nil,
+        companyProfile: nil,
+        providerProfile: ProviderProfile(
+            displayName: "ShinyCar Detail",
+            bio: "Spécialiste du detailing automobile à Bruxelles.",
+            baseCity: "Bruxelles",
+            postalCode: "1000",
+            hasMobileService: true,
+            minPrice: 50,
+            rating: 4.8,
+            services: ["interior", "exterior", "polishing"]
+        )
     )
 }

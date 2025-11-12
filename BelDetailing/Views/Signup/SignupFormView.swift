@@ -4,6 +4,7 @@
 //
 //  Created by Achraf Benali on 10/11/2025.
 //
+
 import SwiftUI
 import RswiftResources
 
@@ -19,37 +20,67 @@ struct SignupFormView: View {
   @State private var vatNumber = ""
   @State private var password = ""
 
-  private let side = CGFloat(24)
-
   var body: some View {
     ScrollView(showsIndicators: false) {
       VStack(alignment: .leading, spacing: 24) {
 
-        // HEADER — aligné à gauche, une seule flèche
-        SignupHeroHeader(onBack: onBack)
-          .padding(.top, 8)
+        // === HEADER ===
+        Button(action: onBack) {
+          HStack(spacing: 6) {
+            Image(systemName: "chevron.left")
+              .font(.system(size: 17, weight: .semibold))
+            Text(R.string.localizable.commonBack())
+              .font(.system(size: 17))
+          }
+          .foregroundColor(.gray)
+          .frame(height: 44, alignment: .leading)
+          .contentShape(Rectangle())
+        }
+        .padding(.top, 8)
 
-        // BOUTON APPLE (particulier uniquement)
+        Text(R.string.localizable.signupCreateAccountTitle())
+          .font(.system(size: 44, weight: .heavy))
+          .foregroundColor(.black)
+          .multilineTextAlignment(.leading)
+
+        Text(R.string.localizable.signupCreateAccountSubtitle())
+          .font(.system(size: 17))
+          .foregroundColor(.gray)
+
+        // === BOUTON APPLE ===
         if role == .customer {
-            // Dans SignupFormView (label du bouton)
-            Button(action: {}) {
-              Label {
-                Text(R.string.localizable.signupContinueApple())
-                  .font(.system(size: 17, weight: .semibold))   // ← était plus grand, on réduit
-                  .baselineOffset(-0.5)                          // ← micro correction verticale
-              } icon: {
-                Image(systemName: "applelogo")
-                  .font(.system(size: 18, weight: .regular))     // icône légèrement > texte
-              }
-              .labelStyle(.titleAndIcon)
+          Button(action: {}) {
+            Label {
+              Text(R.string.localizable.signupContinueApple())
+                .font(.system(size: 17, weight: .semibold))
+                .baselineOffset(-0.5)
+            } icon: {
+              Image(systemName: "applelogo")
+                .font(.system(size: 18, weight: .regular))
             }
-            .buttonStyle(AppleHoverButton(fontSize: 17))          // voir style ci-dessous
+            .labelStyle(.titleAndIcon)
+          }
+          .buttonStyle(AppleHoverButtonStrongerBorder(fontSize: 17)) // 👈 version améliorée
 
-
-          SeparatorChip(text: R.string.localizable.signupOrEmail())
+          // Séparateur centré (sur une seule ligne)
+          HStack(spacing: 12) {
+            Rectangle()
+              .fill(Color.gray.opacity(0.25))
+              .frame(height: 1)
+            Text(R.string.localizable.signupOrEmail().uppercased())
+              .font(.system(size: 13, weight: .medium))
+              .foregroundColor(.gray)
+              .lineLimit(1)
+              .fixedSize() // 👈 empêche de passer sur 2 lignes
+            Rectangle()
+              .fill(Color.gray.opacity(0.25))
+              .frame(height: 1)
+          }
+          .frame(maxWidth: .infinity)
+          .padding(.top, 8)
         }
 
-        // SECTION TITLE
+        // === SECTION TITLE ===
         VStack(alignment: .leading, spacing: 6) {
           Text(R.string.localizable.signupPersonalInfoTitle())
             .font(.system(size: 22, weight: .bold))
@@ -59,7 +90,7 @@ struct SignupFormView: View {
             .foregroundColor(.gray)
         }
 
-        // CHAMPS
+        // === CHAMPS ===
         VStack(spacing: 18) {
           CustomInputField(
             icon: "person",
@@ -100,7 +131,7 @@ struct SignupFormView: View {
           )
         }
 
-        // CTA
+        // === CTA ===
         Button(action: onSubmit) {
           R.string.localizable.signupCreateAccount()
             .textView(style: .buttonCTA)
@@ -110,7 +141,7 @@ struct SignupFormView: View {
         }
         .buttonStyle(.plain)
 
-        // ALREADY HAVE ACCOUNT
+        // === ALREADY HAVE ACCOUNT ===
         HStack(spacing: 6) {
           Text(R.string.localizable.signupAlreadyAccount())
             .font(.system(size: 16))
@@ -124,8 +155,7 @@ struct SignupFormView: View {
         }
         .padding(.bottom, 40)
       }
-      // ← applique la même marge à tout : titre, bouton, champs, etc.
-      .padding(.horizontal, side)
+      .padding(.horizontal, 24)
     }
     .background(Color.white.ignoresSafeArea())
     .navigationBarBackButtonHidden(true)

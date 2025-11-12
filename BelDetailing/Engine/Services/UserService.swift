@@ -1,5 +1,5 @@
 //
-//  serService.swift
+//  UserService.swift
 //  BelDetailing
 //
 //  Created by Achraf Benali on 06/11/2025.
@@ -10,6 +10,7 @@ import Foundation
 // MARK: - Protocol
 protocol UserService {
     // MARK: Auth
+    var currentUser: User? { get set } // ✅ ajouté
     func register(payload: [String: Any]) async -> APIResponse<User>
     func login(email: String, password: String) async -> APIResponse<User>
     func refresh() async -> APIResponse<Bool>
@@ -28,19 +29,29 @@ protocol UserService {
 
 // MARK: - Network Implementation
 final class UserServiceNetwork: UserService {
+    var currentUser: User? // ✅ ajouté
+
     private let networkClient: NetworkClient
     init(networkClient: NetworkClient) { self.networkClient = networkClient }
 
     // MARK: Auth
     func register(payload: [String: Any]) async -> APIResponse<User> {
-        await networkClient.call(endPoint: .register, dict: payload)
+        let response: APIResponse<User> = await networkClient.call(endPoint: .register, dict: payload)
+        if case let .success(user) = response {
+            currentUser = user
+        }
+        return response
     }
 
     func login(email: String, password: String) async -> APIResponse<User> {
-        await networkClient.call(endPoint: .login, dict: [
-            "email": email,
-            "password": password
-        ])
+        let response: APIResponse<User> = await networkClient.call(
+            endPoint: .login,
+            dict: ["email": email, "password": password]
+        )
+        if case let .success(user) = response {
+            currentUser = user
+        }
+        return response
     }
 
     func refresh() async -> APIResponse<Bool> {
@@ -48,18 +59,24 @@ final class UserServiceNetwork: UserService {
     }
 
     func me() async -> APIResponse<User> {
-        await networkClient.call(endPoint: .profile)
+        let response: APIResponse<User> = await networkClient.call(endPoint: .profile)
+        if case let .success(user) = response {
+            currentUser = user
+        }
+        return response
     }
 
     func updateProfile(data: [String: Any]) async -> APIResponse<User> {
-        await networkClient.call(endPoint: .updateProfile, dict: data)
+        let response: APIResponse<User> = await networkClient.call(endPoint: .updateProfile, dict: data)
+        if case let .success(user) = response {
+            currentUser = user
+        }
+        return response
     }
 
     // MARK: TVA Validation
     func validateVAT(_ number: String) async -> APIResponse<Bool> {
-        await networkClient.call(
-            endPoint: .vatValidate(number: number)
-        )
+        await networkClient.call(endPoint: .vatValidate(number: number))
     }
 
     // MARK: Providers Discovery
@@ -80,14 +97,20 @@ final class UserServiceNetwork: UserService {
 
 // MARK: - Mock Implementation
 final class UserServiceMock: MockService, UserService {
+    var currentUser: User? = .sampleProvider // ✅ par défaut prestataire pour voir le dashboard
+
     func register(payload: [String: Any]) async -> APIResponse<User> {
         await randomWait()
-        return .success(User.sampleCustomer)
+        let user = User.sampleCustomer
+        currentUser = user
+        return .success(user)
     }
 
     func login(email: String, password: String) async -> APIResponse<User> {
         await randomWait()
-        return .success(User.sampleCustomer)
+        let user = User.sampleCustomer
+        currentUser = user
+        return .success(user)
     }
 
     func refresh() async -> APIResponse<Bool> {
@@ -97,12 +120,12 @@ final class UserServiceMock: MockService, UserService {
 
     func me() async -> APIResponse<User> {
         await randomWait()
-        return .success(User.sampleCustomer)
+        return .success(currentUser ?? .sampleCustomer)
     }
 
     func updateProfile(data: [String: Any]) async -> APIResponse<User> {
         await randomWait()
-        return .success(User.sampleCustomer)
+        return .success(currentUser ?? .sampleCustomer)
     }
 
     func validateVAT(_ number: String) async -> APIResponse<Bool> {

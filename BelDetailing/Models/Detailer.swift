@@ -64,7 +64,7 @@ extension Detailer {
                 minPrice: 80,
                 hasMobileService: true,
                 logoUrl: "https://cdn.example.com/providers/prov_001_logo.jpg",
-                bannerUrl: "https://cdn.example.com/providers/prov_001_banner.jpg",
+                bannerUrl: "https://res.cloudinary.com/dyigkyptj/image/upload/c_thumb,w_200,g_face/v1762979693/detail3_ovn3ge.jpg",
                 serviceCategories: [.carCleaning, .carPolishing, .interiorDetailing],
                 teamSize: 3,
                 yearsOfExperience: 7
@@ -83,11 +83,70 @@ extension Detailer {
                 minPrice: 60,
                 hasMobileService: false,
                 logoUrl: nil,
-                bannerUrl: nil,
+                bannerUrl: "https://res.cloudinary.com/dyigkyptj/image/upload/e_improve,w_300,h_600,c_thumb,g_auto/v1762979364/detail1_bdupvi.png",
+                serviceCategories: [.carCleaning, .ceramicCoating],
+                teamSize: 1,
+                yearsOfExperience: 4
+            ),
+            Detailer(
+                id: "prov_003",
+                displayName: "AutoClean Expert",
+                companyName: "AutoClean SRL",
+                bio: "Service rapide et professionnel, nettoyage intérieur/extérieur.",
+                city: "Ixelles",
+                postalCode: "1050",
+                lat: 50.833,
+                lng: 4.366,
+                rating: 4.5,
+                reviewCount: 75,
+                minPrice: 60,
+                hasMobileService: false,
+                logoUrl: nil,
+                bannerUrl: "https://res.cloudinary.com/dyigkyptj/image/upload/e_improve,w_300,h_600,c_thumb,g_auto/v1762979364/detail1_bdupvi.png",
+                serviceCategories: [.carCleaning, .ceramicCoating],
+                teamSize: 1,
+                yearsOfExperience: 4
+            ),
+            Detailer(
+                id: "prov_004",
+                displayName: "AutoClean Expert",
+                companyName: "AutoClean SRL",
+                bio: "Service rapide et professionnel, nettoyage intérieur/extérieur.",
+                city: "Ixelles",
+                postalCode: "1050",
+                lat: 50.833,
+                lng: 4.366,
+                rating: 4.5,
+                reviewCount: 75,
+                minPrice: 60,
+                hasMobileService: false,
+                logoUrl: nil,
+                bannerUrl: "https://res.cloudinary.com/dyigkyptj/image/upload/e_improve,w_300,h_600,c_thumb,g_auto/v1762979364/detail1_bdupvi.png",
                 serviceCategories: [.carCleaning, .ceramicCoating],
                 teamSize: 1,
                 yearsOfExperience: 4
             )
         ]
+    }
+}
+
+extension Detailer {
+  /// En attendant la vraie durée depuis l'API
+  var mockDurationText: String { "2–3h" }
+
+  /// En attendant la vraie distance (ne mettre que la valeur, l’unité vient du Localizable)
+  var mockDistanceKmText: String { "2.3" }
+}
+
+// MARK: - URL Helpers
+extension Detailer {
+    var bannerURL: URL? {
+        guard let urlString = bannerUrl else { return nil }
+        return URL(string: urlString)
+    }
+
+    var logoURL: URL? {
+        guard let urlString = logoUrl else { return nil }
+        return URL(string: urlString)
     }
 }

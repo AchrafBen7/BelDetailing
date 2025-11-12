@@ -5,7 +5,7 @@
 //  Created by Achraf Benali on 04/11/2025.
 //// BelDetailingApp.swift
 
-import SwiftUI
+/*import SwiftUI
 @main
 struct BelDetailingApp: App {
   let engine = Engine(mock: true)
@@ -23,5 +23,18 @@ struct BelDetailingApp: App {
       RootView(engine: engine)
     }
   }
-}
+}*/
 
+import SwiftUI
+
+@main
+struct BelDetailingApp: App {
+  // un seul engine mock partagé
+  private let engine = Engine(mock: true)
+
+  var body: some Scene {
+    WindowGroup {
+      HomeView(engine: engine)   // ⬅️ démarre directement sur le Home
+    }
+  }
+}
