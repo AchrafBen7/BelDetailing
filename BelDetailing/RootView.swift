@@ -1,92 +1,79 @@
-//
-//  RootView.swift
-//  BelDetailing
-//
-//
-//  RootView.swift
-//  BelDetailing
-//
-
 import SwiftUI
 
 struct RootView: View {
-  @State private var path: [String] = []
-  let engine: Engine
+    @State private var path: [String] = []
+    let engine: Engine
 
-  var body: some View {
-    NavigationStack(path: $path) {
+    var body: some View {
+        NavigationStack(path: $path) {
+            OnboardingView(onFinish: {
+                path.append("welcome")
+            })
+            .navigationDestination(for: String.self) { route in
+                switch route {
+                case "welcome":
+                    WelcomeView(
+                        onStart: { path.append("signupRole") },
+                        onLogin: { path.append("login") }
+                    )
+                    .navigationBarBackButtonHidden(true)
 
-      // === PAGE D’ACCUEIL : Onboarding ===
-      OnboardingView(onFinish: {
-        path.append("welcome")
-      })
+                case "login":
+                    LoginView(
+                        onBack: { path.removeLast() },
+                        onApple: { print("Apple login") },
+                        onGoogle: { print("Google login") },
+                        onEmail: { path.append("loginEmail") },
+                        onShowTerms: { print("Show terms") },
+                        onShowPrivacy: { print("Show privacy") }
+                    )
+                    .navigationBarBackButtonHidden(true)
 
-      .navigationDestination(for: String.self) { route in
-        switch route {
+                case "loginEmail":
+                    EmailLoginView(
+                        onBack: { path.removeLast() },
+                        onCreateAccount: { path.append("signupRole") }
+                    )
+                    .navigationBarBackButtonHidden(true)
 
-        // === PAGE WELCOME ===
-        case "welcome":
-          WelcomeView(
-            onStart: { path.append("signupRole") },
-            onLogin: { path.append("login") }
-          )
-          .navigationBarBackButtonHidden(true)
-          .toolbar {
-            ToolbarItem(placement: .topBarLeading) { EmptyView() }
-          }
+                case "signupRole":
+                    SignupRoleSelectionView(engine: engine) { selectedRole in
+                        path.append(selectedRole.rawValue)
+                    }
 
-        // === PAGE LOGIN ===
-        case "login":
-          LoginView(
-            onBack: { path.removeLast() },
-            onApple: { print("Apple login") },
-            onGoogle: { print("Google login") },
-            onEmail: { path.append("loginEmail") }, // ← redirection ici
-            onShowTerms: { print("Show terms") },
-            onShowPrivacy: { print("Show privacy") }
-          )
-          .navigationBarBackButtonHidden(true)
+                case UserRole.customer.rawValue:
+                    SignupFormView(
+                        role: .customer,
+                        onBack: { path.removeLast() },
+                        onSubmit: {
+                            // ✅ Quand l’inscription est terminée :
+                            path.append("mainTabs")
+                        }
+                    )
 
-        // === PAGE LOGIN PAR EMAIL ===
-        case "loginEmail":
-          EmailLoginView(
-            onBack: { path.removeLast() },
-            onCreateAccount: { path.append("signupRole") } // ✅ redirection
-          )
-          .navigationBarBackButtonHidden(true)
-        // === PAGE SÉLECTION DE RÔLE ===
-        case "signupRole":
-          SignupRoleSelectionView(engine: engine) { selectedRole in
-            path.append(selectedRole.rawValue)
-          }
+                case UserRole.company.rawValue:
+                    SignupFormView(
+                        role: .company,
+                        onBack: { path.removeLast() },
+                        onSubmit: { path.append("mainTabs") }
+                    )
 
-        // === FORMULAIRES SELON LE RÔLE ===
-        case UserRole.customer.rawValue:
-          SignupFormView(
-            role: .customer,
-            onBack: { path.removeLast() },
-            onSubmit: { print("Register particulier") }
-          )
+                case UserRole.provider.rawValue:
+                    SignupFormView(
+                        role: .provider,
+                        onBack: { path.removeLast() },
+                        onSubmit: { path.append("mainTabs") }
+                    )
 
-        case UserRole.company.rawValue:
-          SignupFormView(
-            role: .company,
-            onBack: { path.removeLast() },
-            onSubmit: { print("Register société") }
-          )
+                // ✅ La route finale : ton app avec les tabs
+                case "mainTabs":
+                    MainTabView(engine: engine)
+                        .navigationBarBackButtonHidden(true)
 
-        case UserRole.provider.rawValue:
-          SignupFormView(
-            role: .provider,
-            onBack: { path.removeLast() },
-            onSubmit: { print("Register prestataire") }
-          )
-
-        // === PAR DÉFAUT ===
-        default:
-          EmptyView()
+                default:
+                    EmptyView()
+                }
+            }
         }
-      }
     }
-  }
 }

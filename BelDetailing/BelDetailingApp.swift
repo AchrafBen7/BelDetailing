@@ -29,12 +29,11 @@ import SwiftUI
 
 @main
 struct BelDetailingApp: App {
-  // un seul engine mock partagé
-  private let engine = Engine(mock: true)
+    let engine = Engine(mock: true)
 
-  var body: some Scene {
-    WindowGroup {
-      HomeView(engine: engine)   // ⬅️ démarre directement sur le Home
+    var body: some Scene {
+        WindowGroup {
+            MainTabView(engine: engine) 
+        }
     }
-  }
 }

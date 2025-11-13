@@ -10,7 +10,6 @@ import Foundation
 final class Engine {
     // MARK: - Properties
     let networkClient: NetworkClient
-    
     // MARK: - Services
     let cityService: CityService
     let userService: UserService
@@ -22,11 +21,9 @@ final class Engine {
     let applicationService: ApplicationService
     let searchService: SearchService
     let mediaService: MediaService
-    
     // MARK: - Init
     init(mock: Bool = false) {
         self.networkClient = NetworkClient(server: .dev)
-        
         if mock {
             // MODE MOCK → utilise les versions locales
             self.cityService = CityServiceMock()
@@ -39,7 +36,6 @@ final class Engine {
             self.applicationService = ApplicationServiceMock()
             self.searchService = SearchServiceMock()
             self.mediaService = MediaServiceMock()
-            
         } else {
             // MODE LIVE → appels API réels
             self.cityService = CityServiceNetwork(networkClient: networkClient)

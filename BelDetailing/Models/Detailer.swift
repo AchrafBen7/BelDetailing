@@ -5,7 +5,6 @@
 //  Created by Achraf Benali on 07/11/2025.
 //
 
-
 import Foundation
 
 struct Detailer: Codable, Identifiable, Hashable {
