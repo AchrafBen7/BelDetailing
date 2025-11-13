@@ -40,7 +40,7 @@ struct MainTabView: View {
       // Barre custom
       CustomTabBar(selection: $selection)
         .padding(.horizontal, 16)
-        .padding(.bottom, 8)
+        .padding(.bottom, -4)
         .ignoresSafeArea(edges: .bottom)
     }
   }

@@ -18,16 +18,12 @@ final class SearchViewModel: ObservableObject {
     @Published var results: [Detailer] = []
     @Published var errorText: String?
     @Published var cities: [City] = []
-    
     private let engine: Engine
-    
     init(engine: Engine) { self.engine = engine }
-    
     func loadCities() async {
         let res = await engine.cityService.cities()
         if case .success(let list) = res { self.cities = list }
     }
-    
     func search() async {
         isLoading = true; defer { isLoading = false }
         let res = await engine.searchService.searchProviders(
@@ -50,4 +46,13 @@ final class SearchViewModel: ObservableObject {
         
     }
     
+}
+
+extension SearchViewModel {
+  func resetFilters() {
+    query = ""
+    city = nil
+    maxPrice = nil
+    atHome = false
+  }
 }

@@ -4,8 +4,6 @@
 //
 //  Created by Achraf Benali on 06/11/2025.
 //
-
-
 import Foundation
 
 /// Classe de base utilisée pour tous les services mockés (CityServiceMock, BookingServiceMock, etc.)

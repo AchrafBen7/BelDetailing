@@ -8,23 +8,28 @@
 import Foundation
 
 // MARK: - Models
+
 struct Booking: Codable, Identifiable, Hashable {
     let id: String
     let providerId: String
     let providerName: String
     let serviceName: String
     let price: Double
-    let date: String        // ISO 8601
-    let startTime: String   // "14:00"
-    let endTime: String     // "15:00"
+    let date: String        // "yyyy-MM-dd"
+    let startTime: String   // "HH:mm"
+    let endTime: String     // "HH:mm"
     let address: String
     let status: BookingStatus
     let paymentStatus: PaymentStatus
-    let paymentIntentId: String?            // 👈 Stripe PaymentIntent
-    let commissionRate: Double?             // 👈 ex: 0.10 (10%)
-    let invoiceSent: Bool?                  // 👈 pour le back-office
+    let paymentIntentId: String?
+    let commissionRate: Double?
+    let invoiceSent: Bool?
     let customer: BookingCustomer
+
+    // 👉 NOUVEAU : URL de la bannière du detailer
+    let providerBannerUrl: String?
 }
+
 
 struct BookingCustomer: Codable, Hashable {
     let firstName: String
@@ -64,7 +69,8 @@ extension Booking {
                 paymentIntentId: "pi_12345",
                 commissionRate: 0.10,
                 invoiceSent: false,
-                customer: .sampleAchraf
+                customer: .sampleAchraf,
+                providerBannerUrl:"https://res.cloudinary.com/dyigkyptj/image/upload/e_improve,w_300,h_600,c_thumb,g_auto/v1762979364/detail1_bdupvi.png"
             ),
             Booking(
                 id: "bkg_002",
@@ -81,7 +87,8 @@ extension Booking {
                 paymentIntentId: "pi_98765",
                 commissionRate: 0.10,
                 invoiceSent: true,
-                customer: .sampleAchraf
+                customer: .sampleAchraf,
+                providerBannerUrl:"https://res.cloudinary.com/dyigkyptj/image/upload/e_improve,w_300,h_600,c_thumb,g_auto/v1762979364/detail1_bdupvi.png"
             ),
             Booking(
                 id: "bkg_003",
@@ -98,7 +105,8 @@ extension Booking {
                 paymentIntentId: "pi_22222",
                 commissionRate: 0.10,
                 invoiceSent: true,
-                customer: .sampleAchraf
+                customer: .sampleAchraf,
+                providerBannerUrl:"https://res.cloudinary.com/dyigkyptj/image/upload/e_improve,w_300,h_600,c_thumb,g_auto/v1762979364/detail1_bdupvi.png"
             )
         ]
     }
@@ -111,4 +119,10 @@ extension BookingCustomer {
         email: "achraf@example.com",
         phone: "+32470123456"
     )
+}
+extension Booking {
+  /// URL utilisée pour l’image de la carte de réservation
+  var imageURL: String? {
+    providerBannerUrl
+  }
 }

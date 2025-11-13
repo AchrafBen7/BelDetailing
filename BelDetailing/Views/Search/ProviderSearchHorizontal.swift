@@ -12,7 +12,7 @@ struct ProviderSearchHorizontal: View {
   let provider: Detailer
 
   // Ratio plus rectangulaire (≈ 320x260)
-  private let cardSize = CGSize(width: 320, height: 260)
+  private let cardSize = CGSize(width: 260, height: 180)
   private let corner: CGFloat = 20
 
   var body: some View {

@@ -1,89 +1,109 @@
-//
-//  BookingsView.swift
-//  BelDetailing
-//
-//  Created by Achraf Benali on 08/11/2025.
-//
-
 import SwiftUI
 import RswiftResources
-import Combine
 
 struct BookingsView: View {
   @StateObject private var viewModel: BookingsViewModel
+  @State private var selectedFilter: BookingFilter = .all
+  @Namespace private var tabsNS
 
   init(engine: Engine) {
     _viewModel = StateObject(wrappedValue: BookingsViewModel(engine: engine))
   }
 
   var body: some View {
-    NavigationView {
-      Group {
-        if viewModel.isLoading {
-          LoadingView()
-        } else if viewModel.upcoming.isEmpty, viewModel.history.isEmpty {
-          EmptyStateView(
-            title: R.string.localizable.bookingsEmptyTitle(),
-            message: R.string.localizable.bookingsEmptyMessage()
-          )
-        } else {
-          List {
-            if !viewModel.upcoming.isEmpty {
-              Section(R.string.localizable.bookingsUpcoming()) {
-                ForEach(viewModel.upcoming) { booking in
-                  bookingCell(booking)
+    NavigationStack {
+      VStack(alignment: .leading, spacing: 0) {
+
+        // Header
+        HStack {
+          (R.string.localizable.tabBookings() + ".")
+            .textView(style: .heroTitle)
+          Spacer()
+          Image(systemName: "bell")
+            .font(.system(size: 20, weight: .semibold))
+            .overlay(
+              Circle()
+                .fill(Color.red)
+                .frame(width: 8, height: 8)
+                .offset(x: 8, y: -6)
+            )
+        }
+        .padding(.horizontal, 20)
+        .padding(.top, 8)
+
+        // Tabs
+        ScrollView(.horizontal, showsIndicators: false) {
+          HStack(spacing: 20) {
+            ForEach(BookingFilter.allCases, id: \.self) { filter in
+              VStack(spacing: 6) {
+                Text(filter.title)
+                  .font(.system(size: 16, weight: .semibold))
+                  .foregroundColor(selectedFilter == filter ? .black : .gray)
+
+                ZStack {
+                  if selectedFilter == filter {
+                    Capsule()
+                      .fill(Color.black)
+                      .frame(height: 3)
+                      .matchedGeometryEffect(id: "underline", in: tabsNS)
+                  } else {
+                    Capsule()
+                      .fill(Color.clear)
+                      .frame(height: 3)
+                  }
                 }
               }
-            }
-            if !viewModel.history.isEmpty {
-              Section(R.string.localizable.bookingsHistory()) {
-                ForEach(viewModel.history) { booking in
-                  bookingCell(booking)
+              .contentShape(Rectangle())
+              .onTapGesture {
+                withAnimation(.spring(response: 0.28, dampingFraction: 0.9)) {
+                  selectedFilter = filter
                 }
               }
             }
           }
-          .listStyle(.insetGrouped)
+          .padding(.horizontal, 20)
+          .padding(.vertical, 8)
         }
+
+        // Content
+        ScrollView(showsIndicators: false) {
+          LazyVStack(spacing: 20) {
+            ForEach(filteredBookings) { booking in
+              BookingCardView(booking: booking)
+            }
+          }
+          .padding(.horizontal, 16)
+          .padding(.bottom, 24)
+        }
+        .clipped() // sécurité visuelle
       }
-      .navigationTitle(R.string.localizable.tabBookings())
+      .background(Color.white)
+      .toolbar(.hidden, for: .navigationBar)
     }
-    .task { await viewModel.load() }
-    .alert(viewModel.errorText ?? "", isPresented: .constant(viewModel.errorText != nil)) {
-      Button(R.string.localizable.commonOk(), role: .cancel) {
-        viewModel.errorText = nil
-      }
-    }
+    .task { await viewModel.loadIfNeeded() }
   }
 
-  // MARK: - Row
-  private func bookingCell(_ booking: Booking) -> some View {
-    VStack(alignment: .leading, spacing: 6) {
-      "\(booking.providerName) • \(booking.serviceName)"
-        .textView(style: AppStyle.TextStyle.sectionTitle)
-
-      "\(booking.date) • \(booking.startTime)–\(booking.endTime)"
-        .textView(style: AppStyle.TextStyle.description)
-
-      HStack {
-        String(format: "€ %.2f", booking.price)
-          .textView(style: AppStyle.TextStyle.description)
-
-        Spacer()
-
-        Text(booking.status.rawValue.capitalized)
-          .font(.system(size: 12, weight: .semibold))
-          .padding(.horizontal, 10)
-          .padding(.vertical, 4)
-          .background(Color(R.color.secondaryOrange))
-          .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
-          .foregroundStyle(.white)
-      }
+  private var filteredBookings: [Booking] {
+    switch selectedFilter {
+    case .all:       return viewModel.allBookings
+    case .pending:   return viewModel.pending
+    case .upcoming:  return viewModel.upcoming
+    case .ongoing:   return viewModel.ongoing
+    case .completed: return viewModel.completed
     }
-    .padding(.vertical, 6)
   }
 }
 
-#Preview {
-  BookingsView(engine: Engine(mock: true))
+enum BookingFilter: CaseIterable {
+  case all, pending, upcoming, ongoing, completed
+
+  var title: String {
+    switch self {
+    case .all:       return R.string.localizable.filterAll()
+    case .pending:   return R.string.localizable.bookingStatusPending()
+    case .upcoming:  return R.string.localizable.bookingStatusConfirmed()
+    case .ongoing:   return R.string.localizable.bookingStatusDeclined()
+    case .completed: return R.string.localizable.bookingStatusCompleted()
+    }
+  }
 }

@@ -1,8 +1,3 @@
-//
-//  SearchView.swift
-//  BelDetailing
-//
-
 import SwiftUI
 import MapKit
 import RswiftResources
@@ -11,25 +6,30 @@ struct SearchView: View {
   @StateObject private var vm: SearchViewModel
   @FocusState private var isSearchFocused: Bool
   @State private var showFilters = false
+  @State private var topRated = false
+  @State private var debounceTask: Task<Void, Never>?
 
-  // Région défaut: Bruxelles
   @State private var region = MKCoordinateRegion(
-    center: CLLocationCoordinate2D(latitude: 50.8503, longitude: 4.3517),
-    span: MKCoordinateSpan(latitudeDelta: 0.25, longitudeDelta: 0.25)
+    center: .init(latitude: 50.8503, longitude: 4.3517),
+    span: .init(latitudeDelta: 0.25, longitudeDelta: 0.25)
   )
 
   init(engine: Engine) {
     _vm = StateObject(wrappedValue: SearchViewModel(engine: engine))
   }
 
+  private var displayedResults: [Detailer] {
+    topRated ? vm.results.sorted { $0.rating > $1.rating } : vm.results
+  }
+
   var body: some View {
     ZStack(alignment: .top) {
       // === MAP ===
-      Map(coordinateRegion: $region, annotationItems: vm.results) { position in
-        MapAnnotation(coordinate: .init(latitude: position.lat, longitude: position.lng)) {
+      Map(coordinateRegion: $region, annotationItems: displayedResults) { pos in
+        MapAnnotation(coordinate: .init(latitude: pos.lat, longitude: pos.lng)) {
           Button {
             withAnimation(.easeInOut) {
-              region.center = .init(latitude: position.lat, longitude: position.lng)
+              region.center = .init(latitude: pos.lat, longitude: pos.lng)
               region.span = .init(latitudeDelta: 0.07, longitudeDelta: 0.07)
             }
           } label: {
@@ -41,51 +41,71 @@ struct SearchView: View {
       }
       .ignoresSafeArea()
 
-      // === BARRE DE RECHERCHE + FILTRES ===
-      VStack(spacing: 10) {
-        HStack(spacing: 10) {
+      // === HEADER (search + filter + chips) ===
+      VStack(alignment: .leading, spacing: 12) {
+
+        // --- BARRE DE RECHERCHE + BOUTON FILTRE ---
+        HStack(spacing: 12) {
           HStack(spacing: 8) {
             Image(systemName: "magnifyingglass")
-              .font(.system(size: 16, weight: .semibold))
+              .font(.system(size: 17, weight: .regular))
               .foregroundColor(Color(R.color.secondaryText))
+
             TextField(R.string.localizable.searchPlaceholder(), text: $vm.query)
               .textInputAutocapitalization(.never)
               .disableAutocorrection(true)
               .focused($isSearchFocused)
               .onSubmit { Task { await vm.search() } }
+              .onChange(of: vm.query) { _ in
+                debounceTask?.cancel()
+                debounceTask = Task { @MainActor in
+                  try? await Task.sleep(nanoseconds: 350_000_000)
+                  await vm.search()
+                }
+              }
           }
-          .padding(.horizontal, 12)
-          .frame(height: 44)
-          .background(Color.white)
-          .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
-          .overlay(RoundedRectangle(cornerRadius: 14).stroke(Color.gray.opacity(0.25)))
-
-          Button {
-            Task { await vm.search() }
-            isSearchFocused = false
-          } label: {
-            Text(R.string.localizable.searchActionCta())
-          }
-          .buttonStyle(PrimaryButton())
+          .padding(.horizontal, 14)
+          .frame(height: 48)
+          .background(Color.white.opacity(0.9))
+          .clipShape(Capsule())
+          .overlay(
+            Capsule().stroke(Color.black.opacity(0.22), lineWidth: 1) // 👈 plus clair
+          )
+          .shadow(color: .black.opacity(0.08), radius: 2, y: 1) // 👈 ombre douce et discrète
 
           Button { showFilters = true } label: {
             Image(systemName: "slider.horizontal.3")
-              .font(.system(size: 18, weight: .bold))
+              .font(.system(size: 18, weight: .regular))
               .foregroundColor(.black)
-              .frame(width: 44, height: 44)
-              .background(Color.gray.opacity(0.12))
+              .frame(width: 48, height: 48)
+              .background(Color.white.opacity(0.9))
               .clipShape(Circle())
+              .overlay(
+                Circle().stroke(Color.black.opacity(0.22), lineWidth: 1) // 👈 même ton clair
+              )
+              .shadow(color: .black.opacity(0.08), radius: 2, y: 1)
           }
-          .buttonStyle(HighlightButton())
+          .buttonStyle(.plain)
           .accessibilityLabel(R.string.localizable.filterTitle())
         }
         .padding(.horizontal, AppStyle.Padding.small16.rawValue)
-        .padding(.top, 8)
-        .padding(.bottom, 8)
-        .background(
-          VisualEffectBlur(blurStyle: .systemUltraThinMaterialLight)
-            .clipShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
-        )
+        .padding(.top, 10)
+
+        // --- CHIPS ---
+        ScrollView(.horizontal, showsIndicators: false) {
+          HStack(spacing: 12) {
+            Chip(title: R.string.localizable.chipOffers()) { showFilters = true }
+            Chip(title: R.string.localizable.chipPrice()) { showFilters = true }
+            Chip(title: R.string.localizable.filterAtHome(), isOn: vm.atHome) {
+              vm.atHome.toggle()
+              Task { await vm.search() }
+            }
+            Chip(title: R.string.localizable.chipTopRated(), isOn: topRated) {
+              topRated.toggle()
+            }
+          }
+          .padding(.horizontal, AppStyle.Padding.small16.rawValue)
+        }
       }
       .padding(.top, 8)
 
@@ -95,19 +115,26 @@ struct SearchView: View {
 
         if vm.isLoading {
           LoadingView()
-            .padding(.bottom, 160) // éloigne du bas
-        } else if vm.results.isEmpty {
-          EmptyStateView(
-            title: R.string.localizable.searchEmptyTitle(),
-            message: R.string.localizable.searchEmptyMessage()
-          )
-          .padding(.bottom, 160)
-          .padding(.horizontal, AppStyle.Padding.small16.rawValue)
+            .padding(.bottom, 140)
+        } else if displayedResults.isEmpty {
+            EmptyStateView(
+              title: R.string.localizable.searchEmptyTitle(),
+              message: R.string.localizable.searchEmptyMessage(),
+              onRetry: { Task { await vm.search() } },
+              onClear: {
+                vm.resetFilters()
+                // Si tu as un toggle “mieux notés” côté vue :
+                topRated = false
+                Task { await vm.search() }
+              }
+            )
+            .padding(.horizontal, AppStyle.Padding.small16.rawValue)
+            .padding(.bottom, 140)
+
         } else {
-          // ✅ Carrousel horizontal positionné plus haut
           ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: 14) {
-              ForEach(vm.results) { provider in
+              ForEach(displayedResults) { provider in
                 ProviderSearchHorizontal(provider: provider)
                   .onTapGesture {
                     withAnimation(.easeInOut) {
@@ -119,8 +146,7 @@ struct SearchView: View {
             }
             .padding(.horizontal, AppStyle.Padding.small16.rawValue)
           }
-          // ⬆️ Positionné plus haut avec un espacement fixe sous les tabs
-          .padding(.bottom, 160) // distance entre les cards et la tab bar
+          .padding(.bottom, 130)
         }
       }
       .ignoresSafeArea(edges: .bottom)
@@ -147,11 +173,32 @@ struct SearchView: View {
   }
 }
 
-// Helper UIKit Blur
-struct VisualEffectBlur: UIViewRepresentable {
-  var blurStyle: UIBlurEffect.Style
-  func makeUIView(context: Context) -> UIVisualEffectView {
-    UIVisualEffectView(effect: UIBlurEffect(style: blurStyle))
+// MARK: - CHIP COMPONENT
+private struct Chip: View {
+  let title: String
+  var isOn: Bool = false
+  var action: () -> Void
+
+  var body: some View {
+    Button(action: action) {
+      Text(title)
+        .font(.system(size: 15, weight: .regular))
+        .foregroundColor(.black)
+        .padding(.horizontal, 14)
+        .padding(.vertical, 8)
+        .background(Color.white.opacity(0.9))
+        .clipShape(Capsule())
+        .overlay(
+          Capsule().stroke(Color.black.opacity(0.22), lineWidth: 1) // 👈 bordure un peu plus claire
+        )
+        .shadow(color: .black.opacity(0.08), radius: 2, y: 1)
+        .overlay {
+          if isOn {
+            Capsule()
+              .fill(Color.black.opacity(0.08))
+          }
+        }
+    }
+    .buttonStyle(.plain)
   }
-  func updateUIView(_ uiView: UIVisualEffectView, context: Context) {}
 }

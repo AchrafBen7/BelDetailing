@@ -15,7 +15,6 @@ struct HomeHeroSection: View {
     let subtitle: String
     var onLocationTap: () -> Void = {}
     var onProfileTap: () -> Void = {}
-    
     var body: some View {
         GeometryReader { geo in
             ZStack(alignment: .top) {
@@ -44,36 +43,44 @@ struct HomeHeroSection: View {
                     }
                 
                 VStack {
-                    // === TOP BAR ===
+                    // === TOP BAR ===--
                     HStack {
-                        Button(action: onLocationTap) {
-                            Label(cityName, systemImage: "mappin.and.ellipse")
-                                .font(AppStyle.TextStyle.buttonSecondary.font)
-                                .foregroundColor(AppStyle.TextStyle.buttonSecondary.defaultColor)
-                                .padding(.horizontal, AppStyle.Padding.small16.rawValue)
-                                .padding(.vertical, AppStyle.Padding.verySmall8.rawValue)
-                                .background(Color.white)
-                                .clipShape(Capsule())
-                                .shadow(color: .black.opacity(0.1), radius: 3, y: 2)
+                      // Location pill (regular, perfectly centered)
+                      Button(action: onLocationTap) {
+                        HStack(spacing: 8) {
+                          Image(systemName: "mappin.and.ellipse")
+                            .font(.system(size: 16, weight: .regular))
+                            .imageScale(.medium)
+                            .offset(y: 0.5)                // tiny optical fix so it feels level
+                          Text(cityName)
+                            .font(.system(size: 17, weight: .regular))  // <- regular (not bold)
                         }
-                        
-                        Spacer()
-                        
-                        Button(action: onProfileTap) {
-                            Image(systemName: "person.fill")
-                                .font(.system(size: 18, weight: .medium))
-                                .foregroundColor(.white)
-                                .padding(12)
-                                .background(Color.black.opacity(0.7))
-                                .clipShape(Circle())
-                        }
+                        .foregroundColor(.black)
+                        .frame(height: 34)                 // consistent vertical centering
+                        .padding(.horizontal, 14)
+                        .background(Color.white)
+                        .clipShape(Capsule())
+                        .overlay(
+                          Capsule().stroke(Color.black.opacity(0.06), lineWidth: 1)
+                        )
+                        .shadow(color: .black.opacity(0.1), radius: 3, y: 2)
+                      }
+
+                      Spacer()
+
+                      Button(action: onProfileTap) {
+                        Image(systemName: "person.fill")
+                          .font(.system(size: 18, weight: .medium))
+                          .foregroundColor(.white)
+                          .padding(12)
+                          .background(Color.black.opacity(0.7))
+                          .clipShape(Circle())
+                      }
                     }
-                    // ↓ beaucoup plus bas (aligné visuellement comme ta photo)
                     .padding(.horizontal, AppStyle.Padding.small16.rawValue)
                     .padding(.top, geo.safeAreaInsets.top + AppStyle.Padding.big32.rawValue * 2)
-                    
+
                     Spacer()
-                    
                     // === TITLES ===
                     // === TITLES ===
                     VStack(alignment: .leading, spacing: AppStyle.Padding.small16.rawValue) {
@@ -83,7 +90,6 @@ struct HomeHeroSection: View {
                             .multilineTextAlignment(.leading)
                             .shadow(radius: 2)
                             .lineSpacing(4)
-                        
                         Text(subtitle)
                             .font(AppStyle.TextStyle.description.font) // 20
                             .foregroundColor(.white.opacity(0.95))

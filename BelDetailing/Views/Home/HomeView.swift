@@ -15,7 +15,7 @@ struct HomeView: View {
 
     var body: some View {
         ScrollView(showsIndicators: false) {
-            VStack(alignment: .leading, spacing: 28) {
+            VStack(alignment: .leading, spacing: 20) { // ⬅️ spacing général réduit (28 → 20)
 
                 // === HERO SECTION ===
                 HomeHeroSection(
@@ -36,13 +36,15 @@ struct HomeView: View {
                     filters: filters,
                     selected: $selectedFilter
                 )
-                .padding(.top, -6)
+                .padding(.top, -14) // ⬅️ rapproché de la hero
+                .padding(.bottom, -4) // ⬅️ colle un peu plus le “Nearby”
 
                 // === À proximité ===
                 HomeNearbySection(
                     title: R.string.localizable.homeNearbyTitle(),
                     providers: vm.recommended
                 )
+                .padding(.top, -6) // ⬅️ fait remonter “Nearby” visuellement
 
                 // === TOUS LES PRESTATAIRES ===
                 HomeAllProvidersSection(
@@ -52,7 +54,6 @@ struct HomeView: View {
             }
             .padding(.bottom, 20)
         }
-        // ✅ Laisse la TabBar native gérer sa propre safe area
         .ignoresSafeArea(edges: .top)
         .task {
             await vm.load()

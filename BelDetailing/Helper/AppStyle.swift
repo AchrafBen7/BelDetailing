@@ -55,7 +55,6 @@ struct AppStyle {
         }
     }
 }
-
 struct FilterChip: View {
   let title: String
   let isSelected: Bool
@@ -64,26 +63,17 @@ struct FilterChip: View {
   var body: some View {
     Button(action: action) {
       Text(title)
-        .font(AppStyle.TextStyle.chipLabel.font)                 // ⬅️ cohérent avec AppStyle
-        .foregroundColor(isSelected ? .white : Color(R.color.primaryText))
-        .padding(.vertical, AppStyle.Padding.verySmall8.rawValue + 2)
-        .padding(.horizontal, AppStyle.Padding.small16.rawValue + 6)
-        .background(
-          Group {
-            if isSelected {
-              Capsule()
-                .fill(Color.black)
-                .shadow(color: .black.opacity(0.15), radius: 6, y: 2)
-            } else {
-              Capsule()
-                .fill(Color.white)
-                .overlay(
-                  Capsule().stroke(Color.gray.opacity(0.35), lineWidth: 1.2)
-                )
-            }
-          }
+        .font(AppStyle.TextStyle.chipLabel.font)
+        .foregroundColor(isSelected ? .white : .black)
+        .padding(.horizontal, 16)
+        .padding(.vertical, 10)
+        .background(isSelected ? Color.black : Color.white)
+        .clipShape(Capsule())
+        .overlay(
+          Capsule().stroke(Color.black.opacity(0.2), lineWidth: 1)
         )
+        .shadow(color: .black.opacity(0.05), radius: 1, y: 1)
     }
-    .buttonStyle(HighlightButton())
+    .buttonStyle(.plain)
   }
 }
