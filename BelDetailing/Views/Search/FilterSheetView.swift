@@ -16,7 +16,7 @@ struct FilterSheetView: View {
   let cities: [City]
   var onClose: () -> Void
 
-  // slider state interne (value affichée même si maxPrice == nil)
+  // Slider interne (affiche même si maxPrice == nil)
   @State private var priceValue: Double = 150
   private let minPrice: Double = 0
   private let maxPriceCap: Double = 300
@@ -24,12 +24,13 @@ struct FilterSheetView: View {
   var body: some View {
     NavigationStack {
       ScrollView {
-        VStack(alignment: .leading, spacing: 20) {
+        VStack(alignment: .leading, spacing: 28) {
 
-          // Budget
+          // === Section Budget ===
           VStack(alignment: .leading, spacing: 10) {
             Text(R.string.localizable.filterBudgetTitle())
               .font(AppStyle.TextStyle.sectionTitle.font)
+              .foregroundColor(.primary)
 
             HStack {
               Text("€\(Int(minPrice))")
@@ -40,57 +41,80 @@ struct FilterSheetView: View {
             .foregroundColor(Color(R.color.secondaryText))
 
             Slider(value: $priceValue, in: minPrice...maxPriceCap, step: 5)
+              .tint(Color.accentColor)
               .onChange(of: priceValue) { newValue in
                 maxPrice = newValue
               }
+
+            if let maxPrice {
+              Text("≤ €\(Int(maxPrice))")
+                .font(.system(size: 14, weight: .medium))
+                .foregroundColor(.secondary)
+            }
           }
 
-          // Villes
+          // === Section Ville ===
           VStack(alignment: .leading, spacing: 12) {
             Text(R.string.localizable.filterCityTitle())
               .font(AppStyle.TextStyle.sectionTitle.font)
+              .foregroundColor(.primary)
 
             // Grille de chips
             let columns = [GridItem(.adaptive(minimum: 140), spacing: 12)]
             LazyVGrid(columns: columns, spacing: 12) {
-              // "Toutes les villes"
+              // Bouton "Toutes les villes"
               FilterChip(
                 title: R.string.localizable.filterAllCities(),
                 isSelected: selectedCity == nil
-              ) { selectedCity = nil }
+              ) {
+                selectedCity = nil
+              }
 
               ForEach(cities) { city in
                 FilterChip(
                   title: city.name,
                   isSelected: selectedCity == city.name
-                ) { selectedCity = city.name }
+                ) {
+                  selectedCity = city.name
+                }
               }
             }
           }
 
-          // À domicile
-          HStack(spacing: 12) {
-            Image(systemName: "house.fill")
-              .font(.system(size: 18))
-            Text(R.string.localizable.filterAtHome())
-              .font(AppStyle.TextStyle.buttonSecondary.font)
-            Spacer()
-            Toggle("", isOn: $atHome)
-              .labelsHidden()
+          // === Section À domicile ===
+          VStack(alignment: .leading, spacing: 8) {
+            HStack {
+              Image(systemName: "house.fill")
+                .font(.system(size: 18))
+                .foregroundColor(.accentColor)
+              Text(R.string.localizable.filterAtHome())
+                .font(AppStyle.TextStyle.buttonSecondary.font)
+              Spacer()
+              Toggle("", isOn: $atHome)
+                .labelsHidden()
+            }
+            .padding()
+            .background(Color.gray.opacity(0.08))
+            .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
           }
-          .padding()
-          .background(Color.gray.opacity(0.08))
-          .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
+
+          // === Bouton "Appliquer" ===
+          Button(action: { onClose() }) {
+            Text(R.string.localizable.searchActionCta())
+              .frame(maxWidth: .infinity)
+          }
+          .buttonStyle(PrimaryButton())
+          .padding(.top, 12)
         }
         .padding(.horizontal, AppStyle.Padding.small16.rawValue)
-        .padding(.top, AppStyle.Padding.small16.rawValue)
-        .padding(.bottom, AppStyle.Padding.small16.rawValue)
+        .padding(.vertical, AppStyle.Padding.small16.rawValue)
       }
       .navigationTitle(R.string.localizable.filterTitle())
       .navigationBarTitleDisplayMode(.inline)
       .toolbar {
         ToolbarItem(placement: .topBarTrailing) {
           Button(R.string.localizable.close()) { onClose() }
+            .fontWeight(.semibold)
         }
       }
     }

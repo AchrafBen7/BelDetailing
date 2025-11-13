@@ -46,8 +46,8 @@
 		9B306C192EC52B1C003EB87F /* ProviderCardVertical.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B306C172EC52B17003EB87F /* ProviderCardVertical.swift */; };
 		9B306C272EC53AA9003EB87F /* Typography+TextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B306C252EC53AA6003EB87F /* Typography+TextView.swift */; };
 		9B306C3F2EC55F2C003EB87F /* ProviderSearchHorizontal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B306C3D2EC55F1C003EB87F /* ProviderSearchHorizontal.swift */; };
-		9B306C4F2EC5699D003EB87F /* FilterSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B306C4D2EC56992003EB87F /* FilterSheetView.swift */; };
 		9B306C732EC57AD9003EB87F /* CustomTabBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B306C712EC57ACE003EB87F /* CustomTabBar.swift */; };
+		9B306C812EC57F2E003EB87F /* FilterSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B306C7F2EC57F2B003EB87F /* FilterSheetView.swift */; };
 		9B9DA23F2EBEADFF006BB3C1 /* StorageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B9DA23D2EBEADFD006BB3C1 /* StorageManager.swift */; };
 		9B9DA2442EBEAECF006BB3C1 /* UserDefaultsKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B9DA2422EBEAEBF006BB3C1 /* UserDefaultsKeys.swift */; };
 		9B9DA25F2EBEC067006BB3C1 /* MainTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B9DA25D2EBEC064006BB3C1 /* MainTabView.swift */; };
@@ -144,8 +144,8 @@
 		9B306C172EC52B17003EB87F /* ProviderCardVertical.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProviderCardVertical.swift; sourceTree = "<group>"; };
 		9B306C252EC53AA6003EB87F /* Typography+TextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Typography+TextView.swift"; sourceTree = "<group>"; };
 		9B306C3D2EC55F1C003EB87F /* ProviderSearchHorizontal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProviderSearchHorizontal.swift; sourceTree = "<group>"; };
-		9B306C4D2EC56992003EB87F /* FilterSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterSheetView.swift; sourceTree = "<group>"; };
 		9B306C712EC57ACE003EB87F /* CustomTabBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTabBar.swift; sourceTree = "<group>"; };
+		9B306C7F2EC57F2B003EB87F /* FilterSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterSheetView.swift; sourceTree = "<group>"; };
 		9B9DA23D2EBEADFD006BB3C1 /* StorageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageManager.swift; sourceTree = "<group>"; };
 		9B9DA2422EBEAEBF006BB3C1 /* UserDefaultsKeys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsKeys.swift; sourceTree = "<group>"; };
 		9B9DA25D2EBEC064006BB3C1 /* MainTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabView.swift; sourceTree = "<group>"; };
@@ -475,7 +475,7 @@
 		9B9DA2732EBEC0B5006BB3C1 /* Search */ = {
 			isa = PBXGroup;
 			children = (
-				9B306C4D2EC56992003EB87F /* FilterSheetView.swift */,
+				9B306C7F2EC57F2B003EB87F /* FilterSheetView.swift */,
 				9B306C3D2EC55F1C003EB87F /* ProviderSearchHorizontal.swift */,
 				9B9DA27C2EBEC0C6006BB3C1 /* SearchViewModel.swift */,
 				9B9DA2772EBEC0C0006BB3C1 /* SearchView.swift */,
@@ -724,6 +724,7 @@
 				9B9DA4752EC2E88D006BB3C1 /* EmailLoginView.swift in Sources */,
 				9B2E90ED2EBD703200D76311 /* User.swift in Sources */,
 				9B306C192EC52B1C003EB87F /* ProviderCardVertical.swift in Sources */,
+				9B306C812EC57F2E003EB87F /* FilterSheetView.swift in Sources */,
 				9B2E910D2EBD818C00D76311 /* Review.swift in Sources */,
 				9B9DA2912EBEC108006BB3C1 /* BookingsViewModel.swift in Sources */,
 				9B9DA23F2EBEADFF006BB3C1 /* StorageManager.swift in Sources */,
@@ -748,7 +749,6 @@
 				9B9DA2882EBEC0EF006BB3C1 /* OffersViewModel.swift in Sources */,
 				9B9DA3392EC04A3D006BB3C1 /* WelcomeView.swift in Sources */,
 				9B2E8FD92EBACDF700D76311 /* AppStyle.swift in Sources */,
-				9B306C4F2EC5699D003EB87F /* FilterSheetView.swift in Sources */,
 				9B306C152EC52AC1003EB87F /* HomeAllProvidersSection.swift in Sources */,
 				9B306C3F2EC55F2C003EB87F /* ProviderSearchHorizontal.swift in Sources */,
 				9B2E8FAE2EBA562200D76311 /* BelDetailingApp.swift in Sources */,

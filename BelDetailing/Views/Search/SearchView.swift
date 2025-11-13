@@ -10,6 +10,7 @@ import RswiftResources
 struct SearchView: View {
   @StateObject private var vm: SearchViewModel
   @FocusState private var isSearchFocused: Bool
+  @State private var showFilters = false
 
   // Région défaut: Bruxelles
   @State private var region = MKCoordinateRegion(
@@ -17,21 +18,13 @@ struct SearchView: View {
     span: MKCoordinateSpan(latitudeDelta: 0.25, longitudeDelta: 0.25)
   )
 
-  // Draggable sheet
-  @State private var sheetHeight: CGFloat = 220
-  private let minSheetHeight: CGFloat = 140
-  private let maxSheetHeight: CGFloat = 420
-
-  // Filter sheet
-  @State private var showFilters = false
-
   init(engine: Engine) {
     _vm = StateObject(wrappedValue: SearchViewModel(engine: engine))
   }
 
   var body: some View {
     ZStack(alignment: .top) {
-      // MARK: Map plein écran
+      // === MAP ===
       Map(coordinateRegion: $region, annotationItems: vm.results) { position in
         MapAnnotation(coordinate: .init(latitude: position.lat, longitude: position.lng)) {
           Button {
@@ -48,7 +41,7 @@ struct SearchView: View {
       }
       .ignoresSafeArea()
 
-      // MARK: Barre recherche + bouton filtre (overlay top)
+      // === BARRE DE RECHERCHE + FILTRES ===
       VStack(spacing: 10) {
         HStack(spacing: 10) {
           HStack(spacing: 8) {
@@ -59,6 +52,7 @@ struct SearchView: View {
               .textInputAutocapitalization(.never)
               .disableAutocorrection(true)
               .focused($isSearchFocused)
+              .onSubmit { Task { await vm.search() } }
           }
           .padding(.horizontal, 12)
           .frame(height: 44)
@@ -95,74 +89,41 @@ struct SearchView: View {
       }
       .padding(.top, 8)
 
-      // MARK: Sheet de cards (overlay bottom) — fluide & sans voile
-      GeometryReader { proxy in
-        let safeBottom = proxy.safeAreaInsets.bottom
-        let totalHeight = maxSheetHeight + safeBottom
+      // === HORIZONTAL CARDS ===
+      VStack {
+        Spacer()
 
-        VStack(spacing: 0) {
-          // Handle
-          Capsule()
-            .fill(Color.gray.opacity(0.35))
-            .frame(width: 42, height: 5)
-            .padding(.vertical, 8)
-
-          // Contenu
-          if vm.isLoading {
-            LoadingView().padding(.top, 8); Spacer()
-          } else if vm.results.isEmpty {
-            EmptyStateView(
-              title: R.string.localizable.searchEmptyTitle(),
-              message: R.string.localizable.searchEmptyMessage()
-            )
-            .padding(); Spacer()
-          } else {
-            ScrollView(.horizontal, showsIndicators: false) {
-              HStack(spacing: 14) {
-                ForEach(vm.results) { provider in
-                  ProviderSearchHorizontal(provider: provider)
-                    .onTapGesture {
-                      withAnimation(.easeInOut) {
-                        region.center = .init(latitude: provider.lat, longitude: provider.lng)
-                        region.span = .init(latitudeDelta: 0.07, longitudeDelta: 0.07)
-                      }
+        if vm.isLoading {
+          LoadingView()
+            .padding(.bottom, 160) // éloigne du bas
+        } else if vm.results.isEmpty {
+          EmptyStateView(
+            title: R.string.localizable.searchEmptyTitle(),
+            message: R.string.localizable.searchEmptyMessage()
+          )
+          .padding(.bottom, 160)
+          .padding(.horizontal, AppStyle.Padding.small16.rawValue)
+        } else {
+          // ✅ Carrousel horizontal positionné plus haut
+          ScrollView(.horizontal, showsIndicators: false) {
+            HStack(spacing: 14) {
+              ForEach(vm.results) { provider in
+                ProviderSearchHorizontal(provider: provider)
+                  .onTapGesture {
+                    withAnimation(.easeInOut) {
+                      region.center = .init(latitude: provider.lat, longitude: provider.lng)
+                      region.span = .init(latitudeDelta: 0.07, longitudeDelta: 0.07)
                     }
-                }
+                  }
               }
-              .padding(.horizontal, AppStyle.Padding.small16.rawValue)
-              .padding(.vertical, AppStyle.Padding.small16.rawValue)
             }
+            .padding(.horizontal, AppStyle.Padding.small16.rawValue)
           }
+          // ⬆️ Positionné plus haut avec un espacement fixe sous les tabs
+          .padding(.bottom, 160) // distance entre les cards et la tab bar
         }
-        .frame(height: totalHeight, alignment: .top)
-        .frame(maxWidth: .infinity)
-        .background(Color.clear)         // ⬅️ pas de voile/blanc
-        .offset(y: proxy.size.height - sheetHeight - safeBottom)
-        .gesture(
-          DragGesture(minimumDistance: 5, coordinateSpace: .global)
-            .onChanged { value in
-              let newHeight = sheetHeight - value.translation.height
-              sheetHeight = min(max(newHeight, minSheetHeight), maxSheetHeight)
-            }
-            .onEnded { value in
-              // ⬇️ Anim fluide avec “vitesse” (comme Apple Plans)
-              let predicted = value.predictedEndTranslation.height
-              let target: CGFloat
-              if predicted > 150 {
-                target = minSheetHeight
-              } else if predicted < -150 {
-                target = maxSheetHeight
-              } else {
-                let mid = (minSheetHeight + maxSheetHeight) / 2
-                target = sheetHeight < mid ? maxSheetHeight : minSheetHeight
-              }
-              withAnimation(.spring(response: 0.45, dampingFraction: 0.85)) {
-                sheetHeight = target
-              }
-            }
-        )
-        .ignoresSafeArea(edges: .bottom)
       }
+      .ignoresSafeArea(edges: .bottom)
     }
     .task {
       if vm.results.isEmpty { await vm.search() }
@@ -186,7 +147,7 @@ struct SearchView: View {
   }
 }
 
-// Blur helper
+// Helper UIKit Blur
 struct VisualEffectBlur: UIViewRepresentable {
   var blurStyle: UIBlurEffect.Style
   func makeUIView(context: Context) -> UIVisualEffectView {
