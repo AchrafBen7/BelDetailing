@@ -1,72 +1,98 @@
-//
 //  OfferCard.swift
 //  BelDetailing
 //
-//  Created by Achraf Benali on 08/11/2025.
+//  Created by Achraf Benali on 13/11/2025.
 //
 
 import SwiftUI
 import RswiftResources
 
 struct OfferCard: View {
-  let offer: Offer
+    let offer: Offer
 
-  var body: some View {
-    VStack(alignment: .leading, spacing: 10) {
-      HStack {
-        Text(offer.title)
-          "text".textView(style: AppStyle.TextStyle.sectionTitle)
-        Spacer()
-        Text(String(format: "€ %.0f – %.0f", offer.priceMin, offer.priceMax))
-          .font(.system(size: 14, weight: .semibold))
-          .padding(.horizontal, 10)
-          .padding(.vertical, 5)
-          .background(Color(R.color.primaryBlue))
-          .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
-          .foregroundStyle(.white)
-      }
+    var body: some View {
+        VStack(alignment: .leading, spacing: 14) {
 
-        offer.city.textView(
-            style: AppStyle.TextStyle.description,
-            overrideColor: Color.secondary
-        )
+            // 🔹 Titre
+            Text(offer.title)
+                .font(.system(size: 20, weight: .semibold))
+                .foregroundColor(.black)
 
-        HStack(spacing: 6) {
-          ForEach([offer.type.rawValue.capitalized, offer.status.rawValue.capitalized], id: \.self) { tag in
-            Text(tag)
-              .font(.system(size: 11, weight: .medium))
-              .padding(.horizontal, 8)
-              .padding(.vertical, 4)
-              .background(Color.gray.opacity(0.12))
-              .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
-          }
+            // 🔹 Catégorie + type
+            VStack(alignment: .leading, spacing: 4) {
+                Text(offer.category.localizedTitle)
+                    .font(.system(size: 15))
+                    .foregroundColor(.gray)
+
+                Text(offer.type.localizedTitle)
+                    .font(.system(size: 15, weight: .semibold))
+                    .foregroundColor(.black)
+            }
+
+            // 🔹 Infos (ligne type Indeed)
+            HStack(spacing: 14) {
+                Label("\(offer.vehicleCount)", systemImage: "car.fill")
+                    .font(.system(size: 14))
+                    .foregroundColor(.gray)
+
+                Label("€\(Int(offer.priceMin))–\(Int(offer.priceMax))", systemImage: "eurosign.circle")
+                    .font(.system(size: 14))
+                    .foregroundColor(.gray)
+
+                Label(offer.city, systemImage: "mappin.and.ellipse")
+                    .font(.system(size: 14))
+                    .foregroundColor(.gray)
+            }
+
+            // 🔹 Nombre de candidatures
+            Text("\(offer.applications?.count ?? 0) \(R.string.localizable.offerApplicationsLabel())")
+                .font(.system(size: 14))
+                .foregroundColor(.gray)
+
+            // 🔹 Boutons: Détails + Postuler
+            HStack(spacing: 8) {
+                Button {
+                    print("Details tapped")
+                } label: {
+                    Text(R.string.localizable.offerButtonDetails())
+                        .font(.system(size: 16, weight: .semibold))
+                        .foregroundColor(.black)
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 10)
+                        .background(Color.white)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 12)
+                                .stroke(Color.black.opacity(0.25), lineWidth: 1)
+                        )
+                }
+
+                Button {
+                    print("Apply tapped")
+                } label: {
+                    Text(R.string.localizable.offerButtonApply())
+                        .font(.system(size: 16, weight: .semibold))
+                        .foregroundColor(.white)
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 10)
+                        .background(Color.black)
+                        .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+                }
+            }
         }
-
-      Divider().padding(.vertical, 4)
-
-      HStack {
-          Image(systemName: offer.status == .open ? "bolt.fill" : "pause.circle")
-            .foregroundStyle(offer.status == .open ? .green : .gray)
-
-          Text(offer.status.rawValue.capitalized)
-            .font(.system(size: 13, weight: .semibold))
-            .foregroundStyle(offer.status == .open ? .green : .gray)
-
-        Spacer()
-        Text(offer.type.rawValue.capitalized)
-          .font(.system(size: 13))
-          .foregroundStyle(.secondary)
-      }
+        .padding(18)
+        .background(Color.white)
+        .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
+        // ⬇️ Ombre un peu plus forte qu’avant
+        .shadow(color: .black.opacity(0.16), radius: 10, y: 6)
+        .overlay(alignment: .topTrailing) {
+            Text(offer.status.localizedTitle)
+                .font(.system(size: 12, weight: .semibold))
+                .padding(.horizontal, 10)
+                .padding(.vertical, 6)
+                .background(offer.status.badgeBackground)
+                .foregroundColor(.white)
+                .clipShape(Capsule())
+                .padding(10)
+        }
     }
-    .padding(14)
-    .background(Color.white)
-    .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
-    .shadow(color: .black.opacity(0.06), radius: 6, x: 0, y: 3)
-  }
-}
-
-#Preview {
-  OfferCard(offer: Offer.sampleValues.first!)
-    .padding()
-    .background(Color(R.color.mainBackground))
 }

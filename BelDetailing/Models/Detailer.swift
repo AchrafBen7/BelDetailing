@@ -63,7 +63,7 @@ extension Detailer {
                 minPrice: 80,
                 hasMobileService: true,
                 logoUrl: "https://cdn.example.com/providers/prov_001_logo.jpg",
-                bannerUrl: "https://res.cloudinary.com/dyigkyptj/image/upload/c_thumb,w_200,g_face/v1762979693/detail3_ovn3ge.jpg",
+                bannerUrl: "https://res.cloudinary.com/dyigkyptj/image/upload/v1762979544/detail2_bm8svh.jpg",
                 serviceCategories: [.carCleaning, .carPolishing, .interiorDetailing],
                 teamSize: 3,
                 yearsOfExperience: 7

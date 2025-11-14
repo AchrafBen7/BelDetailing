@@ -40,7 +40,10 @@ struct CompanyProfile: Codable, Hashable {
     let city: String?
     let postalCode: String?
     let contactName: String?
+
+    let logoUrl: String?      // ⬅️ NOUVEAU !
 }
+
 
 struct ProviderProfile: Codable, Hashable {
     let displayName: String
@@ -89,7 +92,8 @@ extension User {
             companyTypeId: "garage",
             city: "Bruxelles",
             postalCode: "1000",
-            contactName: "Yassine"
+            contactName: "Yassine",
+            logoUrl: "https://yourcdn.com/logos/elitecar.png"
         ),
         providerProfile: nil
     )

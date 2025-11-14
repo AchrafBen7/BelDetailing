@@ -6,6 +6,7 @@
 //
 import Foundation
 
+
 struct Offer: Codable, Identifiable, Hashable {
     let id: String
     let title: String
@@ -18,19 +19,22 @@ struct Offer: Codable, Identifiable, Hashable {
     let postalCode: String
     let lat: Double?
     let lng: Double?
-
-    // ✅ Nieuw
-    let type: OfferType                     // ponctuelle / récurrente / contrat long terme
-    let attachments: [Attachment]?          // bestanden gelinkt aan de offer (PDF, images, …)
-
+    
+    let type: OfferType
+    let attachments: [Attachment]?
+    
     let status: OfferStatus
     let contractId: String?
     let createdAt: String
     let createdBy: String
-
-    // Optioneel: inline of “lazy” geladen
+    
     let applications: [Application]?
+    
+    // 👇 NOUVEAU : infos visuelles sur la société
+    let companyName: String?
+    let companyLogoUrl: String?
 }
+
 
 enum OfferStatus: String, Codable, CaseIterable {
     case open
@@ -70,7 +74,7 @@ extension Offer {
                 postalCode: "1000",
                 lat: 50.8503,
                 lng: 4.3517,
-                type: .recurring, // ✅
+                type: .recurring,
                 attachments: [
                     Attachment(
                         id: "att_001",
@@ -78,21 +82,46 @@ extension Offer {
                         url: "https://cdn.example.com/briefs/att_001.pdf",
                         mimeType: "application/pdf",
                         sizeBytes: 284_000
-                    ),
-                    Attachment(
-                        id: "att_002",
-                        fileName: "Exemple_finition.jpg",
-                        url: "https://cdn.example.com/images/att_002.jpg",
-                        mimeType: "image/jpeg",
-                        sizeBytes: 512_000
                     )
                 ],
                 status: .open,
                 contractId: "ctr_101",
                 createdAt: "2025-11-07T10:00:00Z",
                 createdBy: "usr_001",
-                applications: Application.sampleValues
-            )
+                applications: Application.sampleValues,
+                companyName: "EliteCar Fleet",
+                companyLogoUrl: "https://auto.photos/120/120" // ex. logo mock
+            ),
+            Offer(
+                id: "off_002",
+                title: "Nettoyage flotte de 50 véhicules",
+                category: .carCleaning,
+                description: "Garage à Bruxelles cherche prestataire pour entretien mensuel d'une flotte de 50 véhicules.",
+                vehicleCount: 50,
+                priceMin: 1000,
+                priceMax: 2500,
+                city: "Bruxelles",
+                postalCode: "1000",
+                lat: 50.8503,
+                lng: 4.3517,
+                type: .recurring,
+                attachments: [
+                    Attachment(
+                        id: "att_001",
+                        fileName: "Brief-technique.pdf",
+                        url: "https://cdn.example.com/briefs/att_001.pdf",
+                        mimeType: "application/pdf",
+                        sizeBytes: 284_000
+                    )
+                ],
+                status: .open,
+                contractId: "ctr_101",
+                createdAt: "2025-11-07T10:00:00Z",
+                createdBy: "usr_001",
+                applications: Application.sampleValues,
+                companyName: "EliteCar Fleet",
+                companyLogoUrl: "https://auto.photos/120/120" // ex. logo mock
+            ),
         ]
     }
 }
