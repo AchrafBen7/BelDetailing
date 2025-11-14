@@ -414,6 +414,13 @@
 			path = images;
 			sourceTree = "<group>";
 		};
+		9B306D912EC78326003EB87F /* BookinsComponents */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = BookinsComponents;
+			sourceTree = "<group>";
+		};
 		9B9DA2342EBEA81C006BB3C1 /* Storage */ = {
 			isa = PBXGroup;
 			children = (
@@ -475,6 +482,7 @@
 		9B9DA2532EBEC00B006BB3C1 /* Bookings */ = {
 			isa = PBXGroup;
 			children = (
+				9B306D912EC78326003EB87F /* BookinsComponents */,
 				9B306CE52EC66DA5003EB87F /* BookingCardView.swift */,
 				9B9DA28F2EBEC106006BB3C1 /* BookingsViewModel.swift */,
 				9B9DA28A2EBEC0FB006BB3C1 /* BookingsView.swift */,

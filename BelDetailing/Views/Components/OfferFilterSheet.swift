@@ -44,7 +44,7 @@ struct OfferFiltersSheet: View {
           }
         }
         ToolbarItem(placement: .cancellationAction) {
-          Button(R.string.localizable.cancel()) {
+          Button(R.string.localizable.bookingCancel()) {
             dismiss()
           }
         }
