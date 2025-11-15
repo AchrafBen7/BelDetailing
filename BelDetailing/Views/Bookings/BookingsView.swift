@@ -5,18 +5,14 @@ struct BookingsView: View {
     @StateObject private var viewModel: BookingsViewModel
     @State private var selectedFilter: BookingFilter = .all
     @Namespace private var tabsNS
-    
     init(engine: Engine) {
         _viewModel = StateObject(wrappedValue: BookingsViewModel(engine: engine))
     }
-    
     var body: some View {
         NavigationStack {
             VStack(alignment: .leading, spacing: 0) {
-                
                 header
                 tabs
-                
                 // ⚡️ LISTE qui active les swipeActions
                 List {
                     ForEach(filteredBookings) { booking in
@@ -42,9 +38,6 @@ struct BookingsView: View {
                             }
                             .tint(.red)
                         }
-
-
-                        
                     }
                 }
                 .listStyle(.plain)  // style moderne iOS
@@ -60,18 +53,14 @@ struct BookingsView: View {
     }
 }
 
-
 // MARK: - Subviews + Helpers
 private extension BookingsView {
-    
     // MARK: HEADER
     var header: some View {
         HStack {
             (R.string.localizable.tabBookings() + ".")
                 .textView(style: .heroTitle)
-            
             Spacer()
-            
             Image(systemName: "bell")
                 .font(.system(size: 20, weight: .semibold))
                 .overlay(
@@ -84,7 +73,6 @@ private extension BookingsView {
         .padding(.horizontal, 20)
         .padding(.top, 8)
     }
-    
     // MARK: TABS
     var tabs: some View {
         ScrollView(.horizontal, showsIndicators: false) {
@@ -94,7 +82,6 @@ private extension BookingsView {
                         Text(filter.title)
                             .font(.system(size: 16, weight: .semibold))
                             .foregroundColor(selectedFilter == filter ? .black : .gray)
-                        
                         ZStack {
                             if selectedFilter == filter {
                                 Capsule()
@@ -120,7 +107,6 @@ private extension BookingsView {
             .padding(.vertical, 8)
         }
     }
-    
     // MARK: FILTERED BOOKINGS
     var filteredBookings: [Booking] {
         switch selectedFilter {
@@ -141,7 +127,6 @@ private extension BookingsView {
 // MARK: - Filter enum
 enum BookingFilter: CaseIterable {
     case all, pending, upcoming, ongoing, completed
-    
     var title: String {
         switch self {
         case .all:       return R.string.localizable.filterAll()

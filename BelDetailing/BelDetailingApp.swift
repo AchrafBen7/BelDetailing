@@ -1,39 +1,20 @@
-//
-//  BelDetailingApp.swift
-//  BelDetailing
-//
-//  Created by Achraf Benali on 04/11/2025.
-//// BelDetailingApp.swift
-
-/*import SwiftUI
-@main
-struct BelDetailingApp: App {
-  let engine = Engine(mock: true)
-
-  init() {
-    #if DEBUG
-    // ⚠️ Efface les UserDefaults à chaque lancement
-    UserDefaults.standard.removePersistentDomain(forName: Bundle.main.bundleIdentifier!)
-    print("🧹 UserDefaults reset – app considérée comme premier lancement")
-    #endif
-  }
-
-  var body: some Scene {
-    WindowGroup {
-      RootView(engine: engine)
-    }
-  }
-}*/
-
 import SwiftUI
 
 @main
 struct BelDetailingApp: App {
     let engine = Engine(mock: true)
 
+    init() {
+        #if DEBUG
+        // Als je echt wil dat alles reset bij elke run:
+        // UserDefaults.standard.removePersistentDomain(forName: Bundle.main.bundleIdentifier!)
+        // UserDefaults.standard.synchronize()
+        #endif
+    }
+
     var body: some Scene {
         WindowGroup {
-            MainTabView(engine: engine) 
+            RootView(engine: engine)
         }
     }
 }

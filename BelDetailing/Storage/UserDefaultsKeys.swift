@@ -16,4 +16,6 @@ enum UserDefaultsKeys: String {
     case cachedOffers
     case cachedProviders
     case cachedBookings
+    case isLoggedIn          // ⬅️ NIEUW
 }
+

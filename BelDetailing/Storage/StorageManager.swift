@@ -71,10 +71,23 @@ final class StorageManager {
     func saveCachedBookings(_ bookings: [Booking]) { save(bookings, forKey: .cachedBookings) }
     func getCachedBookings() -> [Booking] { get([Booking].self, forKey: .cachedBookings) ?? [] }
 
+    // MARK: - Auth / Session
+
+    /// Sauvegarde un flag simple indiquant si l'utilisateur est connecté (même en mock)
+    func setLoggedIn(_ value: Bool) {
+        defaults.set(value, forKey: UserDefaultsKeys.isLoggedIn.rawValue)
+    }
+
+    /// Retourne true si l'utilisateur est considéré comme connecté
+    func isLoggedIn() -> Bool {
+        defaults.bool(forKey: UserDefaultsKeys.isLoggedIn.rawValue)
+    }
+
     // 🔓 Logout / Reset
     func clearSession() {
         remove(.userProfile)
         remove(.authToken)
         remove(.userRole)
+        remove(.isLoggedIn) // ⬅️ important: l'utilisateur n'est plus connecté
     }
 }
