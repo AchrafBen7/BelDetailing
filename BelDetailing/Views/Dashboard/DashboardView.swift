@@ -1,119 +1,142 @@
-//  DashboardView.swift
-//  BelDetailing
-//
-//  Created by Achraf Benali on 12/11/2025.
-//
-
 import SwiftUI
 import RswiftResources
 
-struct DashboardView: View {
-    let engine: Engine
-    @State private var stats: DetailerStats?
-    @State private var isLoading = true
-
+struct DashboardProviderView: View {
+    
+    @StateObject private var viewModel: ProviderDashboardViewModel
+    @State private var showOffers = false
+    
+    init(engine: Engine) {
+        _viewModel = StateObject(wrappedValue: ProviderDashboardViewModel(engine: engine))
+    }
+    
     var body: some View {
-        NavigationView {
-            ScrollView {
-                VStack(spacing: 24) {
-                    header
-
-                    if let stats = stats {
-                        statsGrid(stats)
-                    } else if isLoading {
-                        ProgressView("Chargement des données…")
-                            .padding(.top, 60)
-                    } else {
-                        Text("Impossible de charger les statistiques.")
-                            .foregroundColor(.secondary)
-                            .padding(.top, 40)
+        NavigationStack {
+            ZStack(alignment: .top) {
+                
+                // 🔥 FOND NOIR ABSOLU EN HAUT
+                Color.black
+                    .ignoresSafeArea(edges: .top)
+                
+                VStack(spacing: 0) {
+                    
+                    // 🔥 HEADER COMPLET HORS SCROLL
+                    ProviderDashboardHeaderView(
+                        monthlyEarnings: 3250,
+                        variationPercent: 12,
+                        reservationsCount: 24,
+                        rating: 4.8,
+                        clientsCount: 87,
+                        onViewOffers: { showOffers = true }
+                    )
+                    
+                    // 🔥 CONTENU SCROLLABLE UNIQUEMENT (fond blanc)
+                    ScrollView(showsIndicators: false) {
+                        VStack(spacing: 28) {
+                            filterTabs
+                            createButton
+                            servicesListOrLoader
+                        }
+                        .padding(.top, 12)
                     }
-
-                    Spacer(minLength: 60)
+                    .background(Color(R.color.mainBackground.name))
                 }
-                .padding(.horizontal)
-                .padding(.top, 20)
             }
-            .background(Color(R.color.mainBackground.name))
-            .navigationTitle("Tableau de bord")
-            .navigationBarTitleDisplayMode(.inline)
-            .task { await loadStats() }
-        }
-    }
-
-    // MARK: - Header
-    private var header: some View {
-        VStack(alignment: .leading, spacing: 6) {
-            Text("Bienvenue,")
-                .font(.headline)
-                .foregroundColor(.secondary)
-            Text("Votre activité")
-                .font(.largeTitle.bold())
-                .foregroundColor(Color(R.color.primaryText))
-        }
-        .frame(maxWidth: .infinity, alignment: .leading)
-    }
-
-    // MARK: - Stats Grid
-    private func statsGrid(_ stats: DetailerStats) -> some View {
-        VStack(spacing: 16) {
-            HStack(spacing: 16) {
-                statCard(title: "Réservations", value: "\(stats.totalBookings)", icon: "calendar")
-                statCard(title: "Terminées", value: "\(stats.completedBookings)", icon: "checkmark.circle.fill", color: .green)
-            }
-
-            HStack(spacing: 16) {
-                statCard(title: "Avis", value: "\(stats.totalReviews)", icon: "text.bubble.fill", color: .blue)
-                statCard(title: "Note moyenne", value: String(format: "%.1f ★", stats.ratingAverage), icon: "star.fill", color: .yellow)
-            }
-
-            HStack(spacing: 16) {
-                statCard(title: "Offres actives", value: "\(stats.activeOffers)", icon: "briefcase.fill", color: .orange)
-                statCard(title: "Revenus du mois", value: "€\(Int(stats.revenueMonth))", icon: "eurosign.circle.fill", color: .purple)
+            .navigationDestination(isPresented: $showOffers) {
+                OffersView(engine: viewModel.engine)
             }
         }
-    }
-
-    // MARK: - Stat Card
-    private func statCard(title: String, value: String, icon: String, color: Color = .accentColor) -> some View {
-        VStack(alignment: .leading, spacing: 8) {
-            HStack {
-                Image(systemName: icon)
-                    .foregroundColor(color)
-                    .font(.system(size: 22, weight: .semibold))
-                Spacer()
-                Text(value)
-                    .font(.title3.bold())
-                    .foregroundColor(Color(R.color.primaryText))
-            }
-            Text(title)
-                .font(.subheadline)
-                .foregroundColor(.secondary)
-        }
-        .padding()
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .background(Color.white)
-        .cornerRadius(16)
-        .shadow(color: .black.opacity(0.05), radius: 4, x: 0, y: 2)
-    }
-
-    // MARK: - Data Fetch
-    private func loadStats() async {
-        isLoading = true
-        let response = await engine.detailerService.getStats(id: "provider_001")
-
-        await MainActor.run {
-            switch response {
-            case .success(let stats):
-                self.stats = stats
-            case .failure:
-                self.stats = nil
-            }
-            isLoading = false
-        }
+        .navigationBarBackButtonHidden(true)
+        .toolbar(.hidden, for: .navigationBar)
     }
 }
 
-#Preview {
-    DashboardView(engine: Engine(mock: true))
+
+
+// MARK: - Subviews
+private extension DashboardProviderView {
+    
+    // -----------------
+    // 🔥 TABS
+    // -----------------
+    var filterTabs: some View {
+        HStack(spacing: 14) {
+            filterButton(.offers,   title: R.string.localizable.dashboardTabOffers())
+            filterButton(.calendar, title: R.string.localizable.dashboardTabCalendar())
+            filterButton(.stats,    title: R.string.localizable.dashboardTabStats())
+            filterButton(.reviews,  title: R.string.localizable.dashboardTabReviews())
+        }
+        .padding(.horizontal, 20)
+    }
+    
+    func filterButton(_ tab: ProviderDashboardFilter, title: String) -> some View {
+        Button {
+            viewModel.selectedFilter = tab
+        } label: {
+            Text(title)
+                .font(.system(size: 15, weight: .semibold))
+                .lineLimit(1)                 // ⬅️ empêche le texte de se couper
+                .minimumScaleFactor(0.7)      // ⬅️ réduit légèrement si nécessaire
+                .padding(.horizontal, 20)
+                .padding(.vertical, 10)
+                .background(viewModel.selectedFilter == tab ? .black : .white)
+                .foregroundColor(viewModel.selectedFilter == tab ? .white : .black)
+                .cornerRadius(24)
+                .shadow(color: .black.opacity(viewModel.selectedFilter == tab ? 0.15 : 0),
+                        radius: 6, y: 3)
+
+        }
+    }
+    
+    // -----------------
+    // 🔥 BOUTON CREER SERVICE
+    // -----------------
+    var createButton: some View {
+        HStack {
+            Text(R.string.localizable.dashboardMyServices())
+                .font(.system(size: 22, weight: .semibold))
+                .foregroundColor(Color(R.color.primaryText))
+            Spacer()
+            Button {
+                print("Créer un service")
+            } label: {
+                HStack(spacing: 8) {
+                    Image(systemName: "plus")
+                        .foregroundColor(.white)        // ⬅️ important
+                    Text(R.string.localizable.dashboardCreateService())
+                        .font(.system(size: 17, weight: .semibold))
+                        .foregroundColor(.white)        // ⬅️ important
+                }
+                .padding(.horizontal, 26)
+                .padding(.vertical, 12)
+                .background(Color.black)
+                .cornerRadius(26)
+
+            }
+        }
+        .padding(.horizontal, 20)
+    }
+    
+    // -----------------
+    // 🔥 LISTE SERVICES + LOADER
+    // -----------------
+    var servicesListOrLoader: some View {
+        Group {
+            if viewModel.isLoading {
+                ProgressView()
+                    .padding(.top, 40)
+            } else {
+                VStack(spacing: 16) {
+                    ForEach(viewModel.services) { service in
+                        ProviderServiceCardView(
+                            service: service,
+                            onEdit: { print("Edit \(service.id)") },
+                            onDelete: { viewModel.deleteService(id: service.id) }
+                        )
+                    }
+                }
+                .padding(.horizontal, 20)
+            }
+        }
+    }
 }

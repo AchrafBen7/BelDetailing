@@ -26,6 +26,9 @@ struct AppStyle {
         case description
         case navigationAction
         case navigationTitle
+        case subtitle
+        case caption
+        case infoLabel
         var size: CGFloat {
             switch self {
             case.title: return 37
@@ -37,12 +40,15 @@ struct AppStyle {
             case.description: return 20
             case.navigationAction: return 18
             case.navigationTitle: return 28
+            case .subtitle: return 18           // ➕ NEW
+            case .caption: return 14
+            case .infoLabel: return 16
             }
         }
         var font: Font {
             switch self {
             case.title,.heroTitle, .sectionTitle, .buttonCTA,.buttonSecondary, .navigationAction, .navigationTitle: return Font.custom(R.font.avenirNextLTProBold, size: size)
-            case.description, .chipLabel: return Font.custom(R.font.avenirNextLTProRegular, size: size)
+            case.description, .chipLabel, .subtitle,.caption,.infoLabel: return Font.custom(R.font.avenirNextLTProRegular, size: size)
             }
         }
         var defaultColor: Color {
@@ -50,7 +56,7 @@ struct AppStyle {
             case.title, .sectionTitle,.navigationTitle,.chipLabel, .heroTitle: return Color(R.color.primaryText)
             case.buttonCTA: return Color.white
             case .buttonSecondary:return Color(R.color.primaryText)
-            case.description: return Color(R.color.secondaryText)
+            case.description, .subtitle, .caption, .infoLabel: return Color(R.color.secondaryText)
             case.navigationAction: return Color(R.color.primaryBlue)}
         }
     }
@@ -76,4 +82,12 @@ struct FilterChip: View {
     }
     .buttonStyle(.plain)
   }
+}
+
+extension View {
+    func textView(style: AppStyle.TextStyle, color: Color? = nil) -> some View {
+        self
+            .font(style.font)
+            .foregroundColor(color ?? style.defaultColor)
+    }
 }

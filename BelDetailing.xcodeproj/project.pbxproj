@@ -92,6 +92,9 @@
 		9BC33E392EC7F96A008D44B8 /* ProfileSettingRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BC33E372EC7F95E008D44B8 /* ProfileSettingRow.swift */; };
 		9BC33E3D2EC7F9C8008D44B8 /* UserExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BC33E3B2EC7F9B8008D44B8 /* UserExtension.swift */; };
 		9BC33E5A2EC809B4008D44B8 /* AuthFlowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BC33E582EC809A1008D44B8 /* AuthFlowView.swift */; };
+		9BC33E6F2ECA9BFC008D44B8 /* ProviderDashboardViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BC33E6D2ECA9BF0008D44B8 /* ProviderDashboardViewModel.swift */; };
+		9BC33E742ECA9C46008D44B8 /* ProviderServiceCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BC33E722ECA9C38008D44B8 /* ProviderServiceCardView.swift */; };
+		9BC33E7C2ECA9DDD008D44B8 /* ProviderDashboardHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BC33E7A2ECA9DD9008D44B8 /* ProviderDashboardHeaderView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -200,6 +203,9 @@
 		9BC33E372EC7F95E008D44B8 /* ProfileSettingRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileSettingRow.swift; sourceTree = "<group>"; };
 		9BC33E3B2EC7F9B8008D44B8 /* UserExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserExtension.swift; sourceTree = "<group>"; };
 		9BC33E582EC809A1008D44B8 /* AuthFlowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthFlowView.swift; sourceTree = "<group>"; };
+		9BC33E6D2ECA9BF0008D44B8 /* ProviderDashboardViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProviderDashboardViewModel.swift; sourceTree = "<group>"; };
+		9BC33E722ECA9C38008D44B8 /* ProviderServiceCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProviderServiceCardView.swift; sourceTree = "<group>"; };
+		9BC33E7A2ECA9DD9008D44B8 /* ProviderDashboardHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProviderDashboardHeaderView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -388,6 +394,9 @@
 		9B306B5A2EC4B290003EB87F /* Dashboard */ = {
 			isa = PBXGroup;
 			children = (
+				9BC33E7A2ECA9DD9008D44B8 /* ProviderDashboardHeaderView.swift */,
+				9BC33E722ECA9C38008D44B8 /* ProviderServiceCardView.swift */,
+				9BC33E6D2ECA9BF0008D44B8 /* ProviderDashboardViewModel.swift */,
 				9B306B5D2EC4B296003EB87F /* DashboardView.swift */,
 			);
 			path = Dashboard;
@@ -780,10 +789,12 @@
 				9BC33E342EC7F947008D44B8 /* ProfileSummaryCard.swift in Sources */,
 				9B2E90FA2EBD7AD400D76311 /* Detailer.swift in Sources */,
 				9B9DA29F2EBEC12C006BB3C1 /* LoadingView.swift in Sources */,
+				9BC33E742ECA9C46008D44B8 /* ProviderServiceCardView.swift in Sources */,
 				9B9DA4672EC2E01A006BB3C1 /* LoginView.swift in Sources */,
 				9B2E8FE62EBC258900D76311 /* APIEndpoints.swift in Sources */,
 				9B9DA3912EC1607D006BB3C1 /* SignupRoleSelectionView.swift in Sources */,
 				9B2E90C02EBCE36F00D76311 /* Booking.swift in Sources */,
+				9BC33E6F2ECA9BFC008D44B8 /* ProviderDashboardViewModel.swift in Sources */,
 				9B9DA4752EC2E88D006BB3C1 /* EmailLoginView.swift in Sources */,
 				9BC33E5A2EC809B4008D44B8 /* AuthFlowView.swift in Sources */,
 				9B2E90ED2EBD703200D76311 /* User.swift in Sources */,
@@ -811,6 +822,7 @@
 				9B9DA2442EBEAECF006BB3C1 /* UserDefaultsKeys.swift in Sources */,
 				9B9DA27E2EBEC0D4006BB3C1 /* SearchViewModel.swift in Sources */,
 				9B2E91092EBD802F00D76311 /* Service.swift in Sources */,
+				9BC33E7C2ECA9DDD008D44B8 /* ProviderDashboardHeaderView.swift in Sources */,
 				9B2E8FF42EBC25C800D76311 /* NetworkTypes+Helpers.swift in Sources */,
 				9B9DA2882EBEC0EF006BB3C1 /* OffersViewModel.swift in Sources */,
 				9B9DA3392EC04A3D006BB3C1 /* WelcomeView.swift in Sources */,

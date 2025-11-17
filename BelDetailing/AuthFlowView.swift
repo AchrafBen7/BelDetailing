@@ -18,7 +18,6 @@ struct AuthFlowView: View {
     var body: some View {
         NavigationStack(path: $path) {
 
-            // 🔹 Start altijd met Onboarding
             OnboardingView(onFinish: {
                 hasSeenOnboarding = true
                 path = ["welcome"]
@@ -37,20 +36,20 @@ struct AuthFlowView: View {
                     LoginView(
                         onBack: { path.removeLast() },
                         onApple: {
-                            // Mock Apple login
                             StorageManager.shared.setLoggedIn(true)
                             isLoggedIn = true
+                            path = []
                         },
                         onGoogle: {
-                            // Mock Google login
                             StorageManager.shared.setLoggedIn(true)
                             isLoggedIn = true
+                            path = []
                         },
                         onEmail: {
                             path.append("loginEmail")
                         },
-                        onShowTerms: { print("Show terms") },
-                        onShowPrivacy: { print("Show privacy") }
+                        onShowTerms: { },
+                        onShowPrivacy: { }
                     )
                     .navigationBarBackButtonHidden(true)
 
@@ -73,6 +72,7 @@ struct AuthFlowView: View {
                         onSubmit: {
                             StorageManager.shared.setLoggedIn(true)
                             isLoggedIn = true
+                            path = []
                         }
                     )
 
@@ -83,6 +83,7 @@ struct AuthFlowView: View {
                         onSubmit: {
                             StorageManager.shared.setLoggedIn(true)
                             isLoggedIn = true
+                            path = []
                         }
                     )
 
@@ -93,6 +94,7 @@ struct AuthFlowView: View {
                         onSubmit: {
                             StorageManager.shared.setLoggedIn(true)
                             isLoggedIn = true
+                            path = []
                         }
                     )
 
@@ -100,6 +102,7 @@ struct AuthFlowView: View {
                     EmptyView()
                 }
             }
+            .toolbar(.hidden, for: .navigationBar)   // ⬅️ OBLIGATOIRE
         }
     }
 }
