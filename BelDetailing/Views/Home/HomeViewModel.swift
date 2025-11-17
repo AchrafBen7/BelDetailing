@@ -14,7 +14,7 @@ final class HomeViewModel: ObservableObject {
   @Published var recommended: [Detailer] = []
   @Published var allDetailers: [Detailer] = []
 
-  private let engine: Engine
+  let engine: Engine
 
   init(engine: Engine) {
     self.engine = engine

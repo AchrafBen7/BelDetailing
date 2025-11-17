@@ -96,6 +96,13 @@
 		9BC33E742ECA9C46008D44B8 /* ProviderServiceCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BC33E722ECA9C38008D44B8 /* ProviderServiceCardView.swift */; };
 		9BC33E7C2ECA9DDD008D44B8 /* ProviderDashboardHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BC33E7A2ECA9DD9008D44B8 /* ProviderDashboardHeaderView.swift */; };
 		9BC33EAA2ECABB4E008D44B8 /* HeaderBackgroundShape.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BC33EA82ECABB39008D44B8 /* HeaderBackgroundShape.swift */; };
+		9BC33EC32ECB3698008D44B8 /* ProviderDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BC33EC12ECB368B008D44B8 /* ProviderDetailView.swift */; };
+		9BC33EE92ECB6FBE008D44B8 /* ProviderDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BC33EE72ECB6F9C008D44B8 /* ProviderDetailViewModel.swift */; };
+		9BC33EEE2ECB7007008D44B8 /* ProviderDEtailHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BC33EEC2ECB7000008D44B8 /* ProviderDEtailHeader.swift */; };
+		9BC33EF32ECB7023008D44B8 /* ContactInfoCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BC33EF12ECB701E008D44B8 /* ContactInfoCard.swift */; };
+		9BC33F0B2ECBC82A008D44B8 /* ServiceCardsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BC33F092ECBC823008D44B8 /* ServiceCardsView.swift */; };
+		9BC33F4B2ECBD08C008D44B8 /* DetailerActionButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BC33F492ECBD081008D44B8 /* DetailerActionButton.swift */; };
+		9BC33F5C2ECBDD39008D44B8 /* ReviewCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BC33F5A2ECBDD2D008D44B8 /* ReviewCardView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -208,6 +215,13 @@
 		9BC33E722ECA9C38008D44B8 /* ProviderServiceCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProviderServiceCardView.swift; sourceTree = "<group>"; };
 		9BC33E7A2ECA9DD9008D44B8 /* ProviderDashboardHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProviderDashboardHeaderView.swift; sourceTree = "<group>"; };
 		9BC33EA82ECABB39008D44B8 /* HeaderBackgroundShape.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeaderBackgroundShape.swift; sourceTree = "<group>"; };
+		9BC33EC12ECB368B008D44B8 /* ProviderDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProviderDetailView.swift; sourceTree = "<group>"; };
+		9BC33EE72ECB6F9C008D44B8 /* ProviderDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProviderDetailViewModel.swift; sourceTree = "<group>"; };
+		9BC33EEC2ECB7000008D44B8 /* ProviderDEtailHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProviderDEtailHeader.swift; sourceTree = "<group>"; };
+		9BC33EF12ECB701E008D44B8 /* ContactInfoCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactInfoCard.swift; sourceTree = "<group>"; };
+		9BC33F092ECBC823008D44B8 /* ServiceCardsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceCardsView.swift; sourceTree = "<group>"; };
+		9BC33F492ECBD081008D44B8 /* DetailerActionButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailerActionButton.swift; sourceTree = "<group>"; };
+		9BC33F5A2ECBDD2D008D44B8 /* ReviewCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewCardView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -484,6 +498,7 @@
 		9B9DA24C2EBEBFF6006BB3C1 /* Home */ = {
 			isa = PBXGroup;
 			children = (
+				9BC33EB72ECB3655008D44B8 /* Detail */,
 				9B306BAB2EC4CDDB003EB87F /* HomeComponents */,
 				9B9DA4A82EC41816006BB3C1 /* LocationManager.swift */,
 				9B9DA26E2EBEC097006BB3C1 /* HomeViewModel.swift */,
@@ -601,6 +616,36 @@
 				9BC33EA82ECABB39008D44B8 /* HeaderBackgroundShape.swift */,
 			);
 			path = shapes;
+			sourceTree = "<group>";
+		};
+		9BC33EB72ECB3655008D44B8 /* Detail */ = {
+			isa = PBXGroup;
+			children = (
+				9BC33F572ECBDD23008D44B8 /* Review */,
+				9BC33F462ECBD078008D44B8 /* Components */,
+				9BC33F092ECBC823008D44B8 /* ServiceCardsView.swift */,
+				9BC33EF12ECB701E008D44B8 /* ContactInfoCard.swift */,
+				9BC33EEC2ECB7000008D44B8 /* ProviderDEtailHeader.swift */,
+				9BC33EE72ECB6F9C008D44B8 /* ProviderDetailViewModel.swift */,
+				9BC33EC12ECB368B008D44B8 /* ProviderDetailView.swift */,
+			);
+			path = Detail;
+			sourceTree = "<group>";
+		};
+		9BC33F462ECBD078008D44B8 /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				9BC33F492ECBD081008D44B8 /* DetailerActionButton.swift */,
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
+		9BC33F572ECBDD23008D44B8 /* Review */ = {
+			isa = PBXGroup;
+			children = (
+				9BC33F5A2ECBDD2D008D44B8 /* ReviewCardView.swift */,
+			);
+			path = Review;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -809,12 +854,14 @@
 				9BC33E6F2ECA9BFC008D44B8 /* ProviderDashboardViewModel.swift in Sources */,
 				9B9DA4752EC2E88D006BB3C1 /* EmailLoginView.swift in Sources */,
 				9BC33E5A2EC809B4008D44B8 /* AuthFlowView.swift in Sources */,
+				9BC33F4B2ECBD08C008D44B8 /* DetailerActionButton.swift in Sources */,
 				9B2E90ED2EBD703200D76311 /* User.swift in Sources */,
 				9B306C192EC52B1C003EB87F /* ProviderCardVertical.swift in Sources */,
 				9B306C812EC57F2E003EB87F /* FilterSheetView.swift in Sources */,
 				9BC33E392EC7F96A008D44B8 /* ProfileSettingRow.swift in Sources */,
 				9B2E910D2EBD818C00D76311 /* Review.swift in Sources */,
 				9B9DA2912EBEC108006BB3C1 /* BookingsViewModel.swift in Sources */,
+				9BC33EC32ECB3698008D44B8 /* ProviderDetailView.swift in Sources */,
 				9B9DA23F2EBEADFF006BB3C1 /* StorageManager.swift in Sources */,
 				9B9DA2702EBEC09C006BB3C1 /* HomeViewModel.swift in Sources */,
 				9B2E91052EBD7E4B00D76311 /* DetailerStats.swift in Sources */,
@@ -822,14 +869,18 @@
 				9B9DA3BD2EC173C1006BB3C1 /* RootView.swift in Sources */,
 				9B2E8FDD2EBAD30100D76311 /* String+Extension.swift in Sources */,
 				9B306BB42EC4CE04003EB87F /* HomeFiltersView.swift in Sources */,
+				9BC33EF32ECB7023008D44B8 /* ContactInfoCard.swift in Sources */,
 				9B9DA2832EBEC0E2006BB3C1 /* OffersView.swift in Sources */,
 				9B2E90E92EBD654600D76311 /* ApplicationOffer.swift in Sources */,
+				9BC33F0B2ECBC82A008D44B8 /* ServiceCardsView.swift in Sources */,
 				9B9DA3252EC037A4006BB3C1 /* OnboardingViewModel.swift in Sources */,
+				9BC33EE92ECB6FBE008D44B8 /* ProviderDetailViewModel.swift in Sources */,
 				9B2E90CD2EBD57B200D76311 /* City.swift in Sources */,
 				9BC33E3D2EC7F9C8008D44B8 /* UserExtension.swift in Sources */,
 				9B306BB82EC4CE12003EB87F /* HomeNearbySection.swift in Sources */,
 				9B9DA2642EBEC081006BB3C1 /* HomeView.swift in Sources */,
 				9B9DA28C2EBEC0FC006BB3C1 /* BookingsView.swift in Sources */,
+				9BC33EEE2ECB7007008D44B8 /* ProviderDEtailHeader.swift in Sources */,
 				9B9DA2A82EBEC144006BB3C1 /* ProviderCard.swift in Sources */,
 				9B9DA2442EBEAECF006BB3C1 /* UserDefaultsKeys.swift in Sources */,
 				9B9DA27E2EBEC0D4006BB3C1 /* SearchViewModel.swift in Sources */,
@@ -848,6 +899,7 @@
 				9B2E90F12EBD70C500D76311 /* CompanyType.swift in Sources */,
 				9B306CF62EC67465003EB87F /* BookingStatus+UI.swift in Sources */,
 				9B9DA2962EBEC116006BB3C1 /* ProfileView.swift in Sources */,
+				9BC33F5C2ECBDD39008D44B8 /* ReviewCardView.swift in Sources */,
 				9B306CE72EC66DAB003EB87F /* BookingCardView.swift in Sources */,
 				9B9DA29B2EBEC121006BB3C1 /* ProfileViewModel.swift in Sources */,
 				9B2E8FEF2EBC25AC00D76311 /* NetworkClient.swift in Sources */,

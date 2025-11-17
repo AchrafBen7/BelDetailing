@@ -18,7 +18,7 @@ final class SearchViewModel: ObservableObject {
     @Published var results: [Detailer] = []
     @Published var errorText: String?
     @Published var cities: [City] = []
-    private let engine: Engine
+    let engine: Engine
     init(engine: Engine) { self.engine = engine }
     func loadCities() async {
         let res = await engine.cityService.cities()

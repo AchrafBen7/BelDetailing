@@ -33,7 +33,7 @@ struct ProviderDashboardHeaderView: View {
                 Spacer()
                 
                 Button(action: onViewOffers) {
-                    Text("Voir offres") // 🔁 à mettre en Localizable ensuite
+                    Text(R.string.localizable.dashboardMyOffers())// 🔁 à mettre en Localizable ensuite
                         .font(.system(size: 14, weight: .semibold))
                         .foregroundColor(.white)
                         .padding(.horizontal, 16)
