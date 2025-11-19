@@ -30,7 +30,6 @@ struct Booking: Codable, Identifiable, Hashable {
     let providerBannerUrl: String?
 }
 
-
 struct BookingCustomer: Codable, Hashable {
     let firstName: String
     let lastName: String

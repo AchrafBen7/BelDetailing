@@ -67,8 +67,6 @@ struct FilterSheetView: View {
                       maxPrice = newValue
                     }
                 }
-
-
               // === Villes par région ===
               VStack(alignment: .leading, spacing: 20) {
                 Text(R.string.localizable.filterCityTitle())

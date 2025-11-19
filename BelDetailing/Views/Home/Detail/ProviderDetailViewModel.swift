@@ -15,7 +15,6 @@ final class DetailerDetailViewModel: ObservableObject {
     @Published var isLoading = true
     @Published var isLoadingServices = true
     @Published var errorText: String?
-    
     @Published var reviews: [Review] = []
     @Published var isLoadingReviews = false
 

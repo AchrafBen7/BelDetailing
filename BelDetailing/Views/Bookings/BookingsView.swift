@@ -2,57 +2,78 @@ import SwiftUI
 import RswiftResources
 
 struct BookingsView: View {
+    
     @StateObject private var viewModel: BookingsViewModel
     @State private var selectedFilter: BookingFilter = .all
     @Namespace private var tabsNS
+    @State private var showCancelSheet = false
+    @State private var bookingToCancel: Booking? = nil
+
+    
+    // 👉 Pour ouvrir la page de gestion
+    @State private var selectedBooking: Booking? = nil
+    
+    let engine: Engine
+    
     init(engine: Engine) {
         _viewModel = StateObject(wrappedValue: BookingsViewModel(engine: engine))
+        self.engine = engine
     }
+    
     var body: some View {
         NavigationStack {
+            
             VStack(alignment: .leading, spacing: 0) {
+                
                 header
                 tabs
-                // ⚡️ LISTE qui active les swipeActions
+                
+                // --- LISTE ---
                 List {
                     ForEach(filteredBookings) { booking in
+                        
                         BookingCardView(
                             booking: booking,
-                            onTap: {
-                                print("DETAIL booking \(booking.id)")
+                            onManage: {
+                                selectedBooking = booking
+                            },
+                            onCancel: {
+                                bookingToCancel = booking      // 👉 on set la réservation en cours
+                                showCancelSheet = true         // 👉 on ouvre la sheet
                             }
                         )
-                        .listRowSeparator(.hidden)       // on cache le séparateur
-                        .listRowBackground(Color.clear) // fond transparent
-                        .swipeActions(edge: .trailing, allowsFullSwipe: false) {
-                            Button(role: .destructive) {
-                                print("Cancel booking \(booking.id)")
-                                // plus tard : viewModel.cancelBooking(booking.id)
-                            } label: {
-                                Label(
-                                    R.string.localizable.bookingCancel(),
-                                    systemImage: "xmark.circle.fill"
-                                )
-                                .labelStyle(.iconOnly)
-                                .font(.system(size: 26))
-                            }
-                            .tint(.red)
-                        }
+
+                        
+                        .listRowSeparator(.hidden)
+                        .listRowBackground(Color.clear)
                     }
                 }
-                .listStyle(.plain)  // style moderne iOS
+                .listStyle(.plain)
                 .scrollContentBackground(.hidden)
                 .background(Color.white)
             }
             .background(Color.white)
             .toolbar(.hidden, for: .navigationBar)
+            
+            // MARK: - NAVIGATION TO MANAGE VIEW
+            .navigationDestination(item: $selectedBooking) { booking in
+                BookingManageView(
+                    booking: booking,
+                    engine: engine
+                )
+            }
         }
         .task {
             await viewModel.loadIfNeeded()
         }
+        .sheet(isPresented: $showCancelSheet) {
+            if let booking = bookingToCancel {
+                BookingCancelSheetView(booking: booking)
+            }
+        }
+
     }
 }
-
 // MARK: - Subviews + Helpers
 private extension BookingsView {
     // MARK: HEADER

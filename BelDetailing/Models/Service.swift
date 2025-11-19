@@ -7,6 +7,9 @@
 
 import Foundation
 
+
+
+
 /// Een dienst die een detailer aanbiedt (bv. Polissage, Nettoyage intérieur, …)
 struct Service: Codable, Identifiable, Hashable {
     let id: String
@@ -17,13 +20,21 @@ struct Service: Codable, Identifiable, Hashable {
     let durationMinutes: Int      // duur in minuten
     let description: String?
     let isAvailable: Bool
+    let imageUrl: String?
 }
 
 /// Handige formatter helpers (optioneel)
 extension Service {
     var formattedDuration: String { "\(durationMinutes) min" }
     var formattedPrice: String { String(format: "€ %.2f", price) }
+    var serviceImageURL: URL? {
+        guard let imageUrl,
+              let url = URL(string: imageUrl)
+        else { return nil }
+        return url
+    }
 }
+
 
 // MARK: - Samples voor Mock
 extension Service {
@@ -37,7 +48,8 @@ extension Service {
                 price: 120.0,
                 durationMinutes: 90,
                 description: "Restauration de la brillance, micro-rayures atténuées.",
-                isAvailable: true
+                isAvailable: true,
+                imageUrl: "https://res.cloudinary.com/dyigkyptj/image/upload/v1762979544/detail2_bm8svh.jpg"
             ),
             Service(
                 id: "srv_002",
@@ -47,7 +59,8 @@ extension Service {
                 price: 80.0,
                 durationMinutes: 60,
                 description: "Aspiration, plastiques, vitres, traitement tissus.",
-                isAvailable: true
+                isAvailable: true,
+                imageUrl: "https://res.cloudinary.com/dyigkyptj/image/upload/v1762979544/detail2_bm8svh.jpg"
             ),
             Service(
                 id: "srv_003",
@@ -57,7 +70,8 @@ extension Service {
                 price: 50.0,
                 durationMinutes: 45,
                 description: "Prélavage, lavage main, séchage microfibre.",
-                isAvailable: true
+                isAvailable: true,
+                imageUrl: ""
             ),
             Service(
                 id: "srv_004",
@@ -67,8 +81,10 @@ extension Service {
                 price: 350.0,
                 durationMinutes: 240,
                 description: "Protection hydrophobe, brillance longue durée.",
-                isAvailable: false
+                isAvailable: false,
+                imageUrl: "https://res.cloudinary.com/dyigkyptj/image/upload/v1762979544/detail2_bm8svh.jpg"
             )
         ]
     }
 }
+

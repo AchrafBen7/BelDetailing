@@ -19,17 +19,13 @@ struct Offer: Codable, Identifiable, Hashable {
     let postalCode: String
     let lat: Double?
     let lng: Double?
-    
     let type: OfferType
     let attachments: [Attachment]?
-    
     let status: OfferStatus
     let contractId: String?
     let createdAt: String
     let createdBy: String
-    
     let applications: [Application]?
-    
     // 👇 NOUVEAU : infos visuelles sur la société
     let companyName: String?
     let companyLogoUrl: String?

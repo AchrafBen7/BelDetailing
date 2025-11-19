@@ -3,7 +3,8 @@ import RswiftResources
 
 struct BookingCardView: View {
     let booking: Booking
-    var onTap: () -> Void = {}
+    let onManage: () -> Void      // 👉 action "Modifier"
+    let onCancel: () -> Void      // 👉 action "Annuler"
 
     var body: some View {
         VStack(spacing: 0) {
@@ -35,8 +36,8 @@ struct BookingCardView: View {
                     .padding(10)
             }
 
-            // --- Infos (design original préservé) ---
-            VStack(alignment: .leading, spacing: 8) {
+            // --- Infos + actions ---
+            VStack(alignment: .leading, spacing: 10) {
 
                 Text(booking.providerName)
                     .font(.system(size: 18, weight: .bold))
@@ -59,18 +60,39 @@ struct BookingCardView: View {
                         .font(.system(size: 14))
                 }
 
-                Button(action: onTap) {
-                    Text(R.string.localizable.bookingManage())
-                        .font(.system(size: 16, weight: .semibold))
-                        .foregroundColor(.black)
-                        .frame(maxWidth: .infinity)
-                        .padding(.vertical, 10)
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 12)
-                                .stroke(Color.black.opacity(0.3), lineWidth: 1)
-                        )
+                // --- Boutons MODIFIER + ANNULER ---
+                HStack(spacing: 10) {
+
+                    Button(action: onManage) {
+                        Text(R.string.localizable.bookingManage())
+                            .font(.system(size: 15, weight: .semibold))
+                            .foregroundColor(.black)
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical, 10)
+                            .background(Color.white)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 12)
+                                    .stroke(Color.black.opacity(0.3), lineWidth: 1)
+                            )
+                            .cornerRadius(12)
+                    }
+                    .buttonStyle(.plain)
+
+                    Button(action: onCancel) {
+                        Text(R.string.localizable.bookingCancel())
+                            .font(.system(size: 15, weight: .semibold))
+                            .foregroundColor(.red)
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical, 10)
+                            .background(Color.white)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 12)
+                                    .stroke(Color.red.opacity(0.4), lineWidth: 1)
+                            )
+                            .cornerRadius(12)
+                    }
+                    .buttonStyle(.plain)
                 }
-                .buttonStyle(.plain)
                 .padding(.top, 4)
             }
             .padding(16)
@@ -78,8 +100,5 @@ struct BookingCardView: View {
         .background(Color.white)
         .clipShape(RoundedRectangle(cornerRadius: 16))
         .shadow(color: .black.opacity(0.08), radius: 6, y: 4)
-        .onTapGesture {
-            onTap()
-        }
     }
 }

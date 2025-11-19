@@ -4,19 +4,25 @@ struct RootView: View {
     @AppStorage("hasSeenOnboarding") var hasSeenOnboarding: Bool = false
     @AppStorage("isLoggedIn") var isLoggedIn: Bool = false
 
+    @StateObject var tabBarVisibility = TabBarVisibility()
+    @StateObject var mainTabSelection = MainTabSelection()   // ⬅️ AJOUT
+
     let engine: Engine
 
     var body: some View {
         if !isLoggedIn {
-            // 🌍 Wereld 1: onboarding + welcome + login
             AuthFlowView(
                 engine: engine,
                 hasSeenOnboarding: $hasSeenOnboarding,
                 isLoggedIn: $isLoggedIn
             )
+            .environmentObject(tabBarVisibility)
+            .environmentObject(mainTabSelection) // ⬅️ AJOUT
         } else {
-            // 🌍 Wereld 2: echte app met tabs (geen onboarding meer in de tree)
             MainTabView(engine: engine)
+                .environmentObject(tabBarVisibility)
+                .environmentObject(mainTabSelection) // ⬅️ AJOUT
         }
     }
 }
+

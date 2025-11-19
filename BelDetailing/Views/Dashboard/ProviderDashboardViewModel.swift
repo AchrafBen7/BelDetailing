@@ -38,7 +38,6 @@ final class ProviderDashboardViewModel: ObservableObject {
     }
 
     func deleteService(id: String) {
-        //TODO: delete endpoint → pour l’instant mock
         services.removeAll { $0.id == id }
     }
 }

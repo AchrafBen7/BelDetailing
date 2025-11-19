@@ -2,16 +2,15 @@
 //  DetailerDetailView.swift
 //  BelDetailing
 //
-//  Created by Achraf Benali on 17/11/2025.
-//
 
 import SwiftUI
 import RswiftResources
 
 struct DetailerDetailView: View {
-    
     @StateObject private var vm: DetailerDetailViewModel
     @Environment(\.dismiss) private var dismiss
+    @EnvironmentObject var tabBarVisibility: TabBarVisibility
+    @State private var bookingService: Service?   // 👈 Step1 trigger
     
     init(id: String, engine: Engine) {
         _vm = StateObject(wrappedValue: DetailerDetailViewModel(id: id, engine: engine))
@@ -20,9 +19,10 @@ struct DetailerDetailView: View {
     var body: some View {
         ZStack(alignment: .topLeading) {
             
-            // 🔥 SCROLL CONTENT
             ScrollView(showsIndicators: false) {
+                
                 if vm.isLoading {
+                    
                     ProgressView()
                         .padding(.top, 80)
                     
@@ -30,10 +30,8 @@ struct DetailerDetailView: View {
                     
                     VStack(spacing: 24) {
                         
-                        // --- HEADER ---
                         DetailerDetailHeaderView(detailer: detailer)
                         
-                        // --- BIO ---
                         if let bio = detailer.bio {
                             Text(bio)
                                 .font(.system(size: 16))
@@ -41,26 +39,21 @@ struct DetailerDetailView: View {
                                 .padding(.horizontal, 20)
                         }
                         
-                        // --- BUTTONS (Appeler / Message) ---
                         HStack(spacing: 16) {
                             DetailerActionButton(
                                 icon: "phone",
                                 title: R.string.localizable.detailCall()
-                            ) {
-                                // TODO
-                            }
+                            ) {}
                             
                             DetailerActionButton(
                                 icon: "envelope",
                                 title: R.string.localizable.detailMessage()
-                            ) {
-                                // TODO
-                            }
+                            ) {}
                         }
                         .padding(.horizontal, 20)
                         
-                        // --- CONTACT INFO ---
                         VStack(alignment: .leading, spacing: 16) {
+                            
                             Text(R.string.localizable.detailContactInfo())
                                 .font(.system(size: 22, weight: .semibold))
                                 .padding(.horizontal, 20)
@@ -87,7 +80,6 @@ struct DetailerDetailView: View {
                             .padding(.horizontal, 20)
                         }
                         
-                        // --- SERVICES PROPOSÉS ---
                         VStack(alignment: .leading, spacing: 16) {
                             
                             Text(R.string.localizable.detailServicesTitle())
@@ -95,28 +87,30 @@ struct DetailerDetailView: View {
                                 .padding(.horizontal, 20)
                             
                             if vm.isLoadingServices {
-                                ProgressView()
-                                    .padding(.top, 12)
+                                ProgressView().padding(.top, 12)
+                                
                             } else if vm.services.isEmpty {
                                 Text(R.string.localizable.detailNoServices())
                                     .font(.system(size: 15))
                                     .foregroundColor(.gray)
                                     .padding(.horizontal, 20)
+                                
                             } else {
                                 VStack(spacing: 20) {
                                     ForEach(vm.services) { service in
-                                        ServiceCardView(service: service)
+                                        ServiceCardView(service: service) {
+                                            bookingService = service       // 👈 NEW
+                                        }
                                     }
                                 }
                                 .padding(.horizontal, 20)
                             }
                         }
                         .padding(.top, 6)
-                        // --- REVIEWS SECTION ---
+                        
                         if !vm.reviews.isEmpty {
                             VStack(alignment: .leading, spacing: 16) {
                                 
-                                // Titre + score
                                 HStack {
                                     Text(R.string.localizable.detailReviewsTitle())
                                         .font(.system(size: 24, weight: .bold))
@@ -134,7 +128,6 @@ struct DetailerDetailView: View {
                                 }
                                 .padding(.horizontal, 20)
                                 
-                                // Liste des reviews
                                 ForEach(vm.reviews) { review in
                                     ReviewCardView(review: review)
                                         .padding(.horizontal, 20)
@@ -148,20 +141,31 @@ struct DetailerDetailView: View {
                 }
             }
             
-            // 🔙 BACK BUTTON (white arrow)
-            Button {
-                dismiss()
-            } label: {
+            // Back button
+            Button { dismiss() } label: {
                 Image(systemName: "chevron.left")
                     .font(.system(size: 22, weight: .semibold))
                     .foregroundColor(.white)
                     .padding(.horizontal, 4)
                     .padding(.vertical, 8)
             }
-            .padding(.top, 50)       // ⬅️ ajusté pour ne pas coller au notch
+            .padding(.top, 50)
             .padding(.leading, 20)
         }
         .ignoresSafeArea(edges: .top)
         .toolbar(.hidden, for: .navigationBar)
+        
+        .fullScreenCover(item: $bookingService) { service in
+            NavigationStack {                          // 👈 on donne un nav context
+                BookingStep1View(
+                    service: service,
+                    detailer: vm.detailer!,
+                    engine: vm.engine
+                )
+                .environmentObject(tabBarVisibility)   // 👈 pour cacher la tabbar
+            }
+        }
+        
     }
 }
+
