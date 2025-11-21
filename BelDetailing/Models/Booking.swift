@@ -19,7 +19,7 @@ struct Booking: Codable, Identifiable, Hashable {
     let startTime: String   // "HH:mm"
     let endTime: String     // "HH:mm"
     let address: String
-    let status: BookingStatus
+    var status: BookingStatus
     let paymentStatus: PaymentStatus
     let paymentIntentId: String?
     let commissionRate: Double?
@@ -106,7 +106,44 @@ extension Booking {
                 invoiceSent: true,
                 customer: .sampleAchraf,
                 providerBannerUrl:"https://res.cloudinary.com/dyigkyptj/image/upload/e_improve,w_300,h_600,c_thumb,g_auto/v1762979364/detail1_bdupvi.png"
-            )
+            ),
+            Booking(
+                id: "bkg_004",
+                providerId: "prov_004",
+                providerName: "Clean & Shine",
+                serviceName: "Polissage complet",
+                price: 120.0,
+                date: "2025-11-22",
+                startTime: "14:00",
+                endTime: "15:30",
+                address: "Avenue Louise 123, 1000 Bruxelles",
+                status: .pending,
+                paymentStatus: .preauthorized,
+                paymentIntentId: "pi_12345",
+                commissionRate: 0.10,
+                invoiceSent: false,
+                customer: .sampleAchraf,
+                providerBannerUrl:"https://res.cloudinary.com/dyigkyptj/image/upload/e_improve,w_300,h_600,c_thumb,g_auto/v1762979364/detail1_bdupvi.png"
+            ),
+            Booking(
+                id: "bkg_005",
+                providerId: "prov_005",
+                providerName: "Clean & Shine",
+                serviceName: "Polissage complet",
+                price: 120.0,
+                date: "2025-11-25",
+                startTime: "14:00",
+                endTime: "15:30",
+                address: "Avenue Louise 123, 1000 Bruxelles",
+                status: .confirmed,
+                paymentStatus: .paid,
+                paymentIntentId: "pi_12345",
+                commissionRate: 0.10,
+                invoiceSent: false,
+                customer: .sampleAchraf,
+                providerBannerUrl:"https://res.cloudinary.com/dyigkyptj/image/upload/e_improve,w_300,h_600,c_thumb,g_auto/v1762979364/detail1_bdupvi.png"
+            ),
+            
         ]
     }
 }
@@ -124,4 +161,10 @@ extension Booking {
   var imageURL: String? {
     providerBannerUrl
   }
+}
+extension Booking {
+    var isWithin24h: Bool {
+        guard let start = DateFormatters.isoDateTime(date: date, time: startTime) else { return false }
+        return start.timeIntervalSinceNow < 24 * 3600
+    }
 }

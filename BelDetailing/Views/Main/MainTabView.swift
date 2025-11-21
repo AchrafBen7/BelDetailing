@@ -1,7 +1,4 @@
-//
 //  MainTabView.swift
-//  BelDetailing
-//
 
 import SwiftUI
 import RswiftResources
@@ -11,18 +8,23 @@ struct MainTabView: View {
     enum Tab: CaseIterable { case home, search, bookings, dashboard, profile }
 
     let engine: Engine
-
     @State private var dashboardResetID = UUID()
 
-    // 👉 Maintenant la sélection vient d’un ObservableObject global
     @EnvironmentObject var mainTabSelection: MainTabSelection
     @EnvironmentObject var tabBarVisibility: TabBarVisibility
 
+    // 👇 AJOUTE ÇA
+    init(engine: Engine) {
+        self.engine = engine
+        
+        // on cache complètement la tabbar système,
+        // on garde seulement ta CustomTabBar
+        UITabBar.appearance().isHidden = true
+    }
+
     var body: some View {
         ZStack(alignment: .bottom) {
-
             TabView(selection: $mainTabSelection.currentTab) {
-
                 HomeView(engine: engine)
                     .environmentObject(tabBarVisibility)
                     .tag(Tab.home)
@@ -51,7 +53,6 @@ struct MainTabView: View {
             }
             .ignoresSafeArea(.keyboard)
 
-            // === CUSTOM TAB BAR ===
             if !tabBarVisibility.isHidden {
                 CustomTabBar(
                     selection: $mainTabSelection.currentTab,
@@ -61,7 +62,7 @@ struct MainTabView: View {
                     }
                 )
                 .padding(.horizontal, 16)
-                .padding(.bottom, -4)
+                .padding(.bottom,-20)
                 .ignoresSafeArea(edges: .bottom)
                 .transition(.move(edge: .bottom).combined(with: .opacity))
             }

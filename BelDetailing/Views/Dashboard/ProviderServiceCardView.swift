@@ -1,9 +1,3 @@
-//
-//  ProviderServiceCardView.swift
-//  BelDetailing
-//
-//  Created by Achraf Benali on 17/11/2025.
-//
 import SwiftUI
 import RswiftResources
 
@@ -14,66 +8,84 @@ struct ProviderServiceCardView: View {
     let onDelete: () -> Void
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 16) {
+        VStack(alignment: .leading, spacing: 20) {
 
-            HStack {
+            // MARK: - Title + Status Dot
+            HStack(alignment: .center) {
+
                 Text(service.name)
-                    .font(.system(size: 20, weight: .semibold))
+                    .textView(style: .sectionTitle)
+
                 Spacer()
+
                 Circle()
                     .fill(service.isAvailable ? Color.green : Color.red.opacity(0.6))
                     .frame(width: 10, height: 10)
             }
 
-            if let desc = service.description {
+            // MARK: - Description
+            if let desc = service.description, !desc.isEmpty {
                 Text(desc)
-                    .foregroundColor(.gray)
-                    .font(.system(size: 15))
+                    .textView(style: .description, color: Color(R.color.secondaryText))
             }
 
-            HStack(spacing: 24) {
+            // MARK: - Price + Duration + Reservations
+            HStack(spacing: 28) {
 
-                VStack(alignment: .leading) {
-                    Text("\(Int(service.price))€")
-                        .font(.system(size: 22, weight: .bold))
+                // PRICE
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(String(format: "%.0f€", service.price))
+                        .font(.system(size: 28, weight: .semibold))   // EXACT comme la photo
+                        .foregroundColor(Color(R.color.primaryText))
+
                     Text(service.formattedDuration)
-                        .foregroundColor(.gray)
-                        .font(.caption)
+                        .textView(style: .caption)
+                        .foregroundColor(Color.gray)
                 }
 
-                Divider().frame(height: 32)
+                Divider().frame(height: 40)
 
-                VStack(alignment: .leading) {
-                    Text("12") // futur: service.reservationCount
-                        .font(.system(size: 22, weight: .bold))
+                // RESERVATION COUNT
+                VStack(alignment: .leading, spacing: 2) {
+                    Text("\(service.reservationCount ?? 0)")
+                        .font(.system(size: 28, weight: .semibold))
+                        .foregroundColor(Color(R.color.primaryText))
+
                     Text(R.string.localizable.dashboardReservations())
-                        .foregroundColor(.gray)
-                        .font(.caption)
+                        .textView(style: .caption)
+                        .foregroundColor(Color.gray)
+
                 }
             }
 
+            // MARK: - Buttons
             HStack(spacing: 12) {
 
+                // EDIT BUTTON
                 Button(action: onEdit) {
-                    HStack {
-                        Image(systemName: "pencil")
-                        Text(R.string.localizable.dashboardEdit())  // ✅ FIX
-                            .textView(style: .buttonSecondary)      // optionnel si tu veux ton style
+                    HStack(spacing: 6) {
+                        Image(systemName: "square.and.pencil")
+                            .font(.system(size: 16, weight: .semibold))
+
+                        Text(R.string.localizable.dashboardEdit())
+                            .font(.system(size: 16, weight: .semibold))   // ⬅️ plus petit
+                            .baselineOffset(0)                            // ⬅️ parfait alignement
                     }
+                    .foregroundColor(Color(R.color.primaryText))
                     .frame(maxWidth: .infinity)
-                    .padding(.vertical, 10)
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 20)
-                            .stroke(Color.black.opacity(0.2))
+                    .padding(.vertical, 12)      // ⬅️ un peu plus compact que 10
+                    .background(
+                        RoundedRectangle(cornerRadius: 24)
+                            .stroke(Color.black.opacity(0.15), lineWidth: 1)
                     )
                 }
 
-
+                // DELETE BUTTON
                 Button(action: onDelete) {
                     Image(systemName: "trash")
-                        .font(.system(size: 18, weight: .bold))
                         .foregroundColor(.black)
-                        .padding(12)
+                        .font(.system(size: 18, weight: .bold))
+                        .frame(width: 44, height: 44)
                         .background(Color.black.opacity(0.05))
                         .clipShape(Circle())
                 }
@@ -82,8 +94,7 @@ struct ProviderServiceCardView: View {
         }
         .padding(20)
         .background(Color.white)
-        .cornerRadius(22)
+        .clipShape(RoundedRectangle(cornerRadius: 22))
         .shadow(color: .black.opacity(0.06), radius: 8, y: 4)
     }
 }
-

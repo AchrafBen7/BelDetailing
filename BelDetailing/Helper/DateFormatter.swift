@@ -38,4 +38,32 @@ enum DateFormatters {
         out.timeStyle = .short
         return out.string(from: isoDate)
     }
+    /// Convertit un Date → "yyyy-MM-dd"
+    static func onlyDate(_ date: Date) -> String {
+        let df = DateFormatter()
+        df.timeZone = tz
+        df.locale = Locale(identifier: "fr_BE")
+        df.dateFormat = "yyyy-MM-dd"
+        return df.string(from: date)
+    }
+    
+    /// Convertit un ISO8601 -> "15 janvier 2024"
+    static func displayDate(_ isoString: String) -> String {
+        let df = ISO8601DateFormatter()
+        df.timeZone = tz
+
+        guard let date = df.date(from: isoString) else {
+            return isoString        // fallback si parsing échoue
+        }
+
+        let out = DateFormatter()
+        out.locale = Locale(identifier: Locale.current.identifier)  // FR, NL ou EN automatique
+        out.timeZone = tz
+        out.dateStyle = .long      // "15 janvier 2024"
+        out.timeStyle = .none
+
+        return out.string(from: date)
+    }
+
+
 }

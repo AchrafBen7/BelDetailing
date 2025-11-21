@@ -8,7 +8,8 @@ struct BookingsView: View {
     @Namespace private var tabsNS
     @State private var showCancelSheet = false
     @State private var bookingToCancel: Booking? = nil
-
+    @State private var showTooLateAlert = false
+    
     
     // 👉 Pour ouvrir la page de gestion
     @State private var selectedBooking: Booking? = nil
@@ -35,14 +36,34 @@ struct BookingsView: View {
                         BookingCardView(
                             booking: booking,
                             onManage: {
-                                selectedBooking = booking
+                                if booking.isWithin24h {
+                                    print("Impossible de modifier, moins de 24h")
+                                } else {
+                                    selectedBooking = booking
+                                }
                             },
                             onCancel: {
-                                bookingToCancel = booking      // 👉 on set la réservation en cours
-                                showCancelSheet = true         // 👉 on ouvre la sheet
-                            }
+                                if booking.isWithin24h {
+                                    showTooLateAlert = true
+                                } else {
+                                    bookingToCancel = booking
+                                    showCancelSheet = true
+                                }
+                            },
+                            onRepeat: {
+                                    // TODO: lancer le flow pour refaire une réservation
+                                    // Pour l’instant tu peux juste log:
+                                    print("BOOK AGAIN \(booking.id)")
+                                }
+                            
+                            
                         )
-
+                        .alert("Impossible", isPresented: $showTooLateAlert) {
+                            Button("OK", role: .cancel) {}
+                        } message: {
+                            Text("Vous ne pouvez plus annuler ou modifier une réservation dans les 24 heures précédant l'heure prévue.")
+                        }
+                        
                         
                         .listRowSeparator(.hidden)
                         .listRowBackground(Color.clear)
@@ -56,8 +77,8 @@ struct BookingsView: View {
             .toolbar(.hidden, for: .navigationBar)
             
             // MARK: - NAVIGATION TO MANAGE VIEW
-            .navigationDestination(item: $selectedBooking) { booking in
-                BookingManageView(
+            .sheet(item: $selectedBooking) { booking in
+                BookingManageSheetView(
                     booking: booking,
                     engine: engine
                 )
@@ -66,12 +87,11 @@ struct BookingsView: View {
         .task {
             await viewModel.loadIfNeeded()
         }
-        .sheet(isPresented: $showCancelSheet) {
-            if let booking = bookingToCancel {
-                BookingCancelSheetView(booking: booking)
-            }
+        .sheet(item: $bookingToCancel) { booking in
+            BookingCancelSheetView(booking: booking)
         }
 
+        
     }
 }
 // MARK: - Subviews + Helpers

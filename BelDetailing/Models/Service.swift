@@ -21,6 +21,7 @@ struct Service: Codable, Identifiable, Hashable {
     let description: String?
     let isAvailable: Bool
     let imageUrl: String?
+    let reservationCount: Int?
 }
 
 /// Handige formatter helpers (optioneel)
@@ -49,7 +50,9 @@ extension Service {
                 durationMinutes: 90,
                 description: "Restauration de la brillance, micro-rayures atténuées.",
                 isAvailable: true,
-                imageUrl: "https://res.cloudinary.com/dyigkyptj/image/upload/v1762979544/detail2_bm8svh.jpg"
+                imageUrl: "https://res.cloudinary.com/dyigkyptj/image/upload/v1762979544/detail2_bm8svh.jpg",
+                reservationCount: 47
+                
             ),
             Service(
                 id: "srv_002",
@@ -60,7 +63,8 @@ extension Service {
                 durationMinutes: 60,
                 description: "Aspiration, plastiques, vitres, traitement tissus.",
                 isAvailable: true,
-                imageUrl: "https://res.cloudinary.com/dyigkyptj/image/upload/v1762979544/detail2_bm8svh.jpg"
+                imageUrl: "https://res.cloudinary.com/dyigkyptj/image/upload/v1762979544/detail2_bm8svh.jpg",
+                reservationCount: 23
             ),
             Service(
                 id: "srv_003",
@@ -71,7 +75,8 @@ extension Service {
                 durationMinutes: 45,
                 description: "Prélavage, lavage main, séchage microfibre.",
                 isAvailable: true,
-                imageUrl: ""
+                imageUrl: "https://res.cloudinary.com/dyigkyptj/image/upload/v1762979544/detail2_bm8svh.jpg",
+                reservationCount: 10
             ),
             Service(
                 id: "srv_004",
@@ -82,7 +87,8 @@ extension Service {
                 durationMinutes: 240,
                 description: "Protection hydrophobe, brillance longue durée.",
                 isAvailable: false,
-                imageUrl: "https://res.cloudinary.com/dyigkyptj/image/upload/v1762979544/detail2_bm8svh.jpg"
+                imageUrl: "https://res.cloudinary.com/dyigkyptj/image/upload/v1762979544/detail2_bm8svh.jpg",
+                reservationCount: 67
             )
         ]
     }

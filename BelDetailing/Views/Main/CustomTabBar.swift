@@ -10,7 +10,7 @@ private struct TabItem: Identifiable {
 
 struct CustomTabBar: View {
     @Binding var selection: MainTabView.Tab
-    var onDashboardReselect: () -> Void = {}   // 👈 nouveau param par défaut
+    var onDashboardReselect: () -> Void = {}
 
     private let items: [TabItem] = [
         .init(tab: .home,     systemName: "house.fill",              a11yLabel: R.string.localizable.tabHome()),
@@ -22,20 +22,20 @@ struct CustomTabBar: View {
 
     var body: some View {
         ZStack {
-            RoundedRectangle(cornerRadius: 28, style: .continuous)
-                .fill(Color.black)
+            // Fond façon dock iOS : très arrondi + un peu plus haut
+            RoundedRectangle(cornerRadius: 34, style: .continuous)
+                .fill(Color.black) // tu peux tester .opacity(0.9) pour un effet plus soft
                 .overlay(
-                    RoundedRectangle(cornerRadius: 28)
-                        .stroke(.white.opacity(0.12), lineWidth: 0.7)
+                    RoundedRectangle(cornerRadius: 34)
+                        .stroke(Color.white.opacity(0.10), lineWidth: 0.7)
                 )
-                .shadow(color: .black.opacity(0.45), radius: 10, y: -4)
+                .shadow(color: .black.opacity(0.45), radius: 12, y: -4)
 
-            HStack(spacing: 8) {
+            HStack(spacing: 12) {
                 ForEach(items) { item in
                     Button {
                         withAnimation(.spring(response: 0.28, dampingFraction: 0.9)) {
                             if selection == item.tab, item.tab == .dashboard {
-                                // 👇 on est déjà sur dashboard et on reclique dessus
                                 onDashboardReselect()
                             } else {
                                 selection = item.tab
@@ -43,12 +43,12 @@ struct CustomTabBar: View {
                         }
                     } label: {
                         Image(systemName: item.systemName)
-                            .font(.system(size: 22, weight: .semibold))
+                            .font(.system(size: 20, weight: .semibold))  // icônes un peu plus petites
                             .foregroundColor(.white)
-                            .frame(width: 44, height: 44)
+                            .frame(width: 40, height: 40)                // plus proche du dock
                             .background(
                                 selection == item.tab
-                                    ? AnyView(Capsule().fill(Color.white.opacity(0.14)))
+                                    ? AnyView(Capsule().fill(Color.white.opacity(0.18)))
                                     : AnyView(Color.clear)
                             )
                             .clipShape(Capsule())
@@ -59,9 +59,9 @@ struct CustomTabBar: View {
                     .contentShape(Rectangle())
                 }
             }
-            .padding(.horizontal, 8)
-            .padding(.vertical, 6)
+            .padding(.horizontal, 16)  // plus d’espace comme le dock
+            .padding(.vertical, 10)
         }
-        .frame(height: 76)
+        .frame(height: 80)             // un peu plus haut pour le look “dock”
     }
 }

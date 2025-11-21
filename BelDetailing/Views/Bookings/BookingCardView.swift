@@ -3,8 +3,9 @@ import RswiftResources
 
 struct BookingCardView: View {
     let booking: Booking
-    let onManage: () -> Void      // 👉 action "Modifier"
-    let onCancel: () -> Void      // 👉 action "Annuler"
+    let onManage: () -> Void      // 👉 modifier
+    let onCancel: () -> Void      // 👉 annuler
+    let onRepeat: () -> Void      // 👉 réserver à nouveau
 
     var body: some View {
         VStack(spacing: 0) {
@@ -60,40 +61,57 @@ struct BookingCardView: View {
                         .font(.system(size: 14))
                 }
 
-                // --- Boutons MODIFIER + ANNULER ---
-                HStack(spacing: 10) {
-
-                    Button(action: onManage) {
-                        Text(R.string.localizable.bookingManage())
+                // --- Actions ---
+                if booking.status == .completed {
+                    // 👉 RÉSERVER À NOUVEAU (un seul long bouton)
+                    Button(action: onRepeat) {
+                        Text(R.string.localizable.bookingBookAgain()) // ajoute cette key dans Localizable
                             .font(.system(size: 15, weight: .semibold))
-                            .foregroundColor(.black)
+                            .foregroundColor(.white)
                             .frame(maxWidth: .infinity)
-                            .padding(.vertical, 10)
-                            .background(Color.white)
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 12)
-                                    .stroke(Color.black.opacity(0.3), lineWidth: 1)
-                            )
+                            .padding(.vertical, 11)
+                            .background(Color.black)
                             .cornerRadius(12)
                     }
                     .buttonStyle(.plain)
+                    .padding(.top, 4)
 
-                    Button(action: onCancel) {
-                        Text(R.string.localizable.bookingCancel())
-                            .font(.system(size: 15, weight: .semibold))
-                            .foregroundColor(.red)
-                            .frame(maxWidth: .infinity)
-                            .padding(.vertical, 10)
-                            .background(Color.white)
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 12)
-                                    .stroke(Color.red.opacity(0.4), lineWidth: 1)
-                            )
-                            .cornerRadius(12)
+                } else {
+                    // 👉 MODIFIER + ANNULER (comme avant)
+                    HStack(spacing: 10) {
+
+                        Button(action: onManage) {
+                            Text(R.string.localizable.bookingManage())
+                                .font(.system(size: 15, weight: .semibold))
+                                .foregroundColor(.black)
+                                .frame(maxWidth: .infinity)
+                                .padding(.vertical, 10)
+                                .background(Color.white)
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 12)
+                                        .stroke(Color.black.opacity(0.3), lineWidth: 1)
+                                )
+                                .cornerRadius(12)
+                        }
+                        .buttonStyle(.plain)
+
+                        Button(action: onCancel) {
+                            Text(R.string.localizable.bookingCancel())
+                                .font(.system(size: 15, weight: .semibold))
+                                .foregroundColor(.red)
+                                .frame(maxWidth: .infinity)
+                                .padding(.vertical, 10)
+                                .background(Color.white)
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 12)
+                                        .stroke(Color.red.opacity(0.4), lineWidth: 1)
+                                )
+                                .cornerRadius(12)
+                        }
+                        .buttonStyle(.plain)
                     }
-                    .buttonStyle(.plain)
+                    .padding(.top, 4)
                 }
-                .padding(.top, 4)
             }
             .padding(16)
         }
