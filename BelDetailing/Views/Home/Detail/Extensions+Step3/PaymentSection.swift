@@ -16,7 +16,7 @@ extension BookingStep3View {
                 .font(.system(size: 22, weight: .bold))
 
             VStack(spacing: 12) {
-                ForEach(PaymentMethod.allCases, id: \.self) { method in
+                ForEach(Payment.allCases, id: \.self) { method in
 
                     HStack(spacing: 14) {
 

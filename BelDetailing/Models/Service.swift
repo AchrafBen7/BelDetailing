@@ -36,7 +36,6 @@ extension Service {
     }
 }
 
-
 // MARK: - Samples voor Mock
 extension Service {
     static var sampleValues: [Service] {

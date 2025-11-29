@@ -1,4 +1,3 @@
-//
 //  StorageManager.swift
 //  BelDetailing
 //
@@ -31,7 +30,11 @@ final class StorageManager {
     }
 
     private func saveString(_ value: String?, forKey key: UserDefaultsKeys) {
-        defaults.set(value, forKey: key.rawValue)
+        if let value {
+            defaults.set(value, forKey: key.rawValue)
+        } else {
+            defaults.removeObject(forKey: key.rawValue)
+        }
     }
 
     private func getString(forKey key: UserDefaultsKeys) -> String? {
@@ -42,14 +45,10 @@ final class StorageManager {
         defaults.removeObject(forKey: key.rawValue)
     }
 
-    // MARK: - Public Shortcuts
+    // MARK: - USER
 
-    // 👤 User
     func saveUser(_ user: User?) { save(user, forKey: .userProfile) }
     func getUser() -> User? { get(User.self, forKey: .userProfile) }
-
-    func saveAuthToken(_ token: String?) { saveString(token, forKey: .authToken) }
-    func getAuthToken() -> String? { getString(forKey: .authToken) }
 
     func saveUserRole(_ role: UserRole?) { saveString(role?.rawValue, forKey: .userRole) }
     func getUserRole() -> UserRole? {
@@ -57,37 +56,71 @@ final class StorageManager {
         return UserRole(rawValue: raw)
     }
 
-    // 🏙 City
-    func saveSelectedCity(_ city: City?) { save(city, forKey: .selectedCity) }
-    func getSelectedCity() -> City? { get(City.self, forKey: .selectedCity) }
+    // MARK: - AUTH TOKENS
 
-    // 💼 Cached Data
-    func saveCachedOffers(_ offers: [Offer]) { save(offers, forKey: .cachedOffers) }
-    func getCachedOffers() -> [Offer] { get([Offer].self, forKey: .cachedOffers) ?? [] }
+    func saveAccessToken(_ token: String?) {
+        saveString(token, forKey: .accessToken)
+    }
 
-    func saveCachedProviders(_ providers: [Detailer]) { save(providers, forKey: .cachedProviders) }
-    func getCachedProviders() -> [Detailer] { get([Detailer].self, forKey: .cachedProviders) ?? [] }
+    func getAccessToken() -> String? {
+        getString(forKey: .accessToken)
+    }
 
-    func saveCachedBookings(_ bookings: [Booking]) { save(bookings, forKey: .cachedBookings) }
-    func getCachedBookings() -> [Booking] { get([Booking].self, forKey: .cachedBookings) ?? [] }
+    func saveRefreshToken(_ token: String?) {
+        saveString(token, forKey: .refreshToken)
+    }
 
-    // MARK: - Auth / Session
+    func getRefreshToken() -> String? {
+        getString(forKey: .refreshToken)
+    }
+    // MARK: - CACHED PROVIDERS
 
-    /// Sauvegarde un flag simple indiquant si l'utilisateur est connecté (même en mock)
+    func saveCachedProviders(_ providers: [Detailer]) {
+        save(providers, forKey: .cachedProviders)
+    }
+
+    func getCachedProviders() -> [Detailer] {
+        get([Detailer].self, forKey: .cachedProviders) ?? []
+    }
+
+    // MARK: - CACHED BOOKINGS
+
+    func saveCachedBookings(_ bookings: [Booking]) {
+        save(bookings, forKey: .cachedBookings)
+    }
+
+    func getCachedBookings() -> [Booking] {
+        get([Booking].self, forKey: .cachedBookings) ?? []
+    }
+
+    // MARK: - LOGIN STATE
+
     func setLoggedIn(_ value: Bool) {
         defaults.set(value, forKey: UserDefaultsKeys.isLoggedIn.rawValue)
     }
 
-    /// Retourne true si l'utilisateur est considéré comme connecté
     func isLoggedIn() -> Bool {
         defaults.bool(forKey: UserDefaultsKeys.isLoggedIn.rawValue)
     }
+    
+    // MARK: - CACHED OFFERS
 
-    // 🔓 Logout / Reset
+    func saveCachedOffers(_ offers: [Offer]) {
+        save(offers, forKey: .cachedOffers)
+    }
+
+    func getCachedOffers() -> [Offer] {
+        get([Offer].self, forKey: .cachedOffers) ?? []
+    }
+
+
+    // MARK: - LOGOUT
+
     func clearSession() {
         remove(.userProfile)
-        remove(.authToken)
+        remove(.accessToken)
+        remove(.refreshToken)
         remove(.userRole)
-        remove(.isLoggedIn) // ⬅️ important: l'utilisateur n'est plus connecté
+        remove(.isLoggedIn)
     }
 }

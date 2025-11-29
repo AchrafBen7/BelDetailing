@@ -9,8 +9,11 @@ import SwiftUI
 import RswiftResources
 
 struct EmailLoginView: View {
+  let engine: Engine
   var onBack: () -> Void = {}
   var onCreateAccount: () -> Void = {}
+  var onLoginSuccess: () -> Void = {}
+
 
   @State private var email: String = ""
   @State private var password: String = ""
@@ -86,17 +89,26 @@ struct EmailLoginView: View {
           .padding()
           .background(RoundedRectangle(cornerRadius: 14).stroke(Color.gray.opacity(0.2)))
         }
+          Button {
+              Task {
+                  let response = await engine.userService.login(email: email, password: password)
+                  switch response {
+                  case .success(_):
+                      onLoginSuccess()
+                  case .failure(let err):
+                      print("❌ Login error: \(err.localizedDescription)")
+                  }
+              }
+          } label: {
+              R.string.localizable.emailLoginCTA()
+                  .textView(style: .buttonCTA)
+                  .frame(maxWidth: .infinity, minHeight: 58)
+                  .background(Color.black)
+                  .clipShape(RoundedRectangle(cornerRadius: 30))
+                  .shadow(color: .black.opacity(0.1), radius: 4, y: 3)
+          }
+          .padding(.top, 8)
 
-        // MARK: - Main Button
-        Button(action: { print("Connexion avec email") }) {
-          R.string.localizable.emailLoginCTA()
-            .textView(style: .buttonCTA)
-            .frame(maxWidth: .infinity, minHeight: 58)
-            .background(Color.black)
-            .clipShape(RoundedRectangle(cornerRadius: 30))
-            .shadow(color: .black.opacity(0.1), radius: 4, y: 3)
-        }
-        .padding(.top, 8)
 
         // MARK: - Signup link
         HStack(spacing: 4) {

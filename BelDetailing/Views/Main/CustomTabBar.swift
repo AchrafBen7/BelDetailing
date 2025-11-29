@@ -11,7 +11,9 @@ private struct TabItem: Identifiable {
 struct CustomTabBar: View {
     @Binding var selection: MainTabView.Tab
     var onDashboardReselect: () -> Void = {}
-
+    var onProfileReselect: (() -> Void)? = nil
+    
+    
     private let items: [TabItem] = [
         .init(tab: .home,     systemName: "house.fill",              a11yLabel: R.string.localizable.tabHome()),
         .init(tab: .search,   systemName: "magnifyingglass",         a11yLabel: R.string.localizable.tabSearch()),
@@ -19,7 +21,7 @@ struct CustomTabBar: View {
         .init(tab: .dashboard,systemName: "chart.bar.fill",          a11yLabel: R.string.localizable.tabDashboard()),
         .init(tab: .profile,  systemName: "person.crop.circle.fill", a11yLabel: R.string.localizable.tabProfile())
     ]
-
+    
     var body: some View {
         ZStack {
             // Fond façon dock iOS : très arrondi + un peu plus haut
@@ -30,14 +32,21 @@ struct CustomTabBar: View {
                         .stroke(Color.white.opacity(0.10), lineWidth: 0.7)
                 )
                 .shadow(color: .black.opacity(0.45), radius: 12, y: -4)
-
+            
             HStack(spacing: 12) {
                 ForEach(items) { item in
                     Button {
                         withAnimation(.spring(response: 0.28, dampingFraction: 0.9)) {
-                            if selection == item.tab, item.tab == .dashboard {
-                                onDashboardReselect()
+                            if selection == item.tab {
+                                // TAB RESELECTED
+                                if item.tab == .dashboard {
+                                    onDashboardReselect()
+                                }
+                                else if item.tab == .profile {
+                                    onProfileReselect?()
+                                }
                             } else {
+                                // CHANGE TAB NORMAL
                                 selection = item.tab
                             }
                         }
@@ -48,8 +57,8 @@ struct CustomTabBar: View {
                             .frame(width: 40, height: 40)                // plus proche du dock
                             .background(
                                 selection == item.tab
-                                    ? AnyView(Capsule().fill(Color.white.opacity(0.18)))
-                                    : AnyView(Color.clear)
+                                ? AnyView(Capsule().fill(Color.white.opacity(0.18)))
+                                : AnyView(Color.clear)
                             )
                             .clipShape(Capsule())
                             .accessibilityLabel(Text(item.a11yLabel))

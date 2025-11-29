@@ -6,103 +6,77 @@
 //
 
 import SwiftUI
+import SwiftUI
+
+enum AuthRoute: Hashable {
+    case login
+    case signupRole
+    case signupCustomer
+    case signupCompany
+    case signupProvider
+}
 
 struct AuthFlowView: View {
     let engine: Engine
-
-    @Binding var hasSeenOnboarding: Bool
     @Binding var isLoggedIn: Bool
 
-    @State private var path: [String] = []
+    @State private var path: [AuthRoute] = []
 
     var body: some View {
         NavigationStack(path: $path) {
-
-            OnboardingView(onFinish: {
-                hasSeenOnboarding = true
-                path = ["welcome"]
-            })
-            .navigationDestination(for: String.self) { route in
+            WelcomeView(
+                onStart: { path.append(.signupRole) },
+                onLogin: { path.append(.login) }
+            )
+            .navigationDestination(for: AuthRoute.self) { route in
                 switch route {
 
-                case "welcome":
-                    WelcomeView(
-                        onStart: { path.append("signupRole") },
-                        onLogin: { path.append("login") }
-                    )
-                    .navigationBarBackButtonHidden(true)
+                case .login:
+                    LoginScreen(engine: engine, onLoginSuccess: {
+                        isLoggedIn = true
+                        path = []
+                    })
 
-                case "login":
-                    LoginView(
-                        onBack: { path.removeLast() },
-                        onApple: {
-                            StorageManager.shared.setLoggedIn(true)
-                            isLoggedIn = true
-                            path = []
-                        },
-                        onGoogle: {
-                            StorageManager.shared.setLoggedIn(true)
-                            isLoggedIn = true
-                            path = []
-                        },
-                        onEmail: {
-                            path.append("loginEmail")
-                        },
-                        onShowTerms: { },
-                        onShowPrivacy: { }
-                    )
-                    .navigationBarBackButtonHidden(true)
-
-                case "loginEmail":
-                    EmailLoginView(
-                        onBack: { path.removeLast() },
-                        onCreateAccount: { path.append("signupRole") }
-                    )
-                    .navigationBarBackButtonHidden(true)
-
-                case "signupRole":
+                case .signupRole:
                     SignupRoleSelectionView(engine: engine) { selectedRole in
-                        path.append(selectedRole.rawValue)
+                        switch selectedRole {
+                        case .customer: path.append(.signupCustomer)
+                        case .company:  path.append(.signupCompany)
+                        case .provider: path.append(.signupProvider)
+                        }
                     }
 
-                case UserRole.customer.rawValue:
+                case .signupCustomer:
                     SignupFormView(
                         role: .customer,
                         onBack: { path.removeLast() },
                         onSubmit: {
-                            StorageManager.shared.setLoggedIn(true)
                             isLoggedIn = true
                             path = []
                         }
                     )
 
-                case UserRole.company.rawValue:
+                case .signupCompany:
                     SignupFormView(
                         role: .company,
                         onBack: { path.removeLast() },
                         onSubmit: {
-                            StorageManager.shared.setLoggedIn(true)
                             isLoggedIn = true
                             path = []
                         }
                     )
 
-                case UserRole.provider.rawValue:
+                case .signupProvider:
                     SignupFormView(
                         role: .provider,
                         onBack: { path.removeLast() },
                         onSubmit: {
-                            StorageManager.shared.setLoggedIn(true)
                             isLoggedIn = true
                             path = []
                         }
                     )
-
-                default:
-                    EmptyView()
                 }
             }
-            .toolbar(.hidden, for: .navigationBar)   // ⬅️ OBLIGATOIRE
         }
     }
 }

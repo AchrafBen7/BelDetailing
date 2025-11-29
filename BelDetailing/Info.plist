@@ -2,6 +2,32 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>BUNDLE_ID</key>
+	<string>com.Cleanny.BelDetailing</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>Google</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.googleusercontent.apps.251264362988-fg2kci0ff3ebo5kfc36sh9vfv6ni2f4m</string>
+			</array>
+		</dict>
+	</array>
+	<key>CLIENT_ID</key>
+	<string>251264362988-fg2kci0ff3ebo5kfc36sh9vfv6ni2f4m.apps.googleusercontent.com</string>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
+	</dict>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.251264362988-fg2kci0ff3ebo5kfc36sh9vfv6ni2f4m</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Avenir Next LT Pro Bold.otf</string>

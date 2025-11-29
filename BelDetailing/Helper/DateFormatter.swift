@@ -2,13 +2,12 @@
 //  DateFormatter.swift
 //  BelDetailing
 //
-//  Created by Achraf Benali on 13/11/2025.
-//
 
 import Foundation
 
 enum DateFormatters {
-    private static let tz = TimeZone(identifier: "Europe/Brussels")!
+    static let tz = TimeZone(identifier: "Europe/Brussels")!
+
     /// Combine "yyyy-MM-dd" + "HH:mm" en Date (Europe/Brussels)
     static func isoDateTime(date: String, time: String) -> Date? {
         let dateFormatter = DateFormatter()
@@ -17,6 +16,7 @@ enum DateFormatters {
         dateFormatter.dateFormat = "yyyy-MM-dd HH:mm"
         return dateFormatter.date(from: "\(date) \(time)")
     }
+
     /// Parse "yyyy-MM-dd" → Date
     static func isoDate(_ date: String) -> Date? {
         let df = DateFormatter()
@@ -38,6 +38,7 @@ enum DateFormatters {
         out.timeStyle = .short
         return out.string(from: isoDate)
     }
+
     /// Convertit un Date → "yyyy-MM-dd"
     static func onlyDate(_ date: Date) -> String {
         let df = DateFormatter()
@@ -46,7 +47,7 @@ enum DateFormatters {
         df.dateFormat = "yyyy-MM-dd"
         return df.string(from: date)
     }
-    
+
     /// Convertit un ISO8601 -> "15 janvier 2024"
     static func displayDate(_ isoString: String) -> String {
         let df = ISO8601DateFormatter()
@@ -65,5 +66,12 @@ enum DateFormatters {
         return out.string(from: date)
     }
 
-
+    /// Formatter réutilisable "dd/MM/yyyy" pour l'historique des paiements / factures
+    static let shortDate: DateFormatter = {
+        let df = DateFormatter()
+        df.timeZone = tz
+        df.locale = Locale.current      // FR / NL / EN auto
+        df.dateFormat = "dd/MM/yyyy"    // ex: 15/01/2024
+        return df
+    }()
 }

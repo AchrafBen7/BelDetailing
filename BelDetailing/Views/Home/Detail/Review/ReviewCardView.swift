@@ -1,85 +1,110 @@
-//
-//  ReviewCardView.swift
-//  BelDetailing
-//
-//  Created by Achraf Benali on 17/11/2025.
-//
-
 import SwiftUI
 import RswiftResources
 
 struct ReviewCardView: View {
+
     let review: Review
 
-    private var formattedDate: String {
-        let iso = ISO8601DateFormatter()
-        guard let date = iso.date(from: review.createdAt) else { return "" }
-
-        let days = Calendar.current.dateComponents([.day], from: date, to: Date()).day ?? 0
-
-        let text = "\(days) jours"        // bv. "2 jours" / "3 dagen" enz.
-        return R.string.localizable.detailReviewTime(text)
-    }
-
-
+    @State private var isExpanded: Bool = false
+    private let maxCollapsedLines: Int = 3
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 14) {
+        VStack(alignment: .leading, spacing: 10) {
 
-            // --- TOP ---
-            HStack(alignment: .center, spacing: 12) {
+            // HEADER : avatar + nom + rating + date
+            HStack(alignment: .top, spacing: 12) {
 
-                // Avatar
-                Circle()
-                    .fill(Color.gray.opacity(0.2))
-                    .frame(width: 44, height: 44)
-                    .overlay(
-                        Text(String(review.customerName.prefix(1)))
-                            .font(.system(size: 20, weight: .bold))
-                            .foregroundColor(.black)
-                    )
+                // Avatar avec initiales
+                ZStack {
+                    Circle()
+                        .fill(Color.gray.opacity(0.15))
+                        .frame(width: 40, height: 40)
+
+                    Text(initials(from: review.customerName))
+                        .font(.system(size: 16, weight: .semibold))
+                        .foregroundColor(.black)
+                }
 
                 VStack(alignment: .leading, spacing: 4) {
+                    Text(review.customerName)
+                        .font(.system(size: 16, weight: .semibold))
 
-                    HStack {
-                        Text(review.customerName)
-                            .font(.system(size: 17, weight: .semibold))
-
-                        Text(R.string.localizable.detailVerified())
-                            .font(.system(size: 12, weight: .semibold))
-                            .foregroundColor(.white)
-                            .padding(.horizontal, 10)
-                            .padding(.vertical, 4)
-                            .background(Color.orange)
-                            .clipShape(Capsule())
-                    }
-
-                    // Stars + durée
-                    HStack(spacing: 4) {
-                        ForEach(0..<review.rating, id: \.self) { _ in
-                            Image(systemName: "star.fill")
-                                .foregroundColor(.orange)
-                                .font(.system(size: 14))
-                        }
-
-                        Text(formattedDate)
-                            .foregroundColor(.gray)
-                            .font(.system(size: 13))
-                    }
+                    starsRow(rating: review.rating)
                 }
-            }
 
-            // Texte
-            if let comment = review.comment {
-                Text(comment)
-                    .font(.system(size: 16))
+                Spacer()
+
+                Text(formattedDate(from: review.createdAt))
+                    .font(.system(size: 13))
                     .foregroundColor(.gray)
             }
 
+            // COMMENTAIRE (si présent)
+            if let comment = review.comment, !comment.isEmpty {
+                VStack(alignment: .leading, spacing: 4) {
+
+                    Text(comment)
+                        .font(.system(size: 15))
+                        .foregroundColor(.gray)
+                        .lineLimit(isExpanded ? nil : maxCollapsedLines)
+                        .multilineTextAlignment(.leading)
+
+                    // Bouton Read more / Read less UNIQUEMENT si texte assez long
+                    if shouldShowToggle(for: comment) {
+                        Button {
+                            isExpanded.toggle()
+                        } label: {
+                            Text(
+                                isExpanded
+                                ? R.string.localizable.reviewsReadLess()
+                                : R.string.localizable.reviewsReadMore()
+                            )
+                            .font(.system(size: 14, weight: .semibold))
+                            .foregroundColor(.black)
+                        }
+                        .buttonStyle(.plain)
+                        .padding(.top, 2)
+                    }
+                }
+            }
         }
-        .padding(20)
+        .padding(16)
         .background(Color.white)
-        .cornerRadius(22)
-        .shadow(color: .black.opacity(0.06), radius: 6, y: 3)
+        .cornerRadius(20)
+        .shadow(color: .black.opacity(0.04), radius: 4, y: 2)
+    }
+
+    // MARK: - Helpers
+
+    private func initials(from name: String) -> String {
+        let parts = name.split(separator: " ")
+        let first = parts.first?.first.map(String.init) ?? ""
+        let last  = parts.dropFirst().first?.first.map(String.init) ?? ""
+        return (first + last).uppercased()
+    }
+
+    private func formattedDate(from iso: String) -> String {
+        let formatterIn = ISO8601DateFormatter()
+        guard let date = formatterIn.date(from: iso) else { return "" }
+
+        let out = DateFormatter()
+        out.dateStyle = .medium
+        out.timeStyle = .none
+        return out.string(from: date)
+    }
+
+    private func starsRow(rating: Int) -> some View {
+        HStack(spacing: 3) {
+            ForEach(1...5, id: \.self) { index in
+                Image(systemName: index <= rating ? "star.fill" : "star")
+                    .foregroundColor(index <= rating ? .yellow : Color.gray.opacity(0.4))
+                    .font(.system(size: 13))
+            }
+        }
+    }
+
+    /// Affiche le bouton Read more / Read less seulement si le texte est assez long
+    private func shouldShowToggle(for comment: String) -> Bool {
+        comment.count > 120
     }
 }

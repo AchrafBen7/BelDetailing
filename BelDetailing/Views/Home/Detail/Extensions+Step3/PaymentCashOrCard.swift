@@ -1,13 +1,13 @@
 //
-//  PaymentMethod.swift
+//  PaymentCashOrCard.swift
 //  BelDetailing
 //
-//  Created by Achraf Benali on 19/11/2025.
+//  Created by Achraf Benali on 21/11/2025.
 //
 import SwiftUI
 import RswiftResources
 
-enum PaymentMethod: CaseIterable {
+enum Payment: CaseIterable {
     case card, paypal, applePay, cash
 
     var title: String {

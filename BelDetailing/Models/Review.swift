@@ -28,7 +28,7 @@ extension Review {
                 providerId: "prov_001",
                 customerName: "Sophie L.",
                 rating: 5,
-                comment: "Service impeccable, très pro !",
+                comment: "Voiture comme neuve !,Voiture comme neuve !,Voiture comme neuve !,Voiture comme neuve !,Voiture comme neuve !,Voiture comme neuve !,Voiture comme neuve !,Voiture comme neuve !",
                 createdAt: "2025-10-28T10:00:00Z"
             ),
             Review(
@@ -47,6 +47,15 @@ extension Review {
                 customerName: "Claire D.",
                 rating: 5,
                 comment: "Voiture comme neuve !",
+                createdAt: "2025-11-02T09:45:00Z"
+            ),
+            Review(
+                id: "rev_004",
+                bookingId: "bkg_005",
+                providerId: "prov_004",
+                customerName: "Claire D.",
+                rating: 5,
+                comment: "Voiture comme neuve !,Voiture comme neuve !,Voiture comme neuve !,Voiture comme neuve !,Voiture comme neuve !,Voiture comme neuve !,Voiture comme neuve !,Voiture comme neuve !",
                 createdAt: "2025-11-02T09:45:00Z"
             )
         ]

@@ -8,8 +8,8 @@
 import Foundation
 
 enum Server: String {
-  case dev = "http://localhost:8000/"
-  case prod = "https://api.beldetail.be/"
+  case dev = "http://localhost:10000/"
+  case prod = "https://beldetailing-backend.onrender.com/"
 }
 
 typealias APIResponse<T: Decodable> = Result<T, APIError>

@@ -72,6 +72,3 @@ struct HomeView: View {
     }
 }
 
-#Preview {
-    HomeView(engine: Engine(mock: true))
-}

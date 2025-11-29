@@ -12,6 +12,8 @@ enum UserDefaultsKeys: String {
     case userRole
     case authToken
     case userProfile
+    case accessToken
+    case refreshToken
     case selectedCity
     case cachedOffers
     case cachedProviders

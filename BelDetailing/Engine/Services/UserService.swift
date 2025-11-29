@@ -7,79 +7,172 @@
 
 import Foundation
 
+struct ProfileResponse: Codable {
+    let user: User
+}
+
 // MARK: - Protocol
 protocol UserService {
     // MARK: Auth
-    var currentUser: User? { get set } // ✅ ajouté
-    func register(payload: [String: Any]) async -> APIResponse<User>
-    func login(email: String, password: String) async -> APIResponse<User>
-    func refresh() async -> APIResponse<Bool>
+    var currentUser: UserLite? { get set }
+    var fullUser: User? { get set }
+
+    func register(payload: [String: Any]) async -> APIResponse<AuthSession>
+    func login(email: String, password: String) async -> APIResponse<AuthSession>
+    func refresh() async -> APIResponse<AuthSession>
     func me() async -> APIResponse<User>
 
-    // MARK: Profile
-    func updateProfile(data: [String: Any]) async -> APIResponse<User>
+    // Social
+    func loginWithApple(
+        identityToken: String,
+        authorizationCode: String?,
+        fullName: String?,
+        email: String?
+    ) async -> APIResponse<AuthSession>
 
-    // MARK: TVA Validation
+    func loginWithGoogle(idToken: String) async -> APIResponse<AuthSession>
+
+    // Profile & TVA
+    func updateProfile(data: [String: Any]) async -> APIResponse<User>
     func validateVAT(_ number: String) async -> APIResponse<Bool>
 
-    // MARK: Providers Discovery
+    // Providers
     func providersNearby(lat: Double, lng: Double, radius: Double) async -> APIResponse<[Detailer]>
     func recommendedProviders(limit: Int?) async -> APIResponse<[Detailer]>
 }
 
 // MARK: - Network Implementation
 final class UserServiceNetwork: UserService {
-    var currentUser: User? // ✅ ajouté
+    var currentUser: UserLite?
+    var fullUser: User?
 
     private let networkClient: NetworkClient
     init(networkClient: NetworkClient) { self.networkClient = networkClient }
 
-    // MARK: Auth
-    func register(payload: [String: Any]) async -> APIResponse<User> {
-        let response: APIResponse<User> = await networkClient.call(endPoint: .register, dict: payload)
-        if case let .success(user) = response {
-            currentUser = user
+    // MARK: - Helpers
+    private func handleAuthSuccess(_ session: AuthSession) {
+        currentUser = session.user
+
+        // ⬇️ Ici tu utilises ton StorageManager à toi
+        StorageManager.shared.saveAccessToken(session.accessToken)
+        StorageManager.shared.saveRefreshToken(session.refreshToken)
+
+        // Et tu mets à jour le header global
+        NetworkClient.defaultHeaders["Authorization"] = "Bearer \(session.accessToken)"
+    }
+
+    // MARK: - Auth
+
+    func register(payload: [String: Any]) async -> APIResponse<AuthSession> {
+        let response: APIResponse<AuthSession> = await networkClient.call(
+            endPoint: .register,
+            dict: payload
+        )
+        if case let .success(session) = response {
+            handleAuthSuccess(session)
         }
         return response
     }
 
-    func login(email: String, password: String) async -> APIResponse<User> {
-        let response: APIResponse<User> = await networkClient.call(
+    func login(email: String, password: String) async -> APIResponse<AuthSession> {
+        let response: APIResponse<AuthSession> = await networkClient.call(
             endPoint: .login,
             dict: ["email": email, "password": password]
         )
-        if case let .success(user) = response {
-            currentUser = user
+        if case let .success(session) = response {
+            handleAuthSuccess(session)
         }
         return response
     }
 
-    func refresh() async -> APIResponse<Bool> {
-        await networkClient.call(endPoint: .refresh)
+    func refresh() async -> APIResponse<AuthSession> {
+        // Tu peux récupérer le refreshToken depuis StorageManager
+        let storedRefresh = StorageManager.shared.getRefreshToken() ?? ""
+
+        let response: APIResponse<AuthSession> = await networkClient.call(
+            endPoint: .refresh,
+            dict: ["refreshToken": storedRefresh]
+        )
+        if case let .success(session) = response {
+            handleAuthSuccess(session)
+        }
+        return response
     }
 
     func me() async -> APIResponse<User> {
-        let response: APIResponse<User> = await networkClient.call(endPoint: .profile)
-        if case let .success(user) = response {
-            currentUser = user
+        let response: APIResponse<ProfileResponse> = await networkClient.call(endPoint: .profile)
+
+        switch response {
+        case .success(let payload):
+            self.fullUser = payload.user
+            return .success(payload.user)
+
+        case .failure(let error):
+            return .failure(error)
         }
-        return response
     }
+
 
     func updateProfile(data: [String: Any]) async -> APIResponse<User> {
-        let response: APIResponse<User> = await networkClient.call(endPoint: .updateProfile, dict: data)
-        if case let .success(user) = response {
-            currentUser = user
+        let response: APIResponse<ProfileResponse> = await networkClient.call(
+            endPoint: .updateProfile,
+            dict: data
+        )
+
+        switch response {
+        case .success(let payload):
+            self.fullUser = payload.user
+            return .success(payload.user)
+
+        case .failure(let error):
+            return .failure(error)
+        }
+    }
+
+
+    // MARK: - Social
+
+    func loginWithApple(
+        identityToken: String,
+        authorizationCode: String?,
+        fullName: String?,
+        email: String?
+    ) async -> APIResponse<AuthSession> {
+
+        var dict: [String: Any] = [
+            "identityToken": identityToken
+        ]
+        if let authorizationCode { dict["authorizationCode"] = authorizationCode }
+        if let fullName { dict["fullName"] = fullName }
+        if let email { dict["email"] = email }
+
+        let response: APIResponse<AuthSession> = await networkClient.call(
+            endPoint: .loginApple,
+            dict: dict
+        )
+        if case let .success(session) = response {
+            handleAuthSuccess(session)
         }
         return response
     }
 
-    // MARK: TVA Validation
+    func loginWithGoogle(idToken: String) async -> APIResponse<AuthSession> {
+        let response: APIResponse<AuthSession> = await networkClient.call(
+            endPoint: .loginGoogle,
+            dict: ["idToken": idToken]
+        )
+        if case let .success(session) = response {
+            handleAuthSuccess(session)
+        }
+        return response
+    }
+
+    // MARK: - TVA + Providers
+
     func validateVAT(_ number: String) async -> APIResponse<Bool> {
         await networkClient.call(endPoint: .vatValidate(number: number))
     }
 
-    // MARK: Providers Discovery
     func providersNearby(lat: Double, lng: Double, radius: Double) async -> APIResponse<[Detailer]> {
         await networkClient.call(
             endPoint: .providersList,
@@ -92,54 +185,5 @@ final class UserServiceNetwork: UserService {
             endPoint: .providersList,
             urlDict: ["sort": "rating,-priceMin", "limit": limit]
         )
-    }
-}
-
-// MARK: - Mock Implementation
-final class UserServiceMock: MockService, UserService {
-    var currentUser: User? = .sampleProvider // ✅ par défaut prestataire pour voir le dashboard
-
-    func register(payload: [String: Any]) async -> APIResponse<User> {
-        await randomWait()
-        let user = User.sampleCustomer
-        currentUser = user
-        return .success(user)
-    }
-
-    func login(email: String, password: String) async -> APIResponse<User> {
-        await randomWait()
-        let user = User.sampleCustomer
-        currentUser = user
-        return .success(user)
-    }
-
-    func refresh() async -> APIResponse<Bool> {
-        await randomWait()
-        return .success(true)
-    }
-
-    func me() async -> APIResponse<User> {
-        await randomWait()
-        return .success(currentUser ?? .sampleCustomer)
-    }
-
-    func updateProfile(data: [String: Any]) async -> APIResponse<User> {
-        await randomWait()
-        return .success(currentUser ?? .sampleCustomer)
-    }
-
-    func validateVAT(_ number: String) async -> APIResponse<Bool> {
-        await randomWait()
-        return .success(number.uppercased().hasPrefix("BE"))
-    }
-
-    func providersNearby(lat: Double, lng: Double, radius: Double) async -> APIResponse<[Detailer]> {
-        await randomWait()
-        return .success(Detailer.sampleValues)
-    }
-
-    func recommendedProviders(limit: Int?) async -> APIResponse<[Detailer]> {
-        await randomWait()
-        return .success(Detailer.sampleValues)
     }
 }

@@ -125,29 +125,24 @@ struct DashboardProviderView: View {
     
     // MARK: - FILTER TABS
     private var filterTabs: some View {
-        HStack(spacing: 14) {
-            filterButton(.offers,   title: R.string.localizable.dashboardTabOffers())
-            filterButton(.calendar, title: R.string.localizable.dashboardTabCalendar())
-            filterButton(.stats,    title: R.string.localizable.dashboardTabStats())
-            filterButton(.reviews,  title: R.string.localizable.dashboardTabReviews())
+        ScrollView(.horizontal, showsIndicators: false) {
+            HStack(spacing: AppStyle.Padding.small16.rawValue) {
+                filterButton(.offers,   title: R.string.localizable.dashboardTabOffers())
+                filterButton(.calendar,   title: R.string.localizable.dashboardTabCalendar())
+                filterButton(.stats,      title: R.string.localizable.dashboardTabStats())
+                filterButton(.reviews,    title: R.string.localizable.dashboardTabReviews())
+            }
+            .padding(.horizontal, AppStyle.Padding.small16.rawValue)
+            .padding(.vertical, AppStyle.Padding.small16.rawValue)
+            .background(Color.white)
         }
-        .padding(.horizontal, 20)
     }
-    
     private func filterButton(_ tab: ProviderDashboardFilter, title: String) -> some View {
-        Button {
-            viewModel.selectedFilter = tab
-        } label: {
-            Text(title)
-                .font(.system(size: 15, weight: .semibold))
-                .lineLimit(1)
-                .minimumScaleFactor(0.7)
-                .padding(.horizontal, 20)
-                .padding(.vertical, 10)
-                .background(viewModel.selectedFilter == tab ? .black : .white)
-                .foregroundColor(viewModel.selectedFilter == tab ? .white : .black)
-                .cornerRadius(24)
-        }
+        FilterChip(
+            title: title,
+            isSelected: viewModel.selectedFilter == tab,
+            action: { viewModel.selectedFilter = tab }
+        )
     }
 }
 // -----------------

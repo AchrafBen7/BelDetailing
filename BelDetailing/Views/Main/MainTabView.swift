@@ -12,6 +12,7 @@ struct MainTabView: View {
 
     @EnvironmentObject var mainTabSelection: MainTabSelection
     @EnvironmentObject var tabBarVisibility: TabBarVisibility
+    @State private var profileResetID = UUID()
 
     // 👇 AJOUTE ÇA
     init(engine: Engine) {
@@ -47,6 +48,7 @@ struct MainTabView: View {
                     .tabItem { EmptyView() }
 
                 ProfileView(engine: engine)
+                    .id(profileResetID)     // 👈 IMPORTANT
                     .environmentObject(tabBarVisibility)
                     .tag(Tab.profile)
                     .tabItem { EmptyView() }
@@ -59,8 +61,13 @@ struct MainTabView: View {
                     onDashboardReselect: {
                         dashboardResetID = UUID()
                         mainTabSelection.currentTab = .dashboard
+                    },
+                    onProfileReselect: {
+                        profileResetID = UUID()          // 👈 reset navigation
+                        mainTabSelection.currentTab = .profile
                     }
                 )
+
                 .padding(.horizontal, 16)
                 .padding(.bottom,-20)
                 .ignoresSafeArea(edges: .bottom)

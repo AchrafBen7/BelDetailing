@@ -7,6 +7,7 @@
 
 import Foundation
 
+
 enum UserRole: String, Codable, CaseIterable { case customer, company, provider }
 
 struct User: Codable, Identifiable, Hashable {

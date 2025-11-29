@@ -21,7 +21,7 @@ struct BookingStep3View: View {
     @EnvironmentObject var mainTabSelection: MainTabSelection
 
     @State var goToConfirmation = false
-    @State var selectedPayment: PaymentMethod = .card
+    @State var selectedPayment: Payment = .card
     @State var promoCode: String = ""
     let cardInset: CGFloat = 20
 

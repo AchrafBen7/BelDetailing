@@ -1,17 +1,14 @@
-//
 //  ProfileView.swift
-//  BelDetailing
-//
-//  Created by Achraf Benali on 08/11/2025.
-//
 
 import SwiftUI
 import RswiftResources
 
 struct ProfileView: View {
     @StateObject private var vm: ProfileViewModel
+    private let engine: Engine           // 👈 on garde l’engine pour pousser les vues
     
     init(engine: Engine) {
+        self.engine = engine
         _vm = StateObject(wrappedValue: ProfileViewModel(engine: engine))
     }
     
@@ -39,8 +36,7 @@ struct ProfileView: View {
                                     user: user,
                                     subtitle: R.string.localizable.profileHeaderSubtitle()
                                 ) {
-                                    // TODO: navigatie naar detailprofiel
-                                    // bv. vm.openProfileDetails()
+                                    // Plus tard: détail du profil
                                     print("Profile tapped")
                                 }
                                 
@@ -51,10 +47,9 @@ struct ProfileView: View {
                                     .padding(.top, 8)
                                 
                                 VStack(spacing: 12) {
-                                    // MARK: - Settings cards
-                                    
+                                    // MARK: - My Orders -> BookingsView
                                     NavigationLink {
-                                        Text("Orders WIP")
+                                        BookingsView(engine: engine)
                                     } label: {
                                         ProfileSettingRow(
                                             systemIcon: "doc.text",
@@ -62,8 +57,9 @@ struct ProfileView: View {
                                         )
                                     }
                                     
+                                    // MARK: - Payments & payouts
                                     NavigationLink {
-                                        Text("Payments & Payouts WIP")
+                                        PaymentSettingsView(engine: engine)
                                     } label: {
                                         ProfileSettingRow(
                                             systemIcon: "creditcard",
@@ -71,8 +67,9 @@ struct ProfileView: View {
                                         )
                                     }
                                     
+                                    // MARK: - Taxes
                                     NavigationLink {
-                                        Text("Taxes WIP")
+                                        TaxesView(engine: engine)
                                     } label: {
                                         ProfileSettingRow(
                                             systemIcon: "doc.plaintext",
@@ -80,8 +77,9 @@ struct ProfileView: View {
                                         )
                                     }
                                     
+                                    // MARK: - Login & Security
                                     NavigationLink {
-                                        Text("Login & Security WIP")
+                                        LoginSecurityView(engine: engine)
                                     } label: {
                                         ProfileSettingRow(
                                             systemIcon: "lock.shield",
@@ -129,6 +127,3 @@ struct ProfileView: View {
     }
 }
 
-#Preview {
-    ProfileView(engine: Engine(mock: true))
-}
