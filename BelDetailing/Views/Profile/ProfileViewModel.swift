@@ -33,8 +33,15 @@ final class ProfileViewModel: ObservableObject {
     }
   }
 
-  func logout() {
-    StorageManager.shared.clearSession()
-    user = nil
-  }
+    func logout() {
+        Task {
+            await engine.logout()
+
+            await MainActor.run {
+                NotificationCenter.default.post(name: .userDidLogout, object: nil)
+            }
+        }
+    }
+
+
 }

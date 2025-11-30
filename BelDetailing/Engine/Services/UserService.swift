@@ -11,6 +11,10 @@ struct ProfileResponse: Codable {
     let user: User
 }
 
+struct EmptyResponse: Codable {}
+
+
+
 // MARK: - Protocol
 protocol UserService {
     // MARK: Auth
@@ -21,7 +25,8 @@ protocol UserService {
     func login(email: String, password: String) async -> APIResponse<AuthSession>
     func refresh() async -> APIResponse<AuthSession>
     func me() async -> APIResponse<User>
-
+    func logout() async -> APIResponse<Bool>
+    
     // Social
     func loginWithApple(
         identityToken: String,
@@ -111,6 +116,27 @@ final class UserServiceNetwork: UserService {
             return .failure(error)
         }
     }
+    
+    func logout() async -> APIResponse<Bool> {
+        let response: APIResponse<EmptyResponse> = await networkClient.call(
+            endPoint: .logout,
+            dict: nil    // important → PAS de body vide "{ }"
+        )
+
+        switch response {
+        case .success:
+            StorageManager.shared.clearSession()
+            currentUser = nil
+            fullUser = nil
+            NetworkClient.defaultHeaders["Authorization"] = nil
+            return .success(true)
+
+        case .failure(let err):
+            return .failure(err)
+        }
+    }
+
+
 
 
     func updateProfile(data: [String: Any]) async -> APIResponse<User> {
@@ -187,3 +213,4 @@ final class UserServiceNetwork: UserService {
         )
     }
 }
+

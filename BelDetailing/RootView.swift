@@ -33,5 +33,9 @@ struct RootView: View {
                 isLoggedIn = true
             }
         }
+        .onReceive(NotificationCenter.default.publisher(for: .userDidLogout)) { _ in
+            isLoggedIn = false
+        }
+
     }
 }

@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import SwiftUI
 
 enum AuthRoute: Hashable {
     case login

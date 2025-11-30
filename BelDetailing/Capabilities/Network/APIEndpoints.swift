@@ -23,6 +23,7 @@ enum APIEndPoint {
     case profile, updateProfile
     case loginApple          // ✅ NEW
     case loginGoogle
+    case logout
     
     // Providers
     case providersList
@@ -87,10 +88,9 @@ protocol EndpointMapper {
 
 // MARK: - Mapper Implementation
 struct BelDetailingEndpointMapper: EndpointMapper {
-    
     static func path(for endPoint: APIEndPoint) -> String {
         switch endPoint {
-        case .register, .login, .refresh, .profile, .updateProfile, .loginApple, .loginGoogle:
+        case .register, .login, .refresh, .profile, .updateProfile, .loginApple, .loginGoogle, .logout:
             return authPath(for: endPoint)
         case .providersList, .providerDetail, .providerReviews, .providerServices, .providerStats, .providerReviewCreate:
             return providerPath(for: endPoint)
@@ -117,7 +117,7 @@ struct BelDetailingEndpointMapper: EndpointMapper {
     
     static func method(for endPoint: APIEndPoint) -> HTTPVerb {
         switch endPoint {
-        case .register, .login, .refresh,.loginApple, .loginGoogle, .providerReviewCreate, .bookingCreate, .bookingCancel,
+        case .register, .login, .refresh,.loginApple, .loginGoogle,.logout, .providerReviewCreate, .bookingCreate, .bookingCancel,
                 .bookingConfirm, .bookingDecline, .offerCreate, .offerClose, .offerApply,
                 .applicationWithdraw, .applicationAccept, .applicationRefuse,
                 .notificationSubscribe, .paymentIntent, .mediaUpload:
@@ -150,6 +150,7 @@ private extension BelDetailingEndpointMapper {
         case .loginGoogle: return
             "api/v1/auth/google"
         case .profile, .updateProfile: return "api/v1/profile"
+        case .logout: return "api/v1/auth/logout"
         default: return ""
         }
     }
