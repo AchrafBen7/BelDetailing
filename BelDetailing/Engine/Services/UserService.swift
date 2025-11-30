@@ -21,12 +21,13 @@ protocol UserService {
     var currentUser: UserLite? { get set }
     var fullUser: User? { get set }
 
-    func register(payload: [String: Any]) async -> APIResponse<AuthSession>
+    func register(payload: [String: Any]) async -> APIResponse<RegisterResponse>
     func login(email: String, password: String) async -> APIResponse<AuthSession>
     func refresh() async -> APIResponse<AuthSession>
     func me() async -> APIResponse<User>
     func logout() async -> APIResponse<Bool>
-    
+    func resendConfirmationEmail(email: String) async -> APIResponse<Bool>
+
     // Social
     func loginWithApple(
         identityToken: String,
@@ -68,16 +69,10 @@ final class UserServiceNetwork: UserService {
 
     // MARK: - Auth
 
-    func register(payload: [String: Any]) async -> APIResponse<AuthSession> {
-        let response: APIResponse<AuthSession> = await networkClient.call(
-            endPoint: .register,
-            dict: payload
-        )
-        if case let .success(session) = response {
-            handleAuthSuccess(session)
-        }
-        return response
+    func register(payload: [String: Any]) async -> APIResponse<RegisterResponse> {
+        await networkClient.call(endPoint: .register, dict: payload)
     }
+
 
     func login(email: String, password: String) async -> APIResponse<AuthSession> {
         let response: APIResponse<AuthSession> = await networkClient.call(
@@ -136,8 +131,22 @@ final class UserServiceNetwork: UserService {
         }
     }
 
+    func resendConfirmationEmail(email: String) async -> APIResponse<Bool> {
+        let response: APIResponse<EmptyResponse> = await networkClient.call(
+            endPoint: .login,   // ❗️ SUPABASE trick : envoie lien magique
+            dict: [
+                "email": email,
+                "shouldSendVerification": true
+            ]
+        )
 
-
+        switch response {
+        case .success:
+            return .success(true)
+        case .failure(let err):
+            return .failure(err)
+        }
+    }
 
     func updateProfile(data: [String: Any]) async -> APIResponse<User> {
         let response: APIResponse<ProfileResponse> = await networkClient.call(

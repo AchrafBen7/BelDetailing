@@ -13,3 +13,9 @@ struct UserLite: Codable, Identifiable {
     let vatNumber: String?
     let isVatValid: Bool?
 }
+
+struct RegisterResponse: Codable {
+    let success: Bool
+    let email: String
+    let role: String
+}

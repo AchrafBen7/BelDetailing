@@ -1,163 +1,199 @@
-//
-//  SignupFormView.swift
-//  BelDetailing
-//
-//  Created by Achraf Benali on 10/11/2025.
-//
-
 import SwiftUI
 import RswiftResources
 
 struct SignupFormView: View {
-  let role: UserRole
-  var onBack: () -> Void = {}
-  var onSubmit: () -> Void = {}
-  var onLogin: () -> Void = {}
+    let role: UserRole
+    let onBack: () -> Void
+    let onSuccess: (String) -> Void
+    let onLogin: () -> Void
 
-  @State private var fullName = ""
-  @State private var email = ""
-  @State private var phone = ""
-  @State private var vatNumber = ""
-  @State private var password = ""
+    @StateObject private var vm: SignupViewModel
 
-  var body: some View {
-    ScrollView(showsIndicators: false) {
-      VStack(alignment: .leading, spacing: 24) {
+    @State private var fullName = ""
+    @State private var email = ""
+    @State private var phone = ""
+    @State private var vatNumber = ""
+    @State private var password = ""
 
-        // === HEADER ===
-        Button(action: onBack) {
-          HStack(spacing: 6) {
-            Image(systemName: "chevron.left")
-              .font(.system(size: 17, weight: .semibold))
-            Text(R.string.localizable.commonBack())
-              .font(.system(size: 17))
-          }
-          .foregroundColor(.gray)
-          .frame(height: 44, alignment: .leading)
-          .contentShape(Rectangle())
-        }
-        .padding(.top, 8)
+    @State private var isLoading = false   // 🔥 NEW anti double-clic
 
-        Text(R.string.localizable.signupCreateAccountTitle())
-          .font(.system(size: 44, weight: .heavy))
-          .foregroundColor(.black)
-          .multilineTextAlignment(.leading)
+    // MARK: - INIT
+    init(role: UserRole, engine: Engine, onBack: @escaping () -> Void,
+         onSuccess: @escaping (String) -> Void, onLogin: @escaping () -> Void) {
 
-        Text(R.string.localizable.signupCreateAccountSubtitle())
-          .font(.system(size: 17))
-          .foregroundColor(.gray)
+        self.role = role
+        self.onBack = onBack
+        self.onSuccess = onSuccess
+        self.onLogin = onLogin
 
-        // === BOUTON APPLE ===
-        if role == .customer {
-          Button(action: {}) {
-            Label {
-              Text(R.string.localizable.signupContinueApple())
-                .font(.system(size: 17, weight: .semibold))
-                .baselineOffset(-0.5)
-            } icon: {
-              Image(systemName: "applelogo")
-                .font(.system(size: 18, weight: .regular))
-            }
-            .labelStyle(.titleAndIcon)
-          }
-          .buttonStyle(AppleHoverButtonStrongerBorder(fontSize: 17)) // 👈 version améliorée
-
-          // Séparateur centré (sur une seule ligne)
-          HStack(spacing: 12) {
-            Rectangle()
-              .fill(Color.gray.opacity(0.25))
-              .frame(height: 1)
-            Text(R.string.localizable.signupOrEmail().uppercased())
-              .font(.system(size: 13, weight: .medium))
-              .foregroundColor(.gray)
-              .lineLimit(1)
-              .fixedSize() // 👈 empêche de passer sur 2 lignes
-            Rectangle()
-              .fill(Color.gray.opacity(0.25))
-              .frame(height: 1)
-          }
-          .frame(maxWidth: .infinity)
-          .padding(.top, 8)
-        }
-
-        // === SECTION TITLE ===
-        VStack(alignment: .leading, spacing: 6) {
-          Text(R.string.localizable.signupPersonalInfoTitle())
-            .font(.system(size: 22, weight: .bold))
-            .foregroundColor(.black)
-          Text(R.string.localizable.signupPersonalInfoSubtitle())
-            .font(.system(size: 16))
-            .foregroundColor(.gray)
-        }
-
-        // === CHAMPS ===
-        VStack(spacing: 18) {
-          CustomInputField(
-            icon: "person",
-            title: R.string.localizable.signupFullNameLabel(),
-            placeholder: R.string.localizable.signupFullNamePlaceholder(),
-            text: $fullName
-          )
-          CustomInputField(
-            icon: "envelope",
-            title: R.string.localizable.signupEmailLabel(),
-            placeholder: R.string.localizable.signupEmailPlaceholder(),
-            text: $email,
-            keyboardType: .emailAddress
-          )
-          CustomInputField(
-            icon: "phone",
-            title: R.string.localizable.signupPhoneLabel(),
-            placeholder: R.string.localizable.signupPhonePlaceholder(),
-            text: $phone,
-            keyboardType: .phonePad
-          )
-
-          if role == .company || role == .provider {
-            CustomInputField(
-              icon: "doc.text",
-              title: R.string.localizable.signupVatLabel(),
-              placeholder: R.string.localizable.signupVatPlaceholder(),
-              text: $vatNumber
-            )
-          }
-
-          CustomInputField(
-            icon: "lock",
-            title: R.string.localizable.signupPasswordLabel(),
-            placeholder: R.string.localizable.signupPasswordPlaceholder(),
-            text: $password,
-            isSecure: true
-          )
-        }
-
-        // === CTA ===
-        Button(action: onSubmit) {
-          R.string.localizable.signupCreateAccount()
-            .textView(style: .buttonCTA)
-            .frame(maxWidth: .infinity, minHeight: 56)
-            .background(RoundedRectangle(cornerRadius: 16).fill(Color.black))
-            .foregroundColor(.white)
-        }
-        .buttonStyle(.plain)
-
-        // === ALREADY HAVE ACCOUNT ===
-        HStack(spacing: 6) {
-          Text(R.string.localizable.signupAlreadyAccount())
-            .font(.system(size: 16))
-            .foregroundColor(.gray)
-          Button(action: onLogin) {
-            Text(R.string.localizable.signupLoginAction())
-              .font(.system(size: 16, weight: .semibold))
-              .underline()
-              .foregroundColor(.black)
-          }
-        }
-        .padding(.bottom, 40)
-      }
-      .padding(.horizontal, 24)
+        _vm = StateObject(wrappedValue: SignupViewModel(engine: engine, initialRole: role))
     }
-    .background(Color.white.ignoresSafeArea())
-    .navigationBarBackButtonHidden(true)
-  }
+
+    // MARK: - VALIDATION
+    var isEmailValid: Bool {
+        email.contains("@") && email.contains(".")
+    }
+
+    var isPasswordValid: Bool {
+        password.count >= 6
+    }
+
+    var isFullNameValid: Bool {
+        !fullName.trimmingCharacters(in: .whitespaces).isEmpty
+    }
+
+    var isPhoneValid: Bool {
+        phone.count >= 8
+    }
+
+    var isVatValid: Bool {
+        if role == .customer { return true }
+        return vatNumber.count >= 8
+    }
+
+    var isFormValid: Bool {
+        isEmailValid && isPasswordValid && isFullNameValid && isPhoneValid && isVatValid
+    }
+
+    // MARK: - BODY
+    var body: some View {
+        ScrollView(showsIndicators: false) {
+            VStack(alignment: .leading, spacing: 24) {
+
+                // === BACK BUTTON ===
+                Button(action: onBack) {
+                    HStack(spacing: 6) {
+                        Image(systemName: "chevron.left")
+                            .font(.system(size: 17, weight: .semibold))
+                        Text(R.string.localizable.commonBack())
+                            .font(.system(size: 17))
+                    }
+                    .foregroundColor(.gray)
+                    .frame(height: 44, alignment: .leading)
+                }
+                .padding(.top, 8)
+
+                // === TITLE ===
+                Text(R.string.localizable.signupCreateAccountTitle())
+                    .font(.system(size: 44, weight: .heavy))
+
+                Text(R.string.localizable.signupCreateAccountSubtitle())
+                    .font(.system(size: 17))
+                    .foregroundColor(.gray)
+
+                // === FIELDS ===
+                VStack(spacing: 18) {
+                    CustomInputField(
+                        icon: "person",
+                        title: R.string.localizable.signupFullNameLabel(),
+                        placeholder: R.string.localizable.signupFullNamePlaceholder(),
+                        text: $fullName,
+                        errorText: "Please enter your full name",
+                        showError: !isFullNameValid && !fullName.isEmpty
+                    )
+
+                    CustomInputField(
+                        icon: "envelope",
+                        title: R.string.localizable.signupEmailLabel(),
+                        placeholder: R.string.localizable.signupEmailPlaceholder(),
+                        text: $email,
+                        keyboardType: .emailAddress,
+                        errorText: "Enter a valid email",
+                        showError: !isEmailValid && !email.isEmpty
+                    )
+
+                    CustomInputField(
+                        icon: "phone",
+                        title: R.string.localizable.signupPhoneLabel(),
+                        placeholder: R.string.localizable.signupPhonePlaceholder(),
+                        text: $phone,
+                        keyboardType: .phonePad,
+                        errorText: "Invalid phone number",
+                        showError: !isPhoneValid && !phone.isEmpty
+                    )
+
+                    if role == .company || role == .provider {
+                        CustomInputField(
+                            icon: "doc.text",
+                            title: R.string.localizable.signupVatLabel(),
+                            placeholder: R.string.localizable.signupVatPlaceholder(),
+                            text: $vatNumber,
+                            errorText: "VAT number required",
+                            showError: !isVatValid && !vatNumber.isEmpty
+                        )
+                    }
+
+                    CustomInputField(
+                        icon: "lock",
+                        title: R.string.localizable.signupPasswordLabel(),
+                        placeholder: R.string.localizable.signupPasswordPlaceholder(),
+                        text: $password,
+                        isSecure: true,
+                        errorText: "Min. 6 characters",
+                        showError: !isPasswordValid && !password.isEmpty
+                    )
+                }
+
+                // === CTA ===
+                Button {
+                    if isLoading { return }
+                    isLoading = true
+
+                    Task {
+                        if let returnedEmail = await vm.registerUser(
+                            email: email,
+                            password: password,
+                            phone: phone,
+                            vatNumber: (role == .company || role == .provider) ? vatNumber : nil
+                        ) {
+                            UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+                            await MainActor.run { onSuccess(returnedEmail) }  // 🔥 navigation OK
+                        } else {
+                            UINotificationFeedbackGenerator().notificationOccurred(.error)
+                        }
+
+                        isLoading = false
+                    }
+                } label: {
+                    ZStack {
+                        if isLoading {
+                            ProgressView()
+                                .progressViewStyle(CircularProgressViewStyle(tint: .white))
+                        } else {
+                            Text(R.string.localizable.signupCreateAccount())
+                                .font(.system(size: 17, weight: .bold))
+                        }
+                    }
+                    .frame(maxWidth: .infinity, minHeight: 56)
+                    .background(
+                        RoundedRectangle(cornerRadius: 16)
+                            .fill(isFormValid ? Color.black : Color.gray.opacity(0.3))
+                    )
+                    .foregroundColor(.white)
+                }
+                .disabled(!isFormValid || isLoading)
+                .opacity(isFormValid ? 1 : 0.5)
+
+                // === LOGIN LINK ===
+                HStack(spacing: 6) {
+                    Text(R.string.localizable.signupAlreadyAccount())
+                        .foregroundColor(.gray)
+                    Button(action: onLogin) {
+                        Text(R.string.localizable.signupLoginAction())
+                            .underline()
+                            .foregroundColor(.black)
+                    }
+                }
+                .padding(.bottom, 40)
+            }
+            .padding(.horizontal, 24)
+        }
+        .background(Color.white.ignoresSafeArea())
+        .onAppear {
+            if vm.selectedRole == nil {
+                vm.selectedRole = role
+            }
+        }
+        .navigationBarBackButtonHidden(true)
+    }
 }

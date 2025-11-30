@@ -8746,6 +8746,259 @@
         }
       }
     },
+    "verify.email.title" : {
+      "comment" : "Title for email verification screen",
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated","value" : "Verify your email." } },
+        "fr" : { "stringUnit" : { "state" : "translated","value" : "Vérifiez votre email." } },
+        "nl" : { "stringUnit" : { "state" : "translated","value" : "Verifieer je e-mail." } }
+      }
+    },
+    "verify.email.subtitle2" : {
+      "comment" : "Instructions after sending email",
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated","value" : "Click the link in the email to activate your account and start using BelDetail." } },
+        "fr" : { "stringUnit" : { "state" : "translated","value" : "Cliquez sur le lien dans l'email pour activer votre compte et commencer à utiliser BelDetail." } },
+        "nl" : { "stringUnit" : { "state" : "translated","value" : "Klik op de link in de e-mail om je account te activeren en BelDetail te gebruiken." } }
+      }
+    },
+    "verify.email.step1.title" : {
+      "comment" : "Step 1 title",
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated","value" : "Check your inbox" } },
+        "fr" : { "stringUnit" : { "state" : "translated","value" : "Vérifiez votre boîte mail" } },
+        "nl" : { "stringUnit" : { "state" : "translated","value" : "Controleer je inbox" } }
+      }
+    },
+    "verify.email.step2.title" : {
+      "comment" : "Step 2 title",
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated","value" : "Click the link" } },
+        "fr" : { "stringUnit" : { "state" : "translated","value" : "Cliquez sur le lien" } },
+        "nl" : { "stringUnit" : { "state" : "translated","value" : "Klik op de link" } }
+      }
+    },
+    "verify.email.step1.title" : {
+      "comment" : "Title of step 1 in verify email screen",
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Check your inbox"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vérifiez votre boîte mail"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Controleer je mailbox"
+          }
+        }
+      }
+    },
+    "verify.email.step1.subtitle" : {
+      "comment" : "Subtitle of step 1 in verify email screen",
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open the email we just sent you."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ouvrez l'email que nous venons d'envoyer."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open de e-mail die we net hebben verstuurd."
+          }
+        }
+      }
+    },
+    "verify.email.step2.subtitle" : {
+      "comment" : "Step 2 subtitle",
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated","value" : "Validate your email address in one click" } },
+        "fr" : { "stringUnit" : { "state" : "translated","value" : "Validez votre adresse email en un clic" } },
+        "nl" : { "stringUnit" : { "state" : "translated","value" : "Bevestig je e-mailadres met één klik" } }
+      }
+    },
+    "verify.email.resend" : {
+      "comment" : "Button to resend verification email",
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : { "stringUnit" : {"state" : "translated", "value" : "Resend email" } },
+        "fr" : { "stringUnit" : {"state" : "translated", "value" : "Renvoyer l'email" } },
+        "nl" : { "stringUnit" : { "state" : "translated","value" : "E-mail opnieuw verzenden" } }
+      }
+    },
+    "verify.email.resend.countdown" : {
+      "comment" : "Resend button with countdown",
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Resend in %@s" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Renvoyer dans %@s" } },
+        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Opnieuw verzenden over %@s" } }
+      }
+    },
+    "verify.email.step2.title" : {
+      "comment" : "Title of step 2 in verify email screen",
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "click the link."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "cliquez sur le lien."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "klik op de link."
+          }
+        }
+      }
+    },
+    "verify.email.step2.subtitle" : {
+      "comment" : "Subtitle of step 2 in verify email screen",
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Confirm your email address in one click."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Validez votre adresse email en un clic."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bevestig je e-mailadres met één klik."
+          }
+        }
+      }
+    },
+    "verify.email.step3.title" : {
+      "comment" : "Title of step 3 in verify email screen",
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "log in."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "connectez-vous."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "log je in."
+          }
+        }
+      }
+    },
+    "verify.email.step3.subtitle" : {
+      "comment" : "Subtitle of step 3 in verify email screen",
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Access your BelDetail account."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Accédez à votre compte BelDetail."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ga naar je BelDetail-account."
+          }
+        }
+      }
+    },
+    "verify.email.subtitle1" : {
+    "extractionState" : "stale",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "We sent a verification email to" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Nous avons envoyé un email de vérification à" } },
+        "nl" : { "stringUnit" : { "state" : "translated", "value" : "We hebben een verificatie-e-mail gestuurd naar" } }
+      }
+    },
+    "verify.email.backToLogin" : {
+      "comment" : "Link to go back to login",
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : { "stringUnit" : {"state" : "translated", "value" : "Back to login" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Retour à la connexion" } },
+        "nl" : { "stringUnit" : { "state" : "translated", "value" : "Terug naar login" } }
+      }
+    },
+    "verify.email.step3.subtitle" : {
+      "comment" : "Step 3 subtitle",
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated","value" : "Access your BelDetail account" } },
+        "fr" : { "stringUnit" : { "state" : "translated","value" : "Accédez à votre compte BelDetail" } },
+        "nl" : { "stringUnit" : { "state" : "translated","value" : "Ga naar je BelDetail-account" } }
+      }
+    },
+
+    "verify.email.step3.title" : {
+      "comment" : "Step 3 title",
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated","value" : "Log in" } },
+        "fr" : { "stringUnit" : { "state" : "translated","value" : "Connectez-vous" } },
+        "nl" : { "stringUnit" : { "state" : "translated","value" : "Log in" } }
+      }
+    },
+
+    "verify.email.step1.subtitle" : {
+      "comment" : "Step 1 subtitle",
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated","value" : "Open the email we just sent you" } },
+        "fr" : { "stringUnit" : { "state" : "translated","value" : "Ouvrez l'email que nous venons d'envoyer" } },
+        "nl" : { "stringUnit" : { "state" : "translated","value" : "Open de e-mail die we zojuist hebben verzonden" } }
+      }
+    },
     "tab.dashboard" : {
       "comment" : "Tab bar item for provider dashboard",
       "extractionState" : "stale",
