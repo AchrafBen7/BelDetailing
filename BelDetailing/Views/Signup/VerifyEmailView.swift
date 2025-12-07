@@ -121,7 +121,6 @@ struct VerifyEmailView: View {
             .disabled(secondsLeft > 0)
             .padding(.horizontal, 20)
 
-
             // Retour à la connexion
             Button(action: onBackToLogin) {
                 Text(R.string.localizable.verifyEmailBackToLogin())
@@ -129,7 +128,6 @@ struct VerifyEmailView: View {
                     .foregroundColor(.black)
                     .underline()
             }
-
 
             Spacer()
         }

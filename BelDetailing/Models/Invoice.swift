@@ -9,11 +9,10 @@ struct Invoice: Identifiable, Hashable {
     let date: Date
 }
 
-extension Invoice {
+extension Invoice { // Readfortune1@gmail.com et Achrouf1208.
     static func fromBookings(_ bookings: [Booking]) -> [Invoice] {
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd"
-        
         return bookings.compactMap { booking in
             guard let date = formatter.date(from: booking.date) else { return nil }
             return Invoice(
@@ -25,7 +24,4 @@ extension Invoice {
         }
     }
     
-    static var sampleValues: [Invoice] {
-        fromBookings(Booking.sampleValues)
-    }
 }

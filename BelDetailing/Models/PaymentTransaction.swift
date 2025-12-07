@@ -39,7 +39,4 @@ extension PaymentTransaction {
         }
     }
     
-    static var sampleValues: [PaymentTransaction] {
-        fromBookings(Booking.sampleValues)
-    }
 }

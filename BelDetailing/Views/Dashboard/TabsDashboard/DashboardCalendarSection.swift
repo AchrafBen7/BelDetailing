@@ -1,33 +1,23 @@
 import SwiftUI
 
 struct ProviderMonthCalendarView: View {
-    
     @Binding var selectedDate: Date
     let status: CalendarDayStatus// jours du mois avec réservations
-    
     private let calendar = Calendar.current
-    
     var body: some View {
         VStack(spacing: 12) {
-            
-            
             header
-            
             weekdayRow
-            
             monthGrid
         }
         .padding(.horizontal, 20)
     }
-    
     // MARK: - Header (mois + flèches)
     private var header: some View {
         HStack {
             Text(monthTitle(for: selectedDate))
                 .font(.system(size: 20, weight: .semibold))
-            
             Spacer()
-            
             Button {
                 moveMonth(by: -1)
             } label: {

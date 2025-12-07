@@ -45,6 +45,7 @@ protocol UserService {
     // Providers
     func providersNearby(lat: Double, lng: Double, radius: Double) async -> APIResponse<[Detailer]>
     func recommendedProviders(limit: Int?) async -> APIResponse<[Detailer]>
+    func allProviders() async -> APIResponse<[Detailer]>
 }
 
 // MARK: - Network Implementation
@@ -86,12 +87,12 @@ final class UserServiceNetwork: UserService {
     }
 
     func refresh() async -> APIResponse<AuthSession> {
-        // Tu peux récupérer le refreshToken depuis StorageManager
         let storedRefresh = StorageManager.shared.getRefreshToken() ?? ""
 
         let response: APIResponse<AuthSession> = await networkClient.call(
             endPoint: .refresh,
-            dict: ["refreshToken": storedRefresh]
+            dict: ["refreshToken": storedRefresh],
+            allowAutoRefresh: false
         )
         if case let .success(session) = response {
             handleAuthSuccess(session)
@@ -221,5 +222,10 @@ final class UserServiceNetwork: UserService {
             urlDict: ["sort": "rating,-priceMin", "limit": limit]
         )
     }
+    func allProviders() async -> APIResponse<[Detailer]> {
+           await networkClient.call(
+               endPoint: .providersList
+           )
+       }
 }
 

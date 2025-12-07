@@ -1,36 +1,33 @@
-//
-//  ConfirmButton.swift
-//  BelDetailing
-//
-//  Created by Achraf Benali on 19/11/2025.
-
-
 import SwiftUI
+import StripePaymentSheet
 import RswiftResources
 
 extension BookingStep3View {
 
     var confirmButton: some View {
 
-        let servicePrice = Int(service.price)
-        let appFee = 5
-        let total = servicePrice + appFee
-
-        return Button {
-            goToConfirmation = true
-        } label: {
-            HStack {
-                Image(systemName: "checkmark")
-                Text("\(R.string.localizable.bookingPayNow()) \(total)€")
+        Button {
+            Task {
+                await startPaymentFlow()
             }
-            .font(.system(size: 18, weight: .semibold))
-            .foregroundColor(.white)
-            .padding()
-            .frame(maxWidth: .infinity)
-            .background(Color.black)
-            .cornerRadius(30)
+        } label: {
+            Text("Betalen en bevestigen")
+                .font(.system(size: 19, weight: .semibold))
+                .foregroundColor(.white)
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 18)
+                .background(Color.black)
+                .cornerRadius(40)
         }
-        .padding(.horizontal, 20)
-        .padding(.bottom, 10)
+
     }
 }
+
+extension Date {
+    func toISODateString() -> String {
+        let time = DateFormatter()
+        time.dateFormat = "yyyy-MM-dd"
+        return time.string(from: self)
+    }
+}
+

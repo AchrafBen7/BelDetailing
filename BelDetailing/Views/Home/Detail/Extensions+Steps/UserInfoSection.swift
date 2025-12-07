@@ -43,20 +43,19 @@ extension BookingStep2View {
                 text: $email,
                 placeholder: R.string.localizable.bookingEmailPlaceholder()
             )
+            inputField(
+                title: R.string.localizable.bookingAddress(),
+                text: $address,
+                placeholder: R.string.localizable.bookingAddressPlaceholder()
+            )
 
             // NOTES
-            VStack(alignment: .leading, spacing: 6) {
-                Text(R.string.localizable.bookingNotes())
-                    .font(.system(size: 16, weight: .semibold))
+            inputField(
+                title: R.string.localizable.bookingNotes(),
+                text: $notes,
+                placeholder: R.string.localizable.bookingNotesPlaceholder()
+            )
 
-                TextField(
-                    R.string.localizable.bookingNotesPlaceholder(),
-                    text: $notes
-                )
-                .padding()
-                .background(Color(.systemGray6))
-                .cornerRadius(14)
-            }
         }
     }
 }

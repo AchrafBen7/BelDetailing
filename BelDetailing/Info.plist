@@ -28,6 +28,8 @@
 	<string>1</string>
 	<key>REVERSED_CLIENT_ID</key>
 	<string>com.googleusercontent.apps.251264362988-fg2kci0ff3ebo5kfc36sh9vfv6ni2f4m</string>
+	<key>StripePublishableKey</key>
+	<string>pk_test_51SWx4xPKE4IUuZRi2zwUvNPKIiiInkRlYcesyNZwOLn2b4NZa9k3bTAnTN6zXlramNN3QgXSnr0L9p0lsG7HQT5I00pQV3ZMo8</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Avenir Next LT Pro Bold.otf</string>

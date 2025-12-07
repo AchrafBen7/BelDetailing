@@ -1,13 +1,6 @@
-//
-//  Booking.swift
-//  BelDetailing
-//
-//  Created by Achraf Benali on 06/11/2025.
-//
-
 import Foundation
 
-// MARK: - Models
+// MARK: - Booking Model
 
 struct Booking: Codable, Identifiable, Hashable {
     let id: String
@@ -15,20 +8,82 @@ struct Booking: Codable, Identifiable, Hashable {
     let providerName: String
     let serviceName: String
     let price: Double
-    let date: String        // "yyyy-MM-dd"
-    let startTime: String   // "HH:mm"
-    let endTime: String     // "HH:mm"
+    let date: String
+    let startTime: String
+    let endTime: String
     let address: String
     var status: BookingStatus
     let paymentStatus: PaymentStatus
     let paymentIntentId: String?
-    let commissionRate: Double?
-    let invoiceSent: Bool?
+    let commissionRate: String?
+    let invoiceSent: Bool
     let customer: BookingCustomer
+    let providerBannerUrl: String? // URL for card banner
 
-    // 👉 NOUVEAU : URL de la bannière du detailer
-    let providerBannerUrl: String?
+    // MARK: - Coding Keys
+
+    enum CodingKeys: String, CodingKey {
+        case id
+        case providerId = "provider_id"
+        case providerName = "provider_name"
+        case serviceName = "service_name"
+        case price
+        case date
+        case startTime = "start_time"
+        case endTime = "end_time"
+        case address
+        case status
+        case paymentStatus = "payment_status"
+        case paymentIntentId = "payment_intent_id"
+        case commissionRate = "commission_rate"
+        case invoiceSent = "invoice_sent"
+        case customer
+        case providerBannerUrl = "provider_banner_url"
+    }
+
+    // MARK: - Custom Decoder
+
+    init(from decoder: Decoder) throws {
+        let keys = try decoder.container(keyedBy: CodingKeys.self)
+
+        id = try keys.decode(String.self, forKey: .id)
+        providerId = try keys.decode(String.self, forKey: .providerId)
+        providerName = try keys.decode(String.self, forKey: .providerName)
+        serviceName = try keys.decode(String.self, forKey: .serviceName)
+        price = try keys.decode(Double.self, forKey: .price)
+        date = try keys.decode(String.self, forKey: .date)
+        startTime = try keys.decode(String.self, forKey: .startTime)
+        endTime = try keys.decode(String.self, forKey: .endTime)
+        address = try keys.decode(String.self, forKey: .address)
+
+        status = try keys.decode(BookingStatus.self, forKey: .status)
+        paymentStatus = try keys.decode(PaymentStatus.self, forKey: .paymentStatus)
+
+        // MARK: paymentIntentId can be "<null>"
+        let piRaw = try? keys.decode(String.self, forKey: .paymentIntentId)
+        paymentIntentId = (piRaw == "<null>" ? nil : piRaw)
+
+        // MARK: commissionRate (string)
+        commissionRate = try? keys.decode(String.self, forKey: .commissionRate)
+
+        // MARK: invoiceSent (can be Bool OR Int)
+        if let boolVal = try? keys.decode(Bool.self, forKey: .invoiceSent) {
+            invoiceSent = boolVal
+        } else if let intVal = try? keys.decode(Int.self, forKey: .invoiceSent) {
+            invoiceSent = (intVal == 1)
+        } else {
+            invoiceSent = false
+        }
+
+        // MARK: provider banner
+        let bannerRaw = try? keys.decode(String.self, forKey: .providerBannerUrl)
+        providerBannerUrl = (bannerRaw == "<null>" ? nil : bannerRaw)
+
+        customer = try keys.decode(BookingCustomer.self, forKey: .customer)
+    }
 }
+
+// MARK: - BookingCustomer
 
 struct BookingCustomer: Codable, Hashable {
     let firstName: String
@@ -37,116 +92,34 @@ struct BookingCustomer: Codable, Hashable {
     let phone: String
 }
 
-enum BookingStatus: String, Codable {
-    case pending, confirmed, declined, cancelled, completed
+// MARK: - Create Booking Response
+
+struct CreateBookingResponse: Codable {
+    let booking: Booking
+    let clientSecret: String
 }
+
+// MARK: - BookingStatus
+
+enum BookingStatus: String, Codable {
+    case pending
+    case confirmed
+    case declined
+    case cancelled
+    case completed
+}
+
+// MARK: - PaymentStatus
 
 enum PaymentStatus: String, Codable {
     case pending          // Réservation effectuée
     case preauthorized    // Montant bloqué sur la carte
     case paid             // Paiement capturé après service
-    case refunded         // Montant remboursé (annulation / litige)
+    case refunded         // Annulation / litige
     case failed           // Erreur de paiement
 }
 
-// MARK: - Samples
-extension Booking {
-    static var sampleValues: [Booking] {
-        [
-            Booking(
-                id: "bkg_001",
-                providerId: "prov_001",
-                providerName: "Clean & Shine",
-                serviceName: "Polissage complet",
-                price: 120.0,
-                date: "2025-12-15",
-                startTime: "14:00",
-                endTime: "15:30",
-                address: "Avenue Louise 123, 1000 Bruxelles",
-                status: .pending,
-                paymentStatus: .preauthorized,
-                paymentIntentId: "pi_12345",
-                commissionRate: 0.10,
-                invoiceSent: false,
-                customer: .sampleAchraf,
-                providerBannerUrl:"https://res.cloudinary.com/dyigkyptj/image/upload/e_improve,w_300,h_600,c_thumb,g_auto/v1762979364/detail1_bdupvi.png"
-            ),
-            Booking(
-                id: "bkg_002",
-                providerId: "prov_002",
-                providerName: "AutoClean Expert",
-                serviceName: "Nettoyage intérieur",
-                price: 80.0,
-                date: "2025-12-16",
-                startTime: "10:00",
-                endTime: "11:00",
-                address: "Rue de la Loi 75, 1000 Bruxelles",
-                status: .confirmed,
-                paymentStatus: .paid,
-                paymentIntentId: "pi_98765",
-                commissionRate: 0.10,
-                invoiceSent: true,
-                customer: .sampleAchraf,
-                providerBannerUrl:"https://res.cloudinary.com/dyigkyptj/image/upload/e_improve,w_300,h_600,c_thumb,g_auto/v1762979364/detail1_bdupvi.png"
-            ),
-            Booking(
-                id: "bkg_003",
-                providerId: "prov_003",
-                providerName: "Detail Pro",
-                serviceName: "Lavage extérieur",
-                price: 50.0,
-                date: "2025-12-10",
-                startTime: "09:30",
-                endTime: "10:15",
-                address: "Boulevard Anspach 1, 1000 Bruxelles",
-                status: .completed,
-                paymentStatus: .refunded,
-                paymentIntentId: "pi_22222",
-                commissionRate: 0.10,
-                invoiceSent: true,
-                customer: .sampleAchraf,
-                providerBannerUrl:"https://res.cloudinary.com/dyigkyptj/image/upload/e_improve,w_300,h_600,c_thumb,g_auto/v1762979364/detail1_bdupvi.png"
-            ),
-            Booking(
-                id: "bkg_004",
-                providerId: "prov_004",
-                providerName: "Clean & Shine",
-                serviceName: "Polissage complet",
-                price: 120.0,
-                date: "2025-11-22",
-                startTime: "14:00",
-                endTime: "15:30",
-                address: "Avenue Louise 123, 1000 Bruxelles",
-                status: .pending,
-                paymentStatus: .preauthorized,
-                paymentIntentId: "pi_12345",
-                commissionRate: 0.10,
-                invoiceSent: false,
-                customer: .sampleAchraf,
-                providerBannerUrl:"https://res.cloudinary.com/dyigkyptj/image/upload/e_improve,w_300,h_600,c_thumb,g_auto/v1762979364/detail1_bdupvi.png"
-            ),
-            Booking(
-                id: "bkg_005",
-                providerId: "prov_005",
-                providerName: "Clean & Shine",
-                serviceName: "Polissage complet",
-                price: 120.0,
-                date: "2025-11-25",
-                startTime: "14:00",
-                endTime: "15:30",
-                address: "Avenue Louise 123, 1000 Bruxelles",
-                status: .confirmed,
-                paymentStatus: .paid,
-                paymentIntentId: "pi_12345",
-                commissionRate: 0.10,
-                invoiceSent: false,
-                customer: .sampleAchraf,
-                providerBannerUrl:"https://res.cloudinary.com/dyigkyptj/image/upload/e_improve,w_300,h_600,c_thumb,g_auto/v1762979364/detail1_bdupvi.png"
-            ),
-            
-        ]
-    }
-}
+// MARK: - Extensions
 
 extension BookingCustomer {
     static let sampleAchraf = BookingCustomer(
@@ -156,15 +129,20 @@ extension BookingCustomer {
         phone: "+32470123456"
     )
 }
+
 extension Booking {
-  /// URL utilisée pour l’image de la carte de réservation
-  var imageURL: String? {
-    providerBannerUrl
-  }
+    /// URL utilisée pour l’image de la carte de réservation
+    var imageURL: String? {
+        providerBannerUrl
+    }
 }
+
 extension Booking {
+    /// Retourne true si la réservation est dans les 24 prochaines heures
     var isWithin24h: Bool {
-        guard let start = DateFormatters.isoDateTime(date: date, time: startTime) else { return false }
+        guard let start = DateFormatters.isoDateTime(date: date, time: startTime) else {
+            return false
+        }
         return start.timeIntervalSinceNow < 24 * 3600
     }
 }

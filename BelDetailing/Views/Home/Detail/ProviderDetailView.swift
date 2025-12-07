@@ -57,44 +57,36 @@ struct DetailerDetailView: View {
                             Text(R.string.localizable.detailContactInfo())
                                 .font(.system(size: 22, weight: .semibold))
                                 .padding(.horizontal, 20)
-                            
                             ContactInfoCard(
                                 icon: "phone",
                                 label: R.string.localizable.detailPhone(),
-                                value: "+32 123 456 789"
+                                value: detailer.phone ?? "–"
                             )
                             .padding(.horizontal, 20)
-                            
                             ContactInfoCard(
                                 icon: "envelope",
                                 label: R.string.localizable.detailEmail(),
-                                value: "contact@detailpro.be"
+                                value: detailer.email ?? "–"
                             )
                             .padding(.horizontal, 20)
-                            
                             ContactInfoCard(
                                 icon: "clock",
                                 label: R.string.localizable.detailHours(),
-                                value: "Lun–Sam: 9h–18h"
+                                value: detailer.openingHours ?? "–"
                             )
                             .padding(.horizontal, 20)
                         }
-                        
                         VStack(alignment: .leading, spacing: 16) {
-                            
                             Text(R.string.localizable.detailServicesTitle())
                                 .font(.system(size: 22, weight: .bold))
                                 .padding(.horizontal, 20)
-                            
                             if vm.isLoadingServices {
                                 ProgressView().padding(.top, 12)
-                                
                             } else if vm.services.isEmpty {
                                 Text(R.string.localizable.detailNoServices())
                                     .font(.system(size: 15))
                                     .foregroundColor(.gray)
                                     .padding(.horizontal, 20)
-                                
                             } else {
                                 VStack(spacing: 20) {
                                     ForEach(vm.services) { service in

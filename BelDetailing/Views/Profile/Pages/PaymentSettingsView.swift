@@ -7,14 +7,12 @@
 
 //  PaymentSettingsView.swift
 
-
+/*
 import SwiftUI
 import RswiftResources
 
 struct PaymentSettingsView: View {
     @Environment(\.dismiss) private var dismiss
-    @StateObject private var vm: PaymentSettingsViewModel
-    
     init(engine: Engine) {
         _vm = StateObject(wrappedValue: PaymentSettingsViewModel(engine: engine))
     }
@@ -69,7 +67,7 @@ struct PaymentSettingsView: View {
                         }
                     }
                     
-                    VStack(spacing: 12) {
+                  /*  VStack(spacing: 12) {
                         ForEach(vm.paymentMethods) { method in
                             PaymentMethodRow(
                                 method: method,
@@ -77,7 +75,7 @@ struct PaymentSettingsView: View {
                                 onDelete: { vm.delete(method) }
                             )
                         }
-                    }
+                    }*/
                     
                     // MARK: - Section: Transactions
                     Text(R.string.localizable.paymentsHistoryTitle())
@@ -189,3 +187,4 @@ private struct PaymentTransactionsCard: View {
         return "\(sign)\(Int(amount))€"
     }
 }
+*/

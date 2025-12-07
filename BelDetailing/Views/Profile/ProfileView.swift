@@ -59,7 +59,7 @@ struct ProfileView: View {
                                     
                                     // MARK: - Payments & payouts
                                     NavigationLink {
-                                        PaymentSettingsView(engine: engine)
+                                        /* PaymentSettingsView(engine: engine)*/
                                     } label: {
                                         ProfileSettingRow(
                                             systemIcon: "creditcard",

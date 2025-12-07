@@ -83,54 +83,62 @@ struct SignupFormView: View {
 
                 // === FIELDS ===
                 VStack(spacing: 18) {
-                    CustomInputField(
-                        icon: "person",
+                    BDInputField(
                         title: R.string.localizable.signupFullNameLabel(),
                         placeholder: R.string.localizable.signupFullNamePlaceholder(),
                         text: $fullName,
-                        errorText: "Please enter your full name",
-                        showError: !isFullNameValid && !fullName.isEmpty
+                        keyboard: .default,
+                        isSecure: false,
+                        icon: "person",
+                        showError: !isFullNameValid && !fullName.isEmpty,
+                        errorText: R.string.localizable.signupFullNameError()
                     )
 
-                    CustomInputField(
-                        icon: "envelope",
-                        title: R.string.localizable.signupEmailLabel(),
-                        placeholder: R.string.localizable.signupEmailPlaceholder(),
+                    BDInputField(
+                        title: R.string.localizable.emailLoginEmailLabel(),
+                        placeholder: R.string.localizable.emailLoginEmailPlaceholder(),
                         text: $email,
-                        keyboardType: .emailAddress,
-                        errorText: "Enter a valid email",
-                        showError: !isEmailValid && !email.isEmpty
+                        keyboard: .emailAddress,
+                        icon: "envelope",
+                        showError: !email.isValidEmail && !email.isEmpty,
+                        errorText: R.string.localizable.bookingInvalidEmail()
                     )
-
-                    CustomInputField(
-                        icon: "phone",
+                    // 📱 Téléphone
+                    BDInputField(
                         title: R.string.localizable.signupPhoneLabel(),
                         placeholder: R.string.localizable.signupPhonePlaceholder(),
                         text: $phone,
-                        keyboardType: .phonePad,
-                        errorText: "Invalid phone number",
-                        showError: !isPhoneValid && !phone.isEmpty
+                        keyboard: .phonePad,
+                        isSecure: false,
+                        icon: "phone",
+                        showError: !isPhoneValid && !phone.isEmpty,
+                        errorText: R.string.localizable.signupPhoneInvalid()
                     )
 
+                    // 🧾 TVA (pour company / provider)
                     if role == .company || role == .provider {
-                        CustomInputField(
-                            icon: "doc.text",
+                        BDInputField(
                             title: R.string.localizable.signupVatLabel(),
                             placeholder: R.string.localizable.signupVatPlaceholder(),
                             text: $vatNumber,
-                            errorText: "VAT number required",
-                            showError: !isVatValid && !vatNumber.isEmpty
+                            keyboard: .default,
+                            isSecure: false,
+                            icon: "doc.text",
+                            showError: !isVatValid && !vatNumber.isEmpty,
+                            errorText: R.string.localizable.signupVatInvalid()
                         )
                     }
 
-                    CustomInputField(
-                        icon: "lock",
+                    // 🔐 Mot de passe
+                    BDInputField(
                         title: R.string.localizable.signupPasswordLabel(),
                         placeholder: R.string.localizable.signupPasswordPlaceholder(),
                         text: $password,
+                        keyboard: .default,
                         isSecure: true,
-                        errorText: "Min. 6 characters",
-                        showError: !isPasswordValid && !password.isEmpty
+                        icon: "lock",
+                        showError: !isPasswordValid && !password.isEmpty,
+                        errorText: R.string.localizable.signupPasswordTooShort()
                     )
                 }
 

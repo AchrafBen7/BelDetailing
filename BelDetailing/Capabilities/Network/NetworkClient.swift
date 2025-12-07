@@ -17,7 +17,7 @@ final class NetworkClient {
     }
     
     static var defaultHeaders: [String: String] = [
-        "content-type": "application/json",
+        "Content-Type": "application/json",
         "Accept": "application/json"
     ]
     
@@ -62,79 +62,108 @@ final class NetworkClient {
     }
     
     // MARK: - JSON call (classique)
-    func call<T: Decodable>(endPoint: APIEndPoint,
-                            dict: [String: Any?]? = nil,
-                            urlDict: [String: Any?]? = nil,
-                            additionalHeaders: [String: String]? = nil,
-                            timeout: TimeInterval = 60) async -> APIResponse<T> {
+    // MARK: - JSON call (classique)
+    func call<T: Decodable>(
+        endPoint: APIEndPoint,
+        dict: [String: Any?]? = nil,
+        urlDict: [String: Any?]? = nil,
+        additionalHeaders: [String: String]? = nil,
+        timeout: TimeInterval = 60,
+        allowAutoRefresh: Bool = true,
+        wrappedInData: Bool = false   // ✅ ICI, c'est normal
+    ) async -> APIResponse<T> {
         guard var url = url(endPoint: endPoint) else {
             return .failure(.urlError)
         }
         if let urlDict {
             url = NetworkClient.urlFor(url: url, urlDict: urlDict)
         }
-        
+
         var request = URLRequest(url: url)
         request.httpMethod = endpointMapperClass.method(for: endPoint).rawValue
         request.httpBody = dict != nil ? try? JSONSerialization.data(withJSONObject: dict ?? [:]) : nil
         request.timeoutInterval = timeout
-        request.allHTTPHeaderFields = NetworkClient.defaultHeaders.merging(additionalHeaders ?? [:], uniquingKeysWith: { _, new in new })
-        
+        request.allHTTPHeaderFields = NetworkClient.defaultHeaders.merging(additionalHeaders ?? [:]) { _, new in new }
+
         do {
             let (data, response) = try await URLSession.shared.data(for: request)
             guard let httpResponse = response as? HTTPURLResponse else {
                 return .failure(.unknownError)
             }
             NetworkClient.logRequest(request: request, urlResponse: httpResponse, data: data)
+
             if (200...299).contains(httpResponse.statusCode) {
                 do {
-                    let decoded = try NetworkClient.defaultDecoder.decode(T.self, from: data)
-                    return .success(decoded)
+                    if wrappedInData {
+                        let decoded = try NetworkClient.defaultDecoder.decode(APIContainer<T>.self, from: data)
+                        return .success(decoded.data)
+                    } else {
+                        let decoded = try NetworkClient.defaultDecoder.decode(T.self, from: data)
+                        return .success(decoded)
+                    }
                 } catch let error {
                     return .failure(.decodingError(decodingError: error))
                 }
+
             } else if httpResponse.statusCode == 401 {
-                // Tentative de refresh automatique
+                if !allowAutoRefresh || endPoint == .refresh {
+                    StorageManager.shared.clearSession()
+                    return .failure(.unauthorized)
+                }
+
                 if let newAccess = await Self.refreshAccessToken() {
-                    // ➡️ Retry de la requête avec le token mis à jour
                     NetworkClient.defaultHeaders["Authorization"] = "Bearer \(newAccess)"
                     return await self.call(
                         endPoint: endPoint,
                         dict: dict,
                         urlDict: urlDict,
                         additionalHeaders: additionalHeaders,
-                        timeout: timeout
+                        timeout: timeout,
+                        allowAutoRefresh: false
                     )
                 }
-                
-                // Refresh impossible → session invalide
+
                 StorageManager.shared.clearSession()
                 return .failure(.unauthorized)
             }
+
             return .failure(.serverError(statusCode: httpResponse.statusCode))
+
         } catch let error {
             return .failure(.from(error: error))
         }
     }
+
+
+    struct APIContainer<T: Decodable>: Decodable {
+        let data: T
+    }
     
     // MARK: - File Upload (multipart/form-data)
-    func call<T: Decodable>(endPoint: APIEndPoint,
-                            fileData: Data,
-                            fileName: String,
-                            mimeType: String,
-                            timeout: TimeInterval = 60) async -> APIResponse<T> {
+    // MARK: - File Upload (multipart/form-data)
+    func call<T: Decodable>(
+        endPoint: APIEndPoint,
+        fileData: Data,
+        fileName: String,
+        mimeType: String,
+        timeout: TimeInterval = 60
+    ) async -> APIResponse<T> {
         guard let url = url(endPoint: endPoint) else {
             return .failure(.urlError)
         }
-        
+
         var request = URLRequest(url: url)
         request.httpMethod = endpointMapperClass.method(for: endPoint).rawValue
-        
+
         let boundary = "Boundary-\(UUID().uuidString)"
         request.setValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
         request.setValue("application/json", forHTTPHeaderField: "Accept")
+        if let auth = NetworkClient.defaultHeaders["Authorization"] {
+            request.setValue(auth, forHTTPHeaderField: "Authorization")
+        }
+
         request.timeoutInterval = timeout
-        
+
         // Corps multipart
         var body = Data()
         body.append("--\(boundary)\r\n".data(using: .utf8)!)
@@ -143,13 +172,14 @@ final class NetworkClient {
         body.append(fileData)
         body.append("\r\n--\(boundary)--\r\n".data(using: .utf8)!)
         request.httpBody = body
-        
+
         do {
             let (data, response) = try await URLSession.shared.data(for: request)
             guard let httpResponse = response as? HTTPURLResponse else {
                 return .failure(.unknownError)
             }
             NetworkClient.logRequest(request: request, urlResponse: httpResponse, data: data)
+
             if (200...299).contains(httpResponse.statusCode) {
                 do {
                     let decoded = try NetworkClient.defaultDecoder.decode(T.self, from: data)
@@ -160,7 +190,9 @@ final class NetworkClient {
             } else if httpResponse.statusCode == 401 {
                 return .failure(.unauthorized)
             }
+
             return .failure(.serverError(statusCode: httpResponse.statusCode))
+
         } catch let error {
             return .failure(.from(error: error))
         }
@@ -175,7 +207,8 @@ extension NetworkClient {
         let client = NetworkClient(server: .prod)
         let response: APIResponse<AuthSession> = await client.call(
             endPoint: .refresh,
-            dict: ["refreshToken": refresh]
+            dict: ["refreshToken": refresh],
+            allowAutoRefresh: false   // 🔥 pas de boucle ici
         )
 
         if case let .success(session) = response {
@@ -188,3 +221,4 @@ extension NetworkClient {
         return nil
     }
 }
+

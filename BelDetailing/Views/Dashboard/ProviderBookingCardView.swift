@@ -32,7 +32,8 @@ struct ProviderBookingCardView: View {
                 .clipShape(RoundedRectangle(cornerRadius: 12))
 
                 VStack(alignment: .leading, spacing: 6) {
-                    Text(booking.customer.firstName + " " + booking.customer.lastName)
+
+                    Text("Client")
                         .font(.system(size: 16, weight: .semibold))
 
                     Text(booking.serviceName)
@@ -43,6 +44,7 @@ struct ProviderBookingCardView: View {
                         .foregroundColor(.gray)
                         .font(.system(size: 13))
                 }
+
 
                 Spacer()
 

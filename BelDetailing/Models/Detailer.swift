@@ -23,6 +23,9 @@ struct Detailer: Codable, Identifiable, Hashable {
     let logoUrl: String?
     let bannerUrl: String?
     let serviceCategories: [ServiceCategory]
+    let phone: String?
+    let email: String?
+    let openingHours: String?
 
     // ✅ Nouveaux champs
     let teamSize: Int            // nombre de membres (1 = solo)
@@ -65,6 +68,9 @@ extension Detailer {
                 logoUrl: "https://cdn.example.com/providers/prov_001_logo.jpg",
                 bannerUrl: "https://res.cloudinary.com/dyigkyptj/image/upload/v1762979544/detail2_bm8svh.jpg",
                 serviceCategories: [.carCleaning, .carPolishing, .interiorDetailing],
+                phone: "+32 477 12 34 56",
+                email: "contact@cleanandshine.be",
+                openingHours: "Mon–Sat: 9h–18h",
                 teamSize: 3,
                 yearsOfExperience: 7
             ),
@@ -84,6 +90,10 @@ extension Detailer {
                 logoUrl: nil,
                 bannerUrl: "https://res.cloudinary.com/dyigkyptj/image/upload/e_improve,w_300,h_600,c_thumb,g_auto/v1762979364/detail1_bdupvi.png",
                 serviceCategories: [.carCleaning, .ceramicCoating],
+                phone: "+32 477 12 34 56",
+                email: "contact@cleanandshine.be",
+                openingHours: "Mon–Sat: 9h–18h",
+
                 teamSize: 1,
                 yearsOfExperience: 4
             ),
@@ -103,6 +113,10 @@ extension Detailer {
                 logoUrl: nil,
                 bannerUrl: "https://res.cloudinary.com/dyigkyptj/image/upload/e_improve,w_300,h_600,c_thumb,g_auto/v1762979364/detail1_bdupvi.png",
                 serviceCategories: [.carCleaning, .ceramicCoating],
+                phone: "+32 477 12 34 56",
+                email: "contact@cleanandshine.be",
+                openingHours: "Mon–Sat: 9h–18h",
+
                 teamSize: 1,
                 yearsOfExperience: 4
             ),
@@ -122,6 +136,10 @@ extension Detailer {
                 logoUrl: nil,
                 bannerUrl: "https://res.cloudinary.com/dyigkyptj/image/upload/e_improve,w_300,h_600,c_thumb,g_auto/v1762979364/detail1_bdupvi.png",
                 serviceCategories: [.carCleaning, .ceramicCoating],
+                phone: "+32 477 12 34 56",
+                email: "contact@cleanandshine.be",
+                openingHours: "Mon–Sat: 9h–18h",
+
                 teamSize: 1,
                 yearsOfExperience: 4
             )

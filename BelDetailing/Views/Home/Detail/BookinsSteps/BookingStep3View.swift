@@ -1,10 +1,7 @@
-//
-//  BookingStep3View.swift
-//  BelDetailing
-//
-
 import SwiftUI
 import RswiftResources
+import StripePaymentSheet
+
 struct BookingStep3View: View {
     let service: Service
     let detailer: Detailer
@@ -14,15 +11,24 @@ struct BookingStep3View: View {
     let fullName: String
     let phone: String
     let email: String
+    let address: String
     let notes: String
+    let bookingId: String
 
     @Environment(\.dismiss) private var dismiss
     @EnvironmentObject var tabBarVisibility: TabBarVisibility
     @EnvironmentObject var mainTabSelection: MainTabSelection
+    @State private var showErrorAlert = false
+    @State private var errorMessage = ""
 
     @State var goToConfirmation = false
     @State var selectedPayment: Payment = .card
     @State var promoCode: String = ""
+
+    @State var isProcessingPayment = false
+    @State var paymentAlertMessage: String?
+    @State var showPaymentAlert = false
+
     let cardInset: CGFloat = 20
 
     var body: some View {
@@ -30,15 +36,11 @@ struct BookingStep3View: View {
             Color(.systemGroupedBackground)
                 .ignoresSafeArea()
 
-            // HEADER + SCROLL
             VStack(spacing: 0) {
-
-                // === FIXED BACK BUTTON ===
                 CustomBackButton {
                     dismiss()
                 }
 
-                // === MAIN CONTENT ===
                 ScrollView(showsIndicators: false) {
                     VStack(alignment: .leading, spacing: 24) {
 
@@ -57,7 +59,6 @@ struct BookingStep3View: View {
                 }
             }
         }
-        // === FIXED BOTTOM BUTTON ===
         .overlay(alignment: .bottom) {
             VStack {
                 confirmButton
@@ -70,7 +71,6 @@ struct BookingStep3View: View {
                     .ignoresSafeArea(edges: .bottom)
             )
         }
-        // === NAVIGATION ===
         .background(
             NavigationLink(
                 destination: BookingConfirmedView(
@@ -81,10 +81,37 @@ struct BookingStep3View: View {
                 isActive: $goToConfirmation
             ) { EmptyView() }
         )
-        .navigationBarBackButtonHidden(true)
-        .toolbar(.hidden, for: .navigationBar)
-        .toolbar(.hidden, for: .tabBar)
-        .onAppear { tabBarVisibility.isHidden = true }
-        .onDisappear { tabBarVisibility.isHidden = false }
+        // Loader UNIQUEMENT pendant la création de la booking
+        .overlay {
+            if isProcessingPayment {
+                Color.black.opacity(0.25)
+                    .ignoresSafeArea()
+                    .overlay(
+                        ProgressView("Processing booking...")
+                            .padding(20)
+                            .background(Color.white)
+                            .cornerRadius(16)
+                    )
+            }
+        }
+        .alert(isPresented: $showPaymentAlert) {
+                    Alert(
+                        title: Text("Payment"),
+                        message: Text(paymentAlertMessage ?? "Unknown error"),
+                        dismissButton: .default(Text("OK"))
+                    )
+                }
+                .navigationBarBackButtonHidden(true)
+                .toolbar(.hidden, for: .navigationBar)
+                .toolbar(.hidden, for: .tabBar)
+                .onAppear { tabBarVisibility.isHidden = true }
+                .onDisappear { tabBarVisibility.isHidden = false }
+    }
+}
+
+extension BookingStep3View {
+    func showAlert(_ message: String) {
+        paymentAlertMessage = message
+        showPaymentAlert = true
     }
 }

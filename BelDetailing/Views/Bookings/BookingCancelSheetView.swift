@@ -2,14 +2,11 @@ import SwiftUI
 import RswiftResources
 
 struct BookingCancelSheetView: View {
-    
     let booking: Booking
     @Environment(\.dismiss) private var dismiss
-    
     var body: some View {
         ScrollView(showsIndicators: false) {   // 👈 FIX #1
             VStack(spacing: 22) {
-                
                 // Title
                 HStack {
                     Image(systemName: "exclamationmark.triangle.fill")
@@ -18,13 +15,11 @@ struct BookingCancelSheetView: View {
                         .font(.system(size: 22, weight: .bold))
                 }
                 .padding(.top, 20)
-                
                 Text(R.string.localizable.bookingCancelConfirmSubtitle())
                     .font(.system(size: 16))
                     .foregroundColor(.gray)
                     .multilineTextAlignment(.center)
                     .padding(.horizontal, 20)
-                
                 // CARD
                 VStack(alignment: .leading, spacing: 10) {
                     HStack {
@@ -32,7 +27,6 @@ struct BookingCancelSheetView: View {
                         Spacer()
                         Text("\(Int(booking.price))€")
                     }
-                    
                     HStack {
                         Text(R.string.localizable.bookingCancelFeeFull())
                             .foregroundColor(.red)
@@ -40,16 +34,13 @@ struct BookingCancelSheetView: View {
                         Text("-\(Int(booking.price))€")
                             .foregroundColor(.red)
                     }
-                    
                     Divider()
-                    
                     HStack {
                         Text(R.string.localizable.bookingRefund())
                             .font(.system(size: 18, weight: .semibold))
                         Spacer()
                         Text("0€")
                     }
-                    
                     Text(R.string.localizable.bookingCancel24hRule())
                         .foregroundColor(.gray)
                         .font(.system(size: 13))
@@ -58,9 +49,7 @@ struct BookingCancelSheetView: View {
                 .background(Color.white)
                 .cornerRadius(18)
                 .padding(.horizontal, 20)
-                
                 Spacer(minLength: 20)
-                
                 // CONFIRM
                 Button {
                     dismiss()
@@ -74,7 +63,6 @@ struct BookingCancelSheetView: View {
                         .cornerRadius(30)
                 }
                 .padding(.horizontal, 20)
-                
                 // GO BACK
                 Button {
                     dismiss()
@@ -92,7 +80,6 @@ struct BookingCancelSheetView: View {
                         )
                 }
                 .padding(.horizontal, 20)
-                
                 Spacer().frame(height: 30)
             }
         }

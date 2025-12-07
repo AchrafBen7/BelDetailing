@@ -22,7 +22,6 @@ final class TaxesViewModel: ObservableObject {
            let vat = user.vatNumber {
             vatNumber = vat
         }
-        invoices = Invoice.sampleValues
     }
     
     func saveVAT() async {
