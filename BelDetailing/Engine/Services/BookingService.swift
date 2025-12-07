@@ -12,7 +12,7 @@ import Foundation
 protocol BookingService {
     func getBookings(scope: String?, status: String?) async -> APIResponse<[Booking]>
     func getBookingDetail(id: String) async -> APIResponse<Booking>
-    func createBooking(_ data: [String: Any]) async -> APIResponse<CreateBookingResponse>
+    func createBooking(_ data: [String : Any]) async -> APIResponse<CreateBookingResponse>
     func updateBooking(id: String, data: [String: Any]) async -> APIResponse<Booking>
     func cancelBooking(id: String) async -> APIResponse<Bool>
     func confirmBooking(id: String) async -> APIResponse<Bool>
@@ -43,13 +43,34 @@ final class BookingServiceNetwork: BookingService {
             endPoint: .bookingUpdate(id: id)
         )
     }
+    
+    func createBooking(_ data: [String : Any]) async -> APIResponse<CreateBookingResponse> {
+        print("➡️Booking payload envoyé :", data)
 
-    func createBooking(_ data: [String: Any]) async -> APIResponse<CreateBookingResponse> {
-        await networkClient.call(
+        // 1️⃣Appel RAW qui renvoie du Data brut
+        let raw: APIResponse<Data> = await networkClient.callRaw(
             endPoint: .bookingCreate,
             dict: data
         )
+
+        switch raw {
+        case .failure(let err):
+            print("❌Erreur backend brut :", err)
+            return .failure(err)
+
+        case .success(let body):
+            do {
+                // 2️⃣Décodage custom qui respecte SNAKE_CASE du backend
+                let parsed = try CreateBookingResponse.decodeFromBookingResponse(body)
+                print("⬅️Réponse création booking :", parsed)
+                return .success(parsed)
+            } catch {
+                print("❌Erreur DECODING custom :", error)
+                return .failure(.decodingError(decodingError: error))
+            }
+        }
     }
+
 
     func updateBooking(id: String,
                        data: [String: Any]) async -> APIResponse<Booking> {

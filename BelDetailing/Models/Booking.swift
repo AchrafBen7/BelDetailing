@@ -17,10 +17,9 @@ struct Booking: Codable, Identifiable, Hashable {
     let paymentIntentId: String?
     let commissionRate: String?
     let invoiceSent: Bool
-    let customer: BookingCustomer
-    let providerBannerUrl: String? // URL for card banner
-
-    // MARK: - Coding Keys
+    let customer: BookingCustomer?
+    let providerBannerUrl: String?
+    let currency: String
 
     enum CodingKeys: String, CodingKey {
         case id
@@ -39,6 +38,7 @@ struct Booking: Codable, Identifiable, Hashable {
         case invoiceSent = "invoice_sent"
         case customer
         case providerBannerUrl = "provider_banner_url"
+        case currency
     }
 
     // MARK: - Custom Decoder
@@ -47,7 +47,7 @@ struct Booking: Codable, Identifiable, Hashable {
         let keys = try decoder.container(keyedBy: CodingKeys.self)
 
         id = try keys.decode(String.self, forKey: .id)
-        providerId = try keys.decode(String.self, forKey: .providerId)
+        providerId = (try? keys.decode(String.self, forKey: .providerId)) ?? ""
         providerName = try keys.decode(String.self, forKey: .providerName)
         serviceName = try keys.decode(String.self, forKey: .serviceName)
         price = try keys.decode(Double.self, forKey: .price)
@@ -59,14 +59,20 @@ struct Booking: Codable, Identifiable, Hashable {
         status = try keys.decode(BookingStatus.self, forKey: .status)
         paymentStatus = try keys.decode(PaymentStatus.self, forKey: .paymentStatus)
 
-        // MARK: paymentIntentId can be "<null>"
+        // MARK: paymentIntentId — can be "<null>"
         let piRaw = try? keys.decode(String.self, forKey: .paymentIntentId)
         paymentIntentId = (piRaw == "<null>" ? nil : piRaw)
 
-        // MARK: commissionRate (string)
-        commissionRate = try? keys.decode(String.self, forKey: .commissionRate)
+        // MARK: commissionRate — can be String OR Number
+        if let str = try? keys.decode(String.self, forKey: .commissionRate) {
+            commissionRate = str
+        } else if let dbl = try? keys.decode(Double.self, forKey: .commissionRate) {
+            commissionRate = String(dbl)
+        } else {
+            commissionRate = nil
+        }
 
-        // MARK: invoiceSent (can be Bool OR Int)
+        // MARK: invoiceSent — may be Bool OR Int
         if let boolVal = try? keys.decode(Bool.self, forKey: .invoiceSent) {
             invoiceSent = boolVal
         } else if let intVal = try? keys.decode(Int.self, forKey: .invoiceSent) {
@@ -75,11 +81,14 @@ struct Booking: Codable, Identifiable, Hashable {
             invoiceSent = false
         }
 
-        // MARK: provider banner
+        // MARK: providerBannerUrl — may be string OR "<null>"
         let bannerRaw = try? keys.decode(String.self, forKey: .providerBannerUrl)
         providerBannerUrl = (bannerRaw == "<null>" ? nil : bannerRaw)
 
-        customer = try keys.decode(BookingCustomer.self, forKey: .customer)
+        // Customer may be null
+        customer = try? keys.decode(BookingCustomer.self, forKey: .customer)
+
+        currency = (try? keys.decode(String.self, forKey: .currency)) ?? "eur"
     }
 }
 
@@ -94,9 +103,35 @@ struct BookingCustomer: Codable, Hashable {
 
 // MARK: - Create Booking Response
 
-struct CreateBookingResponse: Codable {
+struct CreateBookingResponse: Decodable {
     let booking: Booking
-    let clientSecret: String
+    let clientSecret: String?
+
+    private enum CodingKeys: String, CodingKey {
+        case data
+    }
+
+    private enum DataKeys: String, CodingKey {
+        case booking
+        case clientSecret
+    }
+
+    init(from decoder: Decoder) throws {
+
+        // 🔥 Normal case: { "data": { booking, clientSecret } }
+        if let root = try? decoder.container(keyedBy: CodingKeys.self),
+           let data = try? root.nestedContainer(keyedBy: DataKeys.self, forKey: .data) {
+
+            self.booking = try data.decode(Booking.self, forKey: .booking)
+            self.clientSecret = try? data.decode(String.self, forKey: .clientSecret)
+            return
+        }
+
+        // 🔥 Flat fallback: { booking, clientSecret }
+        let flat = try decoder.container(keyedBy: DataKeys.self)
+        self.booking = try flat.decode(Booking.self, forKey: .booking)
+        self.clientSecret = try? flat.decode(String.self, forKey: .clientSecret)
+    }
 }
 
 // MARK: - BookingStatus
@@ -112,11 +147,11 @@ enum BookingStatus: String, Codable {
 // MARK: - PaymentStatus
 
 enum PaymentStatus: String, Codable {
-    case pending          // Réservation effectuée
-    case preauthorized    // Montant bloqué sur la carte
-    case paid             // Paiement capturé après service
-    case refunded         // Annulation / litige
-    case failed           // Erreur de paiement
+    case pending
+    case preauthorized
+    case paid
+    case refunded
+    case failed
 }
 
 // MARK: - Extensions
@@ -131,18 +166,22 @@ extension BookingCustomer {
 }
 
 extension Booking {
-    /// URL utilisée pour l’image de la carte de réservation
-    var imageURL: String? {
-        providerBannerUrl
-    }
-}
+    var imageURL: String? { providerBannerUrl }
 
-extension Booking {
-    /// Retourne true si la réservation est dans les 24 prochaines heures
     var isWithin24h: Bool {
         guard let start = DateFormatters.isoDateTime(date: date, time: startTime) else {
             return false
         }
         return start.timeIntervalSinceNow < 24 * 3600
+    }
+}
+
+extension CreateBookingResponse {
+    static func decodeFromBookingResponse(_ data: Data) throws -> CreateBookingResponse {
+        let decoder = JSONDecoder()
+        decoder.dateDecodingStrategy = .iso8601
+        decoder.keyDecodingStrategy = .useDefaultKeys 
+
+        return try decoder.decode(CreateBookingResponse.self, from: data)
     }
 }

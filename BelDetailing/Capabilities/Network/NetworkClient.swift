@@ -175,6 +175,7 @@ final class NetworkClient {
 
         do {
             let (data, response) = try await URLSession.shared.data(for: request)
+            print("📦RAW JSON RESPONSE:\n", String(data: data, encoding: .utf8) ?? "⛔️ (non-string)")
             guard let httpResponse = response as? HTTPURLResponse else {
                 return .failure(.unknownError)
             }
@@ -222,3 +223,40 @@ extension NetworkClient {
     }
 }
 
+extension NetworkClient {
+    func callRaw(
+        endPoint: APIEndPoint,
+        dict: [String: Any?]? = nil,
+        urlDict: [String: Any?]? = nil,
+        timeout: TimeInterval = 60
+    ) async -> APIResponse<Data> {
+
+        guard var url = url(endPoint: endPoint) else {
+            return .failure(.urlError)
+        }
+        if let urlDict { url = NetworkClient.urlFor(url: url, urlDict: urlDict) }
+
+        var request = URLRequest(url: url)
+        request.httpMethod = endpointMapperClass.method(for: endPoint).rawValue
+        request.httpBody = dict != nil ? try? JSONSerialization.data(withJSONObject: dict!) : nil
+        request.allHTTPHeaderFields = NetworkClient.defaultHeaders
+        request.timeoutInterval = timeout
+
+        do {
+            let (data, response) = try await URLSession.shared.data(for: request)
+            guard let http = response as? HTTPURLResponse else {
+                return .failure(.unknownError)
+            }
+
+            NetworkClient.logRequest(request: request, urlResponse: http, data: data)
+
+            if (200...299).contains(http.statusCode) {
+                return .success(data)
+            } else {
+                return .failure(.serverError(statusCode: http.statusCode))
+            }
+        } catch {
+            return .failure(.from(error: error))
+        }
+    }
+}

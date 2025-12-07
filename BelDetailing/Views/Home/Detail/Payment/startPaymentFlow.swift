@@ -10,15 +10,12 @@ extension BookingStep3View {
 
         // ---------------------------------------------------------
         // 1️⃣ CRÉER LE PAYMENT INTENT (pré-autorisation)
-        // ⚠️ IMPORTANT :
-        // Ton backend multiplie déjà amount * 100 (centimes).
-        // Donc on envoie simplement le prix en EUR.
         // ---------------------------------------------------------
 
         let amount = service.price
 
         let response = await engine.paymentService.createPaymentIntent(
-            bookingId: "",          // TODO: à supprimer plus tard du backend
+            bookingId: "",      // sera retiré du backend plus tard
             amount: amount,
             currency: "eur"
         )
@@ -31,7 +28,7 @@ extension BookingStep3View {
         let clientSecret = intent.clientSecret
 
         // ---------------------------------------------------------
-        // 2️⃣ OUVRIR STRIPE PAYMENTSHEET POUR PRÉ-AUTORISER
+        // 2️⃣ OUVRIR STRIPE PAYMENTSHEET
         // ---------------------------------------------------------
 
         let paymentResult = await StripeManager.shared.confirmPayment(clientSecret)
@@ -39,20 +36,19 @@ extension BookingStep3View {
         switch paymentResult {
         case .success:
             break
+
         case .failure(let message):
             showAlert(message)
             return
+
         case .canceled:
             showAlert("Payment canceled")
             return
         }
 
-        // Laisser Stripe se fermer proprement
-        await MainActor.run {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-                self.goToConfirmation = true
-            }
-        }
+        // Laisser Stripe se fermer un peu AVANT de créer la booking
+        try? await Task.sleep(nanoseconds: 300_000_000)   // 0.3 sec
+
 
         // ---------------------------------------------------------
         // 3️⃣ CRÉER LA BOOKING APRÈS PRÉ-AUTORISATION
@@ -64,15 +60,16 @@ extension BookingStep3View {
             "date": date.toISODateString(),
             "start_time": time,
             "end_time": time,
-            "address": address,
-            "payment_intent_id": intent.id
+            "address": address
         ]
 
         let bookingRes = await engine.bookingService.createBooking(bookingPayload)
 
         switch bookingRes {
         case .success:
+            // 👉 navigation uniquement après success booking
             self.goToConfirmation = true
+
         case .failure(let err):
             showAlert(err.localizedDescription)
         }
