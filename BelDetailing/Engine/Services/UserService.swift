@@ -53,8 +53,10 @@ final class UserServiceNetwork: UserService {
     var currentUser: UserLite?
     var fullUser: User?
 
-    private let networkClient: NetworkClient
-    init(networkClient: NetworkClient) { self.networkClient = networkClient }
+    private let networkClient: NetworkClientProtocol
+    init(networkClient: NetworkClientProtocol) {
+            self.networkClient = networkClient
+        }
 
     // MARK: - Helpers
     private func handleAuthSuccess(_ session: AuthSession) {

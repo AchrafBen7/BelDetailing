@@ -62,7 +62,6 @@ final class NetworkClient {
     }
     
     // MARK: - JSON call (classique)
-    // MARK: - JSON call (classique)
     func call<T: Decodable>(
         endPoint: APIEndPoint,
         dict: [String: Any?]? = nil,
@@ -260,3 +259,6 @@ extension NetworkClient {
         }
     }
 }
+
+extension NetworkClient: NetworkClientProtocol {}
+

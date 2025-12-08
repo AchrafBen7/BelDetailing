@@ -21,4 +21,3 @@ final class StripeAuthContext: NSObject, STPAuthenticationContext {
         return viewController
     }
 }
-
