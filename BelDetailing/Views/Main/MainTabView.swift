@@ -31,10 +31,12 @@ struct MainTabView: View {
                     .tag(Tab.home)
                     .tabItem { EmptyView() }
 
-                SearchView(engine: engine)
-                    .environmentObject(tabBarVisibility)
-                    .tag(Tab.search)
-                    .tabItem { EmptyView() }
+                NavigationStack {
+                    SearchView(engine: engine)
+                }
+                .tag(Tab.search)
+                .environmentObject(tabBarVisibility)
+                .tabItem { EmptyView() }
 
                 BookingsView(engine: engine)
                     .environmentObject(tabBarVisibility)

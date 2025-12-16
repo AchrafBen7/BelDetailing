@@ -85,6 +85,7 @@ struct Booking: Codable, Identifiable, Hashable {
         let bannerRaw = try? keys.decode(String.self, forKey: .providerBannerUrl)
         providerBannerUrl = (bannerRaw == "<null>" ? nil : bannerRaw)
 
+        
         // Customer may be null
         customer = try? keys.decode(BookingCustomer.self, forKey: .customer)
 

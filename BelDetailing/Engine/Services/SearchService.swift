@@ -16,16 +16,19 @@ final class SearchServiceNetwork: SearchService {
     private let networkClient: NetworkClient
     init(networkClient: NetworkClient) { self.networkClient = networkClient }
 
-    func searchProviders(query: String?, city: String?, lat: Double?, lng: Double?, radius: Double?) async -> APIResponse<[Detailer]> {
+    func searchProviders(
+        query: String?, city: String?, lat: Double?, lng: Double?, radius: Double?
+    ) async -> APIResponse<[Detailer]> {
         await networkClient.call(
             endPoint: .searchProviders,
             urlDict: [
                 "q": query,
                 "city": city,
-                "lat": lat?.description,
-                "lng": lng?.description,
-                "radius": radius?.description
-            ]
+                "lat": lat,
+                "lng": lng,
+                "radius": radius
+            ],
+            wrappedInData: true   // ✅ IMPORTANT
         )
     }
 
@@ -36,10 +39,12 @@ final class SearchServiceNetwork: SearchService {
                 "q": query,
                 "city": city,
                 "category": category
-            ]
+            ],
+            wrappedInData: true   // ✅ IMPORTANT aussi
         )
     }
 }
+
 
 final class SearchServiceMock: MockService, SearchService {
     func searchProviders(query: String?, city: String?, lat: Double?, lng: Double?, radius: Double?) async -> APIResponse<[Detailer]> {

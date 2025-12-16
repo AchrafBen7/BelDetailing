@@ -47,15 +47,30 @@ final class NetworkClient {
     // MARK: - URL builder with query params
     static func urlFor(url: URL, urlDict: [String: Any?]) -> URL {
         var urlComponents = URLComponents(string: url.absoluteString)
-        let queryItems = urlDict.flatMap { (key, value) -> [URLQueryItem] in
-            if let value = value as? [String] {
-                return value.map { URLQueryItem(name: key, value: $0) }
+
+        var items: [URLQueryItem] = []
+
+        for (key, value) in urlDict {
+            guard let value else { continue }
+
+            if let str = value as? String, str.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                continue
             }
-            return [URLQueryItem(name: key, value: "\(value ?? "")")]
+
+            if let arr = value as? [String] {
+                for value in arr where !value.isEmpty {
+                    items.append(URLQueryItem(name: key, value: value))
+                }
+                continue
+            }
+
+            items.append(URLQueryItem(name: key, value: "\(value)"))
         }
-        urlComponents?.queryItems = queryItems
+
+        urlComponents?.queryItems = items.isEmpty ? nil : items
         return urlComponents?.url ?? url
     }
+
     
     func url(endPoint: APIEndPoint) -> URL? {
         URL(string: server.rawValue + endpointMapperClass.path(for: endPoint))

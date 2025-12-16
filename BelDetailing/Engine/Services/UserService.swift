@@ -214,7 +214,8 @@ final class UserServiceNetwork: UserService {
     func providersNearby(lat: Double, lng: Double, radius: Double) async -> APIResponse<[Detailer]> {
         await networkClient.call(
             endPoint: .providersList,
-            urlDict: ["lat": lat, "lng": lng, "radius": radius]
+            urlDict: ["lat": lat, "lng": lng, "radius": radius],
+            wrappedInData: true
         )
     }
 

@@ -14,7 +14,14 @@ struct ProviderSearchHorizontal: View {
     // Ratio plus rectangulaire (≈ 320x260)
     private let cardSize = CGSize(width: 260, height: 180)
     private let corner: CGFloat = 20
-    
+    private var priceText: String {
+        if provider.minPrice <= 0 {
+            return R.string.localizable.priceOnRequest() // "Sur devis"
+        } else {
+            return R.string.localizable.priceWithCurrency("\(Int(provider.minPrice))")
+        }
+    }
+
     var body: some View {
         ZStack(alignment: .bottomLeading) {
             // Image
@@ -22,13 +29,11 @@ struct ProviderSearchHorizontal: View {
                 .frame(width: cardSize.width, height: cardSize.height)
                 .clipped()
                 .clipShape(RoundedRectangle(cornerRadius: corner, style: .continuous))
-            
             // Gradient
             LinearGradient(colors: [.clear, .black.opacity(0.75)],
                            startPoint: .top, endPoint: .bottom)
             .clipShape(RoundedRectangle(cornerRadius: corner, style: .continuous))
             .frame(width: cardSize.width, height: cardSize.height)
-            
             // Badges en haut
             VStack(spacing: 0) {
                 HStack(spacing: 8) {
@@ -41,7 +46,6 @@ struct ProviderSearchHorizontal: View {
                 Spacer()
             }
             .frame(width: cardSize.width, height: cardSize.height)
-            
             // Textes + prix
             HStack(alignment: .bottom) {
                 VStack(alignment: .leading, spacing: 4) {
@@ -66,7 +70,7 @@ struct ProviderSearchHorizontal: View {
                 
                 Spacer(minLength: 12)
                 
-                Text(R.string.localizable.priceWithCurrency("\(Int(provider.minPrice))"))
+                Text(priceText)
                     .font(.system(size: 28, weight: .heavy))
                     .foregroundColor(.white)
             }
