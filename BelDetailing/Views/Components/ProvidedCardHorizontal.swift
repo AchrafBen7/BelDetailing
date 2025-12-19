@@ -92,7 +92,3 @@ struct ProviderCardHorizontal: View {
     }
 }
 
-#Preview {
-    ProviderCardHorizontal(provider: Detailer.sampleValues.first!)
-        .padding()
-}

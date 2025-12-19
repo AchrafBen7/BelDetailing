@@ -3,10 +3,12 @@ import RswiftResources
 import Combine
 
 struct DashboardProviderView: View {
+
     @StateObject private var viewModel: ProviderDashboardViewModel
     @State private var showOffers = false
     
-    init(engine: Engine) {
+    init(engine: Engine, providerId: String) {
+        // providerId no longer needed; keep init signature for now to avoid breaking callers
         _viewModel = StateObject(wrappedValue: ProviderDashboardViewModel(engine: engine))
     }
     
@@ -18,13 +20,13 @@ struct DashboardProviderView: View {
                 
                 VStack(spacing: 0) {
                     
-                    // HEADER
+                    // ✅ HEADER DYNAMIQUE (mapping DetailerStats → header)
                     ProviderDashboardHeaderView(
-                        monthlyEarnings: 3250,
-                        variationPercent: 12,
-                        reservationsCount: 24,
-                        rating: 4.8,
-                        clientsCount: 87,
+                        monthlyEarnings: viewModel.stats?.monthlyEarnings ?? 0,
+                        variationPercent: viewModel.stats?.variationPercent ?? 0,
+                        reservationsCount: viewModel.stats?.reservationsCount ?? 0,
+                        rating: viewModel.stats?.rating ?? 0,
+                        clientsCount: viewModel.stats?.clientsCount ?? 0,
                         onViewOffers: { showOffers = true }
                     )
                     
@@ -53,17 +55,20 @@ struct DashboardProviderView: View {
                                 }
                                 
                             case .stats:
-                                StatsPlaceholder()
-                                
+                                StatsPlaceholder(
+                                    stats: viewModel.stats,
+                                    popularServices: viewModel.popularServices
+                                )
+
                             case .reviews:
                                 ProviderReviewsView(
                                     engine: viewModel.engine,
-                                    providerId: viewModel.providerId
+                                    providerId: "" // public reviews may still require id; replace when wiring JWT/me reviews
                                 )
                             }
                         }
                         .padding(.top, 12)
-                        .padding(.bottom, 120)   // ruimte voor TabBar
+                        .padding(.bottom, 120)
                     }
                     .background(Color(R.color.mainBackground.name))
                 }
@@ -172,3 +177,4 @@ var createButton: some View {
     }
     .padding(.horizontal, 20)
 }
+

@@ -16,11 +16,8 @@ struct PaymentTransaction: Identifiable, Hashable {
 
 extension PaymentTransaction {
     static func fromBookings(_ bookings: [Booking]) -> [PaymentTransaction] {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd"
-        
         return bookings.compactMap { booking in
-            guard let date = formatter.date(from: booking.date) else { return nil }
+            guard let date = DateFormatters.isoDate(booking.date) else { return nil }
             
             let signedAmount: Double
             switch booking.paymentStatus {
@@ -30,9 +27,11 @@ extension PaymentTransaction {
                 signedAmount = -booking.price       // paiement -
             }
             
+            let title = booking.serviceName ?? (booking.providerName ?? "Service")
+            
             return PaymentTransaction(
                 id: booking.id,
-                title: booking.serviceName,
+                title: title,
                 date: date,
                 amount: signedAmount
             )

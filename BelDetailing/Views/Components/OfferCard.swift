@@ -45,10 +45,12 @@ struct OfferCard: View {
             }
 
             // 🔹 Nombre de candidatures
-            Text("\(offer.applications?.count ?? 0) \(R.string.localizable.offerApplicationsLabel())")
-                .font(.system(size: 14))
-                .foregroundColor(.gray)
-
+            if let count = offer.applicationsCount, count > 0 {
+                Label("\(count) \(R.string.localizable.offerApplicationsLabel())",
+                      systemImage: "person.2")
+                    .font(.system(size: 13, weight: .medium))
+                    .foregroundColor(.gray)
+            }
             // 🔹 Boutons: Détails + Postuler
             HStack(spacing: 8) {
                 Button {

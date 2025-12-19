@@ -12,16 +12,23 @@ struct BookingCardView: View {
 
             // --- Image + badge status ---
             ZStack(alignment: .topTrailing) {
-                AsyncImage(url: URL(string: booking.imageURL ?? "")) { phase in
-                    switch phase {
-                    case .empty:
-                        Color.gray.opacity(0.2).overlay(ProgressView())
-                    case .success(let image):
-                        image.resizable().scaledToFill()
-                    case .failure:
-                        Color.gray.opacity(0.2)
-                    @unknown default:
-                        Color.gray.opacity(0.2)
+                Group {
+                    if let urlString = booking.imageURL,
+                       let url = URL(string: urlString) {
+                        AsyncImage(url: url) { phase in
+                            switch phase {
+                            case .empty:
+                                Color.gray.opacity(0.2).overlay(ProgressView())
+                            case .success(let image):
+                                image.resizable().scaledToFill()
+                            case .failure:
+                                Color.gray.opacity(0.2)
+                            @unknown default:
+                                Color.gray.opacity(0.2)
+                            }
+                        }
+                    } else {
+                        Color.gray.opacity(0.15)
                     }
                 }
                 .frame(height: 180)
@@ -40,32 +47,27 @@ struct BookingCardView: View {
             // --- Infos + actions ---
             VStack(alignment: .leading, spacing: 10) {
 
-                Text(booking.providerName)
+                Text(booking.displayProviderName)
                     .font(.system(size: 18, weight: .bold))
                     .foregroundColor(.black)
 
-                Text(booking.serviceName)
+                Text(booking.displayServiceName)
                     .font(.system(size: 15))
                     .foregroundColor(.gray)
 
                 HStack(spacing: 12) {
+                    let timeForFormat = booking.displayStartTime == "—" ? "00:00" : booking.displayStartTime
                     Label(
-                        DateFormatters.humanDate(from: booking.date, time: booking.startTime),
+                        DateFormatters.humanDate(from: booking.date, time: timeForFormat),
                         systemImage: "calendar"
                     )
                     .foregroundColor(.gray)
                     .font(.system(size: 14))
-
-                    Label(R.string.localizable.bookingGuestsCount(2), systemImage: "person.2")
-                        .foregroundColor(.gray)
-                        .font(.system(size: 14))
                 }
 
-                // --- Actions ---
                 if booking.status == .completed {
-                    // 👉 RÉSERVER À NOUVEAU (un seul long bouton)
                     Button(action: onRepeat) {
-                        Text(R.string.localizable.bookingBookAgain()) // ajoute cette key dans Localizable
+                        Text(R.string.localizable.bookingBookAgain())
                             .font(.system(size: 15, weight: .semibold))
                             .foregroundColor(.white)
                             .frame(maxWidth: .infinity)
@@ -77,7 +79,6 @@ struct BookingCardView: View {
                     .padding(.top, 4)
 
                 } else {
-                    // 👉 MODIFIER + ANNULER (comme avant)
                     HStack(spacing: 10) {
 
                         Button(action: onManage) {

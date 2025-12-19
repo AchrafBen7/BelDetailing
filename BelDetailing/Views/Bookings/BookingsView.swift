@@ -10,8 +10,6 @@ struct BookingsView: View {
     @State private var bookingToCancel: Booking? = nil
     @State private var showTooLateAlert = false
     
-    
-    // 👉 Pour ouvrir la page de gestion
     @State private var selectedBooking: Booking? = nil
     
     let engine: Engine
@@ -23,80 +21,93 @@ struct BookingsView: View {
     
     var body: some View {
         NavigationStack {
-            
             VStack(alignment: .leading, spacing: 0) {
                 
                 header
                 tabs
                 
-                // --- LISTE ---
-                List {
-                    ForEach(filteredBookings) { booking in
-                        
-                        BookingCardView(
-                            booking: booking,
-                            onManage: {
-                                if booking.isWithin24h {
-                                    print("Impossible de modifier, moins de 24h")
-                                } else {
-                                    selectedBooking = booking
-                                }
-                            },
-                            onCancel: {
-                                if booking.isWithin24h {
-                                    showTooLateAlert = true
-                                } else {
-                                    bookingToCancel = booking
-                                    showCancelSheet = true
-                                }
-                            },
-                            onRepeat: {
-                                    // TODO: lancer le flow pour refaire une réservation
-                                    // Pour l’instant tu peux juste log:
+                // LIST
+                ScrollView(showsIndicators: false) {
+                    LazyVStack(spacing: 16) {
+                        ForEach(filteredBookings, id: \.id) { booking in
+                            BookingCardView(
+                                booking: booking,
+                                onManage: {
+                                    if booking.isWithin24h {
+                                        print("Impossible de modifier, moins de 24h")
+                                    } else {
+                                        selectedBooking = booking
+                                    }
+                                },
+                                onCancel: {
+                                    if booking.isWithin24h {
+                                        showTooLateAlert = true
+                                    } else {
+                                        bookingToCancel = booking
+                                        showCancelSheet = true
+                                    }
+                                },
+                                onRepeat: {
                                     print("BOOK AGAIN \(booking.id)")
                                 }
-                            
-                            
-                        )
-                        .alert("Impossible", isPresented: $showTooLateAlert) {
-                            Button("OK", role: .cancel) {}
-                        } message: {
-                            Text("Vous ne pouvez plus annuler ou modifier une réservation dans les 24 heures précédant l'heure prévue.")
+                            )
+                            .background(Color.yellow.opacity(0.08))
+                            .alert("Impossible", isPresented: $showTooLateAlert) {
+                                Button("OK", role: .cancel) {}
+                            } message: {
+                                Text("Vous ne pouvez plus annuler ou modifier une réservation dans les 24 heures précédant l'heure prévue.")
+                            }
                         }
-                        
-                        
-                        .listRowSeparator(.hidden)
-                        .listRowBackground(Color.clear)
                     }
+                    .padding(.horizontal, 16)
+                    .padding(.top, 8)
+                    .padding(.bottom, 12)
                 }
-                .listStyle(.plain)
-                .scrollContentBackground(.hidden)
+                .refreshable {
+                    await viewModel.reload()
+                }
+                .frame(maxHeight: .infinity)
                 .background(Color.white)
+                
+                // Fallback pour forcer l’expansion
+                Spacer(minLength: 0)
             }
             .background(Color.white)
             .toolbar(.hidden, for: .navigationBar)
-            
-            // MARK: - NAVIGATION TO MANAGE VIEW
+            .task {
+                print("🧩 [View] .task triggered")
+                await viewModel.loadIfNeeded()
+            }
             .sheet(item: $selectedBooking) { booking in
                 BookingManageSheetView(
                     booking: booking,
                     engine: engine
                 )
             }
-        }
-        .task {
-            await viewModel.loadIfNeeded()
+            // When sheet closes, refresh to reflect changes
+            .onChange(of: selectedBooking) { newValue in
+                if newValue == nil {
+                    Task { await viewModel.reload() }
+                }
+            }
+            // Ecoute la création d’une réservation ailleurs dans l’app
+            .onReceive(NotificationCenter.default.publisher(for: .bookingCreated)) { _ in
+                Task { await viewModel.reload() }
+            }
         }
         .sheet(item: $bookingToCancel) { booking in
             BookingCancelSheetView(booking: booking)
         }
-
-        
+        // When cancel sheet closes, refresh to reflect changes
+        .onChange(of: bookingToCancel) { newValue in
+            if newValue == nil {
+                Task { await viewModel.reload() }
+            }
+        }
     }
 }
-// MARK: - Subviews + Helpers
+
 private extension BookingsView {
-    // MARK: HEADER
     var header: some View {
         HStack {
             (R.string.localizable.tabBookings() + ".")
@@ -114,7 +125,6 @@ private extension BookingsView {
         .padding(.horizontal, 20)
         .padding(.top, 8)
     }
-    // MARK: TABS
     var tabs: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: 20) {
@@ -148,24 +158,20 @@ private extension BookingsView {
             .padding(.vertical, 8)
         }
     }
-    // MARK: FILTERED BOOKINGS
     var filteredBookings: [Booking] {
+        let result: [Booking]
         switch selectedFilter {
-        case .all:
-            return viewModel.allBookings
-        case .pending:
-            return viewModel.pending
-        case .upcoming:
-            return viewModel.upcoming
-        case .ongoing:
-            return viewModel.ongoing
-        case .completed:
-            return viewModel.completed
+        case .all:       result = viewModel.allBookings
+        case .pending:   result = viewModel.pending
+        case .upcoming:  result = viewModel.upcoming
+        case .ongoing:   result = viewModel.ongoing
+        case .completed: result = viewModel.completed
         }
+        print("🧮 [View] filtered for \(selectedFilter) ->", result.count)
+        return result
     }
 }
 
-// MARK: - Filter enum
 enum BookingFilter: CaseIterable {
     case all, pending, upcoming, ongoing, completed
     var title: String {

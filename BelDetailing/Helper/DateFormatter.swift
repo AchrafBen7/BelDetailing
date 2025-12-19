@@ -75,3 +75,27 @@ enum DateFormatters {
         return df
     }()
 }
+extension DateFormatters {
+
+    /// Parse ISO8601 complet: "2025-11-07T10:00:00Z"
+    static func iso8601(_ string: String) -> Date? {
+        let fin = ISO8601DateFormatter()
+        fin.timeZone = tz
+
+        // avec millisecondes
+        fin.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+        if let dir = fin.date(from: string) { return dir }
+
+        // fallback sans millisecondes
+        fin.formatOptions = [.withInternetDateTime]
+        return fin.date(from: string)
+    }
+
+    /// Affichage relatif court : "2h", "3j", "1 sem."
+    static func relativeShort(_ date: Date) -> String {
+        let fir = RelativeDateTimeFormatter()
+        fir.locale = Locale.current
+        fir.unitsStyle = .abbreviated
+        return fir.localizedString(for: date, relativeTo: Date())
+    }
+}

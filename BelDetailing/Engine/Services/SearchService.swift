@@ -28,7 +28,7 @@ final class SearchServiceNetwork: SearchService {
                 "lng": lng,
                 "radius": radius
             ],
-            wrappedInData: true   // ✅ IMPORTANT
+            wrappedInData: true
         )
     }
 
@@ -40,20 +40,8 @@ final class SearchServiceNetwork: SearchService {
                 "city": city,
                 "category": category
             ],
-            wrappedInData: true   // ✅ IMPORTANT aussi
+            wrappedInData: true
         )
     }
 }
 
-
-final class SearchServiceMock: MockService, SearchService {
-    func searchProviders(query: String?, city: String?, lat: Double?, lng: Double?, radius: Double?) async -> APIResponse<[Detailer]> {
-        await randomWait()
-        return .success(Detailer.sampleValues)
-    }
-
-    func searchOffers(query: String?, city: String?, category: String?) async -> APIResponse<[Offer]> {
-        await randomWait()
-        return .success(Offer.sampleValues)
-    }
-}

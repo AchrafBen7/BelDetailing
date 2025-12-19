@@ -5,12 +5,12 @@ import Foundation
 struct Booking: Codable, Identifiable, Hashable {
     let id: String
     let providerId: String
-    let providerName: String
-    let serviceName: String
+    let providerName: String?
+    let serviceName: String?          // ⬅️ optionnel
     let price: Double
     let date: String
-    let startTime: String
-    let endTime: String
+    let startTime: String?            // ⬅️ optionnel
+    let endTime: String?              // ⬅️ optionnel
     let address: String
     var status: BookingStatus
     let paymentStatus: PaymentStatus
@@ -23,21 +23,21 @@ struct Booking: Codable, Identifiable, Hashable {
 
     enum CodingKeys: String, CodingKey {
         case id
-        case providerId = "provider_id"
-        case providerName = "provider_name"
-        case serviceName = "service_name"
+        case providerId
+        case providerName
+        case serviceName
         case price
         case date
-        case startTime = "start_time"
-        case endTime = "end_time"
+        case startTime
+        case endTime
         case address
         case status
-        case paymentStatus = "payment_status"
-        case paymentIntentId = "payment_intent_id"
-        case commissionRate = "commission_rate"
-        case invoiceSent = "invoice_sent"
+        case paymentStatus
+        case paymentIntentId
+        case commissionRate
+        case invoiceSent
         case customer
-        case providerBannerUrl = "provider_banner_url"
+        case providerBannerUrl
         case currency
     }
 
@@ -48,16 +48,66 @@ struct Booking: Codable, Identifiable, Hashable {
 
         id = try keys.decode(String.self, forKey: .id)
         providerId = (try? keys.decode(String.self, forKey: .providerId)) ?? ""
-        providerName = try keys.decode(String.self, forKey: .providerName)
-        serviceName = try keys.decode(String.self, forKey: .serviceName)
+
+        // providerName peut être manquant, null, "<null>" ou vide
+        if let rawProviderName = try? keys.decode(String.self, forKey: .providerName) {
+            let trimmed = rawProviderName.trimmingCharacters(in: .whitespacesAndNewlines)
+            providerName = (trimmed.isEmpty || trimmed == "<null>") ? nil : trimmed
+        } else {
+            providerName = nil
+        }
+
+        // serviceName peut être manquant, null, "<null>" ou vide
+        if let rawServiceName = try? keys.decode(String.self, forKey: .serviceName) {
+            let trimmed = rawServiceName.trimmingCharacters(in: .whitespacesAndNewlines)
+            serviceName = (trimmed.isEmpty || trimmed == "<null>") ? nil : trimmed
+        } else {
+            serviceName = nil
+        }
+
         price = try keys.decode(Double.self, forKey: .price)
         date = try keys.decode(String.self, forKey: .date)
-        startTime = try keys.decode(String.self, forKey: .startTime)
-        endTime = try keys.decode(String.self, forKey: .endTime)
+
+        // ⬇️ startTime / endTime optionnels, acceptent absence ou "<null>"
+        if let rawStart = try? keys.decode(String.self, forKey: .startTime) {
+            let trimmed = rawStart.trimmingCharacters(in: .whitespacesAndNewlines)
+            startTime = (trimmed.isEmpty || trimmed == "<null>") ? nil : trimmed
+        } else {
+            startTime = nil
+        }
+
+        if let rawEnd = try? keys.decode(String.self, forKey: .endTime) {
+            let trimmed = rawEnd.trimmingCharacters(in: .whitespacesAndNewlines)
+            endTime = (trimmed.isEmpty || trimmed == "<null>") ? nil : trimmed
+        } else {
+            endTime = nil
+        }
+
         address = try keys.decode(String.self, forKey: .address)
 
         status = try keys.decode(BookingStatus.self, forKey: .status)
-        paymentStatus = try keys.decode(PaymentStatus.self, forKey: .paymentStatus)
+
+        // ⬇️ paymentStatus tolérant: clé absente/null/valeur inconnue -> .pending
+        if let statusDecoded = try? keys.decode(PaymentStatus.self, forKey: .paymentStatus) {
+            paymentStatus = statusDecoded
+        } else if let raw = try? keys.decode(String.self, forKey: .paymentStatus),
+                  let statusFromRaw = PaymentStatus(rawValue: raw) {
+            paymentStatus = statusFromRaw
+        } else {
+            paymentStatus = .pending
+        }
+
+        // MARK: providerBannerUrl — may be string OR "<null>" OR ""
+        let bannerRaw = try? keys.decode(String.self, forKey: .providerBannerUrl)
+        if let raw = bannerRaw?.trimmingCharacters(in: .whitespacesAndNewlines),
+           !raw.isEmpty, raw != "<null>" {
+            providerBannerUrl = raw
+        } else {
+            providerBannerUrl = nil
+        }
+
+        // Customer may be null
+        customer = try? keys.decode(BookingCustomer.self, forKey: .customer)
 
         // MARK: paymentIntentId — can be "<null>"
         let piRaw = try? keys.decode(String.self, forKey: .paymentIntentId)
@@ -80,14 +130,6 @@ struct Booking: Codable, Identifiable, Hashable {
         } else {
             invoiceSent = false
         }
-
-        // MARK: providerBannerUrl — may be string OR "<null>"
-        let bannerRaw = try? keys.decode(String.self, forKey: .providerBannerUrl)
-        providerBannerUrl = (bannerRaw == "<null>" ? nil : bannerRaw)
-
-        
-        // Customer may be null
-        customer = try? keys.decode(BookingCustomer.self, forKey: .customer)
 
         currency = (try? keys.decode(String.self, forKey: .currency)) ?? "eur"
     }
@@ -150,6 +192,7 @@ enum BookingStatus: String, Codable {
 enum PaymentStatus: String, Codable {
     case pending
     case preauthorized
+    case processing   // présent dans tes logs
     case paid
     case refunded
     case failed
@@ -170,10 +213,30 @@ extension Booking {
     var imageURL: String? { providerBannerUrl }
 
     var isWithin24h: Bool {
-        guard let start = DateFormatters.isoDateTime(date: date, time: startTime) else {
+        guard let start = DateFormatters.isoDateTime(date: date, time: startTime ?? "00:00") else {
             return false
         }
         return start.timeIntervalSinceNow < 24 * 3600
+    }
+
+    // Affichage robuste pour l'heure de début
+    var displayStartTime: String {
+        startTime ?? "—"
+    }
+
+    // Affichage robuste pour les noms
+    var displayProviderName: String {
+        if let name = providerName?.trimmingCharacters(in: .whitespacesAndNewlines), !name.isEmpty {
+            return name
+        }
+        return "—"
+    }
+
+    var displayServiceName: String {
+        if let name = serviceName?.trimmingCharacters(in: .whitespacesAndNewlines), !name.isEmpty {
+            return name
+        }
+        return "—"
     }
 }
 
@@ -181,8 +244,7 @@ extension CreateBookingResponse {
     static func decodeFromBookingResponse(_ data: Data) throws -> CreateBookingResponse {
         let decoder = JSONDecoder()
         decoder.dateDecodingStrategy = .iso8601
-        decoder.keyDecodingStrategy = .useDefaultKeys 
-
+        decoder.keyDecodingStrategy = .useDefaultKeys
         return try decoder.decode(CreateBookingResponse.self, from: data)
     }
 }

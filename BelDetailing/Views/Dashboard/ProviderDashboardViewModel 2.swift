@@ -10,20 +10,45 @@ import Combine
 
 @MainActor
 final class ProviderDashboardViewModel: ObservableObject {
+    @Published var selectedDate: Date = Date()
     @Published var selectedFilter: ProviderDashboardFilter = .offers
     @Published var services: [Service] = []
     @Published var isLoading = true
     @Published var bookings: [Booking] = []
-    @Published var selectedDate: Date = Date()
+    @Published var stats: DetailerStats? = nil
+
+    // Expose popular services for StatsPlaceholder
+    // Pour l’instant, DetailerStats ne contient pas ces données,
+    // on renvoie donc un tableau vide. À mapper quand l’API les expose.
+    var popularServices: [PopularServiceUI] {
+        return []
+    }
+
     let engine: Engine
-    let providerId = "prov_001"  // plus tard depuis StorageManager
+
     init(engine: Engine) {
         self.engine = engine
-        loadServices()
-        loadBookings()         // 👈 important pour le calendrier
+        loadAll()
     }
-    // MARK: - Calendar DATA
-    /// Réservations pour la date sélectionnée
+
+    func loadAll() {
+        loadServices()
+        loadBookings()
+        loadStats()
+    }
+
+    func loadStats() {
+        Task {
+            let response = await engine.detailerService.getMyStats()
+            switch response {
+            case .success(let succ):
+                self.stats = succ
+            case .failure:
+                self.stats = nil
+            }
+        }
+    }
+
     var bookingsForSelectedDate: [Booking] {
         bookings
             .filter { $0.date == selectedDateString }
@@ -32,9 +57,9 @@ final class ProviderDashboardViewModel: ObservableObject {
                 booking.status == .pending   ||
                 booking.status == .cancelled
             }
-            .sorted { $0.startTime < $1.startTime }   // optionnel mais plus clean
+            .sorted { ($0.startTime ?? "00:00") < ($1.startTime ?? "00:00") }
     }
-    /// Jours (1,2,3,...) qui ont au moins une réservation pour le mois de `selectedDate`
+
     func bookedDays(inMonth month: Date) -> Set<Int> {
         var result = Set<Int>()
         let calendar = Calendar.current
@@ -50,14 +75,15 @@ final class ProviderDashboardViewModel: ObservableObject {
         }
         return result
     }
+
     private var selectedDateString: String {
-        DateFormatters.onlyDate(selectedDate)   // "yyyy-MM-dd"
+        DateFormatters.onlyDate(selectedDate)
     }
-    // MARK: - Services & Bookings loader
+
     func loadServices() {
         Task {
             isLoading = true
-            let response = await engine.detailerService.getServices(id: providerId)
+            let response = await engine.detailerService.getMyServices()
             switch response {
             case .success(let list):
                 services = list
@@ -67,9 +93,11 @@ final class ProviderDashboardViewModel: ObservableObject {
             isLoading = false
         }
     }
+
     func loadBookings() {
         Task {
-            let response = await engine.bookingService.getBookings(scope: providerId, status: nil)
+            // Backend reads provider from JWT; scope must be "provider"
+            let response = await engine.bookingService.getBookings(scope: "provider", status: nil)
             switch response {
             case .success(let list):
                 bookings = list
@@ -78,18 +106,26 @@ final class ProviderDashboardViewModel: ObservableObject {
             }
         }
     }
+
     func deleteService(id: String) {
         services.removeAll { $0.id == id }
     }
-    // MARK: - ACTIONS booking
+
     func confirmBooking(_ id: String) {
-        if let index = bookings.firstIndex(where: { $0.id == id }) {
-            bookings[index].status = .confirmed
+        Task {
+            let res = await engine.bookingService.confirmBooking(id: id)
+            if case .success = res {
+                loadBookings()
+            }
         }
     }
+
     func declineBooking(_ id: String) {
-        if let index = bookings.firstIndex(where: { $0.id == id }) {
-            bookings[index].status = .declined
+        Task {
+            let res = await engine.bookingService.declineBooking(id: id)
+            if case .success = res {
+                loadBookings()
+            }
         }
     }
 }
@@ -105,32 +141,28 @@ struct CalendarDayStatus {
 }
 
 extension ProviderDashboardViewModel {
-    
     func calendarStatus(forMonth month: Date) -> CalendarDayStatus {
-        
         let calendar = Calendar.current
         let target = calendar.dateComponents([.year, .month], from: month)
-        
+
         var confirmed = Set<Int>()
         var pending   = Set<Int>()
         var cancelled = Set<Int>()
-        
+
         for booking in bookings {
             guard let date = DateFormatters.isoDate(booking.date) else { continue }
             let comps = calendar.dateComponents([.year, .month, .day], from: date)
-            
+
             guard comps.year == target.year,
                   comps.month == target.month,
                   let day = comps.day else { continue }
-            
+
             switch booking.status {
             case .confirmed:
                 confirmed.insert(day)
-                
             case .pending:
                 pending.insert(day)
-                
-            case .declined, .cancelled, .completed:    // tu l'as demandé
+            case .declined, .cancelled, .completed:
                 cancelled.insert(day)
             }
         }
@@ -141,3 +173,4 @@ extension ProviderDashboardViewModel {
         )
     }
 }
+

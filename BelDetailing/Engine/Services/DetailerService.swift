@@ -5,7 +5,6 @@
 //  Created by Achraf Benali on 07/11/2025.
 //
 
-
 import Foundation
 
 // MARK: - Protocol
@@ -13,6 +12,12 @@ protocol DetailerService {
     func getProfile(id: String) async -> APIResponse<Detailer>
     func updateProfile(id: String, data: [String: Any]) async -> APIResponse<Detailer>
     func getReviews(id: String) async -> APIResponse<[Review]>
+
+    // Dashboard (JWT-based)
+    func getMyStats() async -> APIResponse<DetailerStats>
+    func getMyServices() async -> APIResponse<[Service]>
+
+    // Legacy/id-based (public provider detail screens)
     func getStats(id: String) async -> APIResponse<DetailerStats>
     func getServices(id: String) async -> APIResponse<[Service]>
 }
@@ -34,6 +39,16 @@ final class DetailerServiceNetwork: DetailerService {
         await networkClient.call(endPoint: .providerReviews(providerId: id))
     }
 
+    // MARK: JWT-based for the logged-in provider
+    func getMyStats() async -> APIResponse<DetailerStats> {
+        await networkClient.call(endPoint: .providerMyStats)
+    }
+
+    func getMyServices() async -> APIResponse<[Service]> {
+        await networkClient.call(endPoint: .providerMyServices)
+    }
+
+    // MARK: Legacy/id-based (still used on public provider screens)
     func getStats(id: String) async -> APIResponse<DetailerStats> {
         await networkClient.call(endPoint: .providerStats(providerId: id))
     }
@@ -63,9 +78,19 @@ final class DetailerServiceMock: MockService, DetailerService {
         return .success(Review.sampleValues)
     }
 
+    func getMyStats() async -> APIResponse<DetailerStats> {
+        await randomWait()
+        return .failure(.serverError(statusCode: 501))
+    }
+
+    func getMyServices() async -> APIResponse<[Service]> {
+        await randomWait()
+        return .success(Service.sampleValues)
+    }
+
     func getStats(id: String) async -> APIResponse<DetailerStats> {
         await randomWait()
-        return .success(DetailerStats.sample)
+        return .failure(.serverError(statusCode: 501))
     }
 
     func getServices(id: String) async -> APIResponse<[Service]> {

@@ -22,3 +22,7 @@ enum NotificationsConstants: String {
     NotificationCenter.default.post(name: notificationName, object: object)
   }
 }
+
+extension Notification.Name {
+    static let userDidLogout = Notification.Name("userDidLogout")
+}

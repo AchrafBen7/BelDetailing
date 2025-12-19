@@ -43,7 +43,8 @@ struct MainTabView: View {
                     .tag(Tab.bookings)
                     .tabItem { EmptyView() }
 
-                DashboardProviderView(engine: engine)
+                // ✅ Route unique Dashboard, contenu selon rôle
+                DashboardEntryView(engine: engine)
                     .id(dashboardResetID)
                     .environmentObject(tabBarVisibility)
                     .tag(Tab.dashboard)

@@ -21,9 +21,9 @@ struct BookingManageSheetView: View {
         self.booking = booking
         self.engine = engine
         _newDate = State(initialValue:
-            DateFormatters.isoDateTime(date: booking.date, time: booking.startTime) ?? Date()
+            DateFormatters.isoDateTime(date: booking.date, time: booking.startTime ?? "00:00") ?? Date()
         )
-        _newTime = State(initialValue: booking.startTime)
+        _newTime = State(initialValue: booking.startTime ?? "00:00")
     }
 
     var body: some View {
@@ -34,7 +34,7 @@ struct BookingManageSheetView: View {
                 Text(R.string.localizable.bookingManageUpdateTitle())
                     .font(.system(size: 24, weight: .bold))
 
-                Text("\(booking.serviceName) – \(booking.providerName)")
+                Text("\(booking.serviceName ?? "-") – \(booking.providerName ?? "-")")
                     .font(.system(size: 15))
                     .foregroundColor(.gray)
             }

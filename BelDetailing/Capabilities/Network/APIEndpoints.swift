@@ -21,7 +21,7 @@ enum APIEndPoint: Equatable  {
     // Auth
     case register, login, refresh
     case profile, updateProfile
-    case loginApple          // ✅ NEW
+    case loginApple
     case loginGoogle
     case logout
     
@@ -32,6 +32,10 @@ enum APIEndPoint: Equatable  {
     case providerServices(providerId: String)
     case providerStats(providerId: String)
     case providerReviewCreate
+
+    // JWT-based provider endpoints
+    case providerMyStats
+    case providerMyServices
     
     // Bookings
     case bookingsList(scope: String?, status: String?)
@@ -77,10 +81,9 @@ enum APIEndPoint: Equatable  {
     case notificationSubscribe(topic: String)
     
     // Payments
-    case paymentIntent        // déjà existant
+    case paymentIntent
     case paymentCapture
     case paymentRefund
-
 }
 
 // MARK: - Mapper Protocol
@@ -96,7 +99,7 @@ struct BelDetailingEndpointMapper: EndpointMapper {
         case .register, .login, .refresh, .profile, .updateProfile, .loginApple, .loginGoogle, .logout:
             return authPath(for: endPoint)
 
-        case .providersList, .providerDetail, .providerReviews, .providerServices, .providerStats, .providerReviewCreate:
+        case .providersList, .providerDetail, .providerReviews, .providerServices, .providerStats, .providerReviewCreate, .providerMyStats, .providerMyServices:
             return providerPath(for: endPoint)
 
         case .bookingsList, .bookingCreate, .bookingUpdate, .bookingCancel, .bookingConfirm, .bookingDecline:
@@ -123,44 +126,46 @@ struct BelDetailingEndpointMapper: EndpointMapper {
         case .notificationsList, .notificationRead, .notificationSubscribe:
             return notificationPath(for: endPoint)
 
-        // 🟦 NOUVEAUX ENDPOINTS PAIEMENT
         case .paymentIntent, .paymentCapture, .paymentRefund:
             return paymentsPath(for: endPoint)
         }
     }
 
-    
     static func method(for endPoint: APIEndPoint) -> HTTPVerb {
         switch endPoint {
-        case .register, .login, .refresh,.loginApple, .loginGoogle,.logout, .providerReviewCreate, .bookingCreate, .bookingCancel,
-                .bookingConfirm, .bookingDecline, .offerCreate, .offerClose, .offerApply,
-                .applicationWithdraw, .applicationAccept, .applicationRefuse,
-                .notificationSubscribe, .paymentIntent, .paymentCapture, .paymentRefund, .mediaUpload:
+        case .register, .login, .refresh, .loginApple, .loginGoogle, .logout, .providerReviewCreate, .bookingCreate, .bookingCancel,
+             .bookingConfirm, .bookingDecline, .offerCreate, .offerClose, .offerApply,
+             .applicationWithdraw, .applicationAccept, .applicationRefuse,
+             .notificationSubscribe, .paymentIntent, .paymentCapture, .paymentRefund, .mediaUpload:
             return .post
+
         case .updateProfile, .bookingUpdate, .offerUpdate, .notificationRead:
             return .patch
+
         case .providerDetail, .providersList, .providerReviews, .providerServices,
-                .providerStats, .offersList, .offerDetail, .bookingsList,
-                .cities, .serviceCategories, .searchProviders, .searchOffers,
-                .offerApplications, .profile, .notificationsList, .vatValidate:
+             .providerStats, .providerMyStats, .providerMyServices,
+             .offersList, .offerDetail, .bookingsList,
+             .cities, .serviceCategories, .searchProviders, .searchOffers,
+             .offerApplications, .profile, .notificationsList, .vatValidate:
             return .get
+
         case .offerDelete, .mediaDelete:
             return .delete
         }
-        
     }
+
     static func paymentsPath(for endPoint: APIEndPoint) -> String {
-            switch endPoint {
-            case .paymentIntent:
-                return "api/v1/payments/intent"
-            case .paymentCapture:
-                return "api/v1/payments/capture"
-            case .paymentRefund:
-                return "api/v1/payments/refund"
-            default:
-                return ""
-            }
+        switch endPoint {
+        case .paymentIntent:
+            return "api/v1/payments/intent"
+        case .paymentCapture:
+            return "api/v1/payments/capture"
+        case .paymentRefund:
+            return "api/v1/payments/refund"
+        default:
+            return ""
         }
+    }
 }
 
 // MARK: - Helper sub-switches
@@ -170,10 +175,8 @@ private extension BelDetailingEndpointMapper {
         case .register: return "api/v1/auth/register"
         case .login: return "api/v1/auth/login"
         case .refresh: return "api/v1/auth/refresh"
-        case .loginApple: return
-            "api/v1/auth/apple"    
-        case .loginGoogle: return
-            "api/v1/auth/google"
+        case .loginApple: return "api/v1/auth/apple"
+        case .loginGoogle: return "api/v1/auth/google"
         case .profile, .updateProfile: return "api/v1/profile"
         case .logout: return "api/v1/auth/logout"
         default: return ""
@@ -187,6 +190,8 @@ private extension BelDetailingEndpointMapper {
         case .providerReviews(let id): return "api/v1/providers/\(id)/reviews"
         case .providerServices(let id): return "api/v1/providers/\(id)/services"
         case .providerStats(let id): return "api/v1/providers/\(id)/stats"
+        case .providerMyStats: return "api/v1/providers/me/stats"
+        case .providerMyServices: return "api/v1/providers/me/services"
         case .providerReviewCreate: return "api/v1/reviews"
         default: return ""
         }
@@ -262,7 +267,6 @@ private extension BelDetailingEndpointMapper {
         case .notificationRead(let id): return "api/v1/notifications/\(id)/read"
         case .notificationSubscribe(let topic): return "api/v1/notifications/subscribe?topic=\(topic)"
         default: return ""
-
         }
     }
 }

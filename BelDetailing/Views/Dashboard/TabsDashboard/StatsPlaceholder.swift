@@ -4,20 +4,14 @@
 //
 //  Created by Achraf Benali on 20/11/2025.
 
-
 import SwiftUI
 import RswiftResources
 
 struct StatsPlaceholder: View {
 
-    // Mock data
-    private let stats = DetailerStats.sample
-
-    private let popularServices: [(name: String, earnings: Int, count: Int)] = [
-        ("Detailing Complet", 1800, 12),
-        ("Polissage Carrosserie", 680, 8),
-        ("Nettoyage Intérieur", 260, 4)
-    ]
+    // Données injectées depuis le ViewModel (pas de mock ici)
+    let stats: DetailerStats?
+    let popularServices: [PopularServiceUI]
 
     var body: some View {
         VStack(alignment: .leading, spacing: 28) {
@@ -33,32 +27,38 @@ struct StatsPlaceholder: View {
                 Text(R.string.localizable.statsPopularServices())
                     .font(.system(size: 18, weight: .semibold))
 
-                ForEach(popularServices, id: \.name) { service in
-                    VStack(alignment: .leading, spacing: 6) {
+                if popularServices.isEmpty {
+                    Text(R.string.localizable.detailNoServices())
+                        .font(.system(size: 15))
+                        .foregroundColor(.gray)
+                } else {
+                    ForEach(popularServices, id: \.name) { service in
+                        VStack(alignment: .leading, spacing: 6) {
 
-                        HStack {
-                            Text(service.name)
-                                .font(.system(size: 17, weight: .semibold))
+                            HStack {
+                                Text(service.name)
+                                    .font(.system(size: 17, weight: .semibold))
 
-                            Spacer()
+                                Spacer()
 
-                            Text(R.string.localizable.statsPriceEuro(service.earnings))
-                                .font(.system(size: 17, weight: .semibold))
+                                Text(R.string.localizable.statsPriceEuro(Int(service.estimatedEarnings)))
+                                    .font(.system(size: 17, weight: .semibold))
+                            }
+
+                            Text("\(service.count) réservations")
+                                .font(.system(size: 14))
+                                .foregroundColor(.gray)
+
+                            Rectangle()
+                                .fill(Color.black)
+                                .frame(width: barWidth(for: service), height: 5)
+                                .cornerRadius(3)
+                                .padding(.trailing, 60)
+                                .opacity(0.9)
+
+                            Divider()
                         }
-
-                        // Replaced missing localization key with manual formatted text
-                        Text("\(service.count) réservations")
-                            .foregroundColor(.gray)
-
-                        Rectangle()
-                            .fill(Color.black)
-                            .frame(width: barWidth(for: service), height: 5)
-                            .cornerRadius(3)
-                            .padding(.trailing, 60)
-                            .opacity(0.9)
                     }
-
-                    Divider()
                 }
             }
             .padding(20)
@@ -79,12 +79,9 @@ struct StatsPlaceholder: View {
                     Text(R.string.localizable.statsNewClients())
                         .font(.system(size: 15, weight: .medium))
 
-                    Text("+\(stats.totalBookings - stats.completedBookings)")
+                    Text("\(stats?.clientsCount ?? 0)")
                         .font(.system(size: 26, weight: .bold))
-
-                    Text(R.string.localizable.statsNewClientsVariation(16))
-                        .font(.system(size: 14))
-                        .foregroundColor(.green)
+                        .foregroundColor(.black)
                 }
                 .padding()
                 .frame(maxWidth: .infinity)
@@ -101,12 +98,9 @@ struct StatsPlaceholder: View {
                     Text(R.string.localizable.statsSatisfaction())
                         .font(.system(size: 15, weight: .medium))
 
-                    Text(String(format: "%.1f/5", stats.ratingAverage))
+                    Text(String(format: "%.1f", stats?.rating ?? 0))
                         .font(.system(size: 26, weight: .bold))
-
-                    Text(R.string.localizable.statsReviewsCount(stats.totalReviews))
-                        .font(.system(size: 14))
-                        .foregroundColor(.gray)
+                        .foregroundColor(.black)
                 }
                 .padding()
                 .frame(maxWidth: .infinity)
@@ -121,8 +115,16 @@ struct StatsPlaceholder: View {
     }
 
     // MARK: - Helpers
-    private func barWidth(for service: (name: String, earnings: Int, count: Int)) -> CGFloat {
-        let max = popularServices.first?.earnings ?? 1
-        return CGFloat(service.earnings) / CGFloat(max) * 220
+    private func barWidth(for service: PopularServiceUI) -> CGFloat {
+        let maxCount = max(popularServices.map { $0.count }.max() ?? 1, 1)
+        let ratio = CGFloat(service.count) / CGFloat(maxCount)
+        return ratio * 220
     }
+}
+
+// MARK: - UI Model pour les services populaires (pas de mock, juste un mapping UI)
+struct PopularServiceUI: Hashable {
+    let name: String
+    let estimatedEarnings: Double
+    let count: Int
 }

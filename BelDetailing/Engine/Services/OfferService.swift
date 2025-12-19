@@ -27,7 +27,8 @@ final class OfferServiceNetwork: OfferService {
             urlDict: [
                 "status": status?.rawValue,
                 "type": type?.rawValue
-            ]
+            ],
+            wrappedInData: true
         )
     }
 
@@ -50,46 +51,5 @@ final class OfferServiceNetwork: OfferService {
 
     func deleteOffer(id: String) async -> APIResponse<Bool> {
         await networkClient.call(endPoint: .offerDelete(id: id))
-    }
-}
-
-final class OfferServiceMock: MockService, OfferService {
-    func getOffers(status: OfferStatus?, type: OfferType?) async -> APIResponse<[Offer]> {
-        await randomWait()
-        let items = Offer.sampleValues.filter { offer in
-            let statusOK = status == nil || offer.status == status
-            let typeOK = type == nil || offer.type == type
-            return statusOK && typeOK
-        }
-        return .success(items)
-    }
-
-    func getOfferDetail(id: String) async -> APIResponse<Offer> {
-        await randomWait()
-        guard let offer = Offer.sampleValues.first(where: { $0.id == id }) else {
-            return .failure(.serverError(statusCode: 404))
-        }
-        return .success(offer)
-    }
-
-    func createOffer(_ data: [String: Any]) async -> APIResponse<Offer> {
-        await randomWait()
-        // Simpele echo/mock
-        return .success(Offer.sampleValues.first!)
-    }
-
-    func updateOffer(id: String, data: [String: Any]) async -> APIResponse<Offer> {
-        await randomWait()
-        return .success(Offer.sampleValues.first!)
-    }
-
-    func closeOffer(id: String) async -> APIResponse<Bool> {
-        await randomWait()
-        return .success(true)
-    }
-
-    func deleteOffer(id: String) async -> APIResponse<Bool> {
-        await randomWait()
-        return .success(true)
     }
 }

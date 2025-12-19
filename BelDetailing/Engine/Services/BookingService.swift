@@ -33,9 +33,25 @@ final class BookingServiceNetwork: BookingService {
 
     func getBookings(scope: String? = nil,
                      status: String? = nil) async -> APIResponse<[Booking]> {
-        await networkClient.call(
-            endPoint: .bookingsList(scope: scope, status: status)
+        print("🛰️ [Service] getBookings(scope:\(scope ?? "nil"), status:\(status ?? "nil")) wrappedInData:true")
+        let resp: APIResponse<[Booking]> = await networkClient.call(
+            endPoint: .bookingsList(scope: scope, status: status),
+            urlDict: nil,
+            additionalHeaders: nil,
+            timeout: 60,
+            allowAutoRefresh: true,
+            wrappedInData: true   // ⬅️ CRUCIAL: la réponse est { "data": [...] }
         )
+        switch resp {
+        case .success(let list):
+            print("✅ [Service] decoded bookings count:", list.count)
+            if let first = list.first {
+                print("ℹ️ [Service] first booking:", first.id, first.status.rawValue, first.date, first.startTime)
+            }
+        case .failure(let err):
+            print("❌ [Service] error:", err)
+        }
+        return resp
     }
 
     func getBookingDetail(id: String) async -> APIResponse<Booking> {
@@ -45,9 +61,8 @@ final class BookingServiceNetwork: BookingService {
     }
     
     func createBooking(_ data: [String : Any]) async -> APIResponse<CreateBookingResponse> {
-        print("➡️Booking payload envoyé :", data)
+        print("➡️ [Service] createBooking payload:", data)
 
-        // 1️⃣Appel RAW qui renvoie du Data brut
         let raw: APIResponse<Data> = await networkClient.callRaw(
             endPoint: .bookingCreate,
             dict: data
@@ -55,22 +70,20 @@ final class BookingServiceNetwork: BookingService {
 
         switch raw {
         case .failure(let err):
-            print("❌Erreur backend brut :", err)
+            print("❌ [Service] raw error:", err)
             return .failure(err)
 
         case .success(let body):
             do {
-                // 2️⃣Décodage custom qui respecte SNAKE_CASE du backend
                 let parsed = try CreateBookingResponse.decodeFromBookingResponse(body)
-                print("⬅️Réponse création booking :", parsed)
+                print("⬅️ [Service] createBooking parsed:", parsed)
                 return .success(parsed)
             } catch {
-                print("❌Erreur DECODING custom :", error)
+                print("❌ [Service] custom DECODING error:", error)
                 return .failure(.decodingError(decodingError: error))
             }
         }
     }
-
 
     func updateBooking(id: String,
                        data: [String: Any]) async -> APIResponse<Booking> {
@@ -100,12 +113,9 @@ final class BookingServiceNetwork: BookingService {
 
     func getAvailableSlots(providerId: String,
                            date: String) async -> APIResponse<[String]> {
-        // Exemple futur endpoint:
-        // /api/v1/providers/:id/slots?date=2025-12-15
         await networkClient.call(
             endPoint: .providerServices(providerId: providerId),
             urlDict: ["date": date]
         )
     }
-
 }

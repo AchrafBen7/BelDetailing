@@ -14,7 +14,8 @@ struct ProviderBookingCardView: View {
     let onDecline: () -> Void
 
     var isPast: Bool {
-        DateFormatters.isoDateTime(date: booking.date, time: booking.startTime) ?? Date() < Date()
+        let time = booking.startTime ?? "00:00"
+        return (DateFormatters.isoDateTime(date: booking.date, time: time) ?? Date()) < Date()
     }
 
     var body: some View {
@@ -36,11 +37,11 @@ struct ProviderBookingCardView: View {
                     Text("Client")
                         .font(.system(size: 16, weight: .semibold))
 
-                    Text(booking.serviceName)
+                    Text(booking.serviceName ?? "-")
                         .foregroundColor(.gray)
                         .font(.system(size: 14))
 
-                    Text(DateFormatters.humanDate(from: booking.date, time: booking.startTime))
+                    Text(DateFormatters.humanDate(from: booking.date, time: booking.startTime ?? "00:00"))
                         .foregroundColor(.gray)
                         .font(.system(size: 13))
                 }
@@ -91,4 +92,3 @@ struct ProviderBookingCardView: View {
         .shadow(color: .black.opacity(0.08), radius: 4, y: 3)
     }
 }
-

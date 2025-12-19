@@ -18,7 +18,7 @@ final class StripeManager {
                 configuration.merchantDisplayName = "BelDetailing"
                 configuration.allowsDelayedPaymentMethods = false
 
-                let paymentSheet = PaymentSheet(
+                 let paymentSheet = PaymentSheet(
                     paymentIntentClientSecret: clientSecret,
                     configuration: configuration
                 )

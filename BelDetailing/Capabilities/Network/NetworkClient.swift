@@ -15,20 +15,16 @@ final class NetworkClient {
         result.keyDecodingStrategy = .convertFromSnakeCase
         return result
     }
-    
     static var defaultHeaders: [String: String] = [
         "Content-Type": "application/json",
         "Accept": "application/json"
     ]
-    
     let endpointMapperClass: EndpointMapper.Type
     let server: Server
-    
     init(server: Server, endpointMapperClass: EndpointMapper.Type = BelDetailingEndpointMapper.self) {
         self.endpointMapperClass = endpointMapperClass
         self.server = server
     }
-    
     // MARK: - Logging
     static func logRequest(request: URLRequest, urlResponse: HTTPURLResponse, data: Data) {
         print(
@@ -43,7 +39,6 @@ final class NetworkClient {
       """
         )
     }
-    
     // MARK: - URL builder with query params
     static func urlFor(url: URL, urlDict: [String: Any?]) -> URL {
         var urlComponents = URLComponents(string: url.absoluteString)
