@@ -36,6 +36,7 @@ enum APIEndPoint: Equatable  {
     // JWT-based provider endpoints
     case providerMyStats
     case providerMyServices
+    case providerMyReviews
     
     // Bookings
     case bookingsList(scope: String?, status: String?)
@@ -84,6 +85,15 @@ enum APIEndPoint: Equatable  {
     case paymentIntent
     case paymentCapture
     case paymentRefund
+    case paymentSetupIntent
+    case paymentMethods
+    case paymentTransactions
+    
+
+    // Products
+    case products
+    case productsRecommended
+    case productClick(id: String)
 }
 
 // MARK: - Mapper Protocol
@@ -99,7 +109,7 @@ struct BelDetailingEndpointMapper: EndpointMapper {
         case .register, .login, .refresh, .profile, .updateProfile, .loginApple, .loginGoogle, .logout:
             return authPath(for: endPoint)
 
-        case .providersList, .providerDetail, .providerReviews, .providerServices, .providerStats, .providerReviewCreate, .providerMyStats, .providerMyServices:
+        case .providersList, .providerDetail, .providerReviews, .providerServices, .providerStats, .providerReviewCreate, .providerMyStats, .providerMyServices, .providerMyReviews:
             return providerPath(for: endPoint)
 
         case .bookingsList, .bookingCreate, .bookingUpdate, .bookingCancel, .bookingConfirm, .bookingDecline:
@@ -126,8 +136,11 @@ struct BelDetailingEndpointMapper: EndpointMapper {
         case .notificationsList, .notificationRead, .notificationSubscribe:
             return notificationPath(for: endPoint)
 
-        case .paymentIntent, .paymentCapture, .paymentRefund:
+        case .paymentIntent, .paymentCapture, .paymentRefund, .paymentSetupIntent, .paymentMethods, .paymentTransactions:
             return paymentsPath(for: endPoint)
+
+        case .products, .productsRecommended, .productClick:
+            return productsPath(for: endPoint)
         }
     }
 
@@ -136,17 +149,21 @@ struct BelDetailingEndpointMapper: EndpointMapper {
         case .register, .login, .refresh, .loginApple, .loginGoogle, .logout, .providerReviewCreate, .bookingCreate, .bookingCancel,
              .bookingConfirm, .bookingDecline, .offerCreate, .offerClose, .offerApply,
              .applicationWithdraw, .applicationAccept, .applicationRefuse,
-             .notificationSubscribe, .paymentIntent, .paymentCapture, .paymentRefund, .mediaUpload:
+             .notificationSubscribe, .paymentIntent, .paymentCapture, .paymentRefund, .mediaUpload,
+             .productClick,
+             .paymentSetupIntent:
             return .post
 
         case .updateProfile, .bookingUpdate, .offerUpdate, .notificationRead:
             return .patch
 
         case .providerDetail, .providersList, .providerReviews, .providerServices,
-             .providerStats, .providerMyStats, .providerMyServices,
+             .providerStats, .providerMyStats, .providerMyServices, .providerMyReviews,
              .offersList, .offerDetail, .bookingsList,
              .cities, .serviceCategories, .searchProviders, .searchOffers,
-             .offerApplications, .profile, .notificationsList, .vatValidate:
+             .offerApplications, .profile, .notificationsList, .vatValidate,
+             .products, .productsRecommended,
+             .paymentMethods, .paymentTransactions:
             return .get
 
         case .offerDelete, .mediaDelete:
@@ -162,6 +179,12 @@ struct BelDetailingEndpointMapper: EndpointMapper {
             return "api/v1/payments/capture"
         case .paymentRefund:
             return "api/v1/payments/refund"
+        case .paymentSetupIntent:
+            return "api/v1/payments/setup-intent"
+        case .paymentMethods:
+            return "api/v1/payments/methods"
+        case .paymentTransactions:
+            return "api/v1/payments/transactions"
         default:
             return ""
         }
@@ -192,6 +215,7 @@ private extension BelDetailingEndpointMapper {
         case .providerStats(let id): return "api/v1/providers/\(id)/stats"
         case .providerMyStats: return "api/v1/providers/me/stats"
         case .providerMyServices: return "api/v1/providers/me/services"
+        case .providerMyReviews: return "api/v1/providers/me/reviews"
         case .providerReviewCreate: return "api/v1/reviews"
         default: return ""
         }
@@ -266,6 +290,15 @@ private extension BelDetailingEndpointMapper {
         case .notificationsList: return "api/v1/notifications"
         case .notificationRead(let id): return "api/v1/notifications/\(id)/read"
         case .notificationSubscribe(let topic): return "api/v1/notifications/subscribe?topic=\(topic)"
+        default: return ""
+        }
+    }
+
+    static func productsPath(for endPoint: APIEndPoint) -> String {
+        switch endPoint {
+        case .products: return "api/v1/products"
+        case .productsRecommended: return "api/v1/products/recommended"
+        case .productClick(let id): return "api/v1/products/\(id)/click"
         default: return ""
         }
     }

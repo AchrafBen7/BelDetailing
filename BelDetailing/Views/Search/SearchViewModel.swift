@@ -36,7 +36,11 @@ final class SearchViewModel: ObservableObject {
         case .success(let list):
             // simpele client-side filtering (prijs, service aan huis)
             self.results = list.filter { detailer in
-                let priceOK = maxPrice == nil || detailer.minPrice <= (maxPrice ?? .greatestFiniteMagnitude)
+                let priceOK: Bool = {
+                    guard let max = maxPrice else { return true }
+                    guard let min = detailer.minPrice else { return false } // exclude unknown price when max is set
+                    return min <= max
+                }()
                 let mobileOK = !atHome || detailer.hasMobileService
                 return priceOK && mobileOK
             }

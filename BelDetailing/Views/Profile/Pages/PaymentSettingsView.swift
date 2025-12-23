@@ -5,186 +5,222 @@
 //  Created by Achraf Benali on 21/11/2025.
 //
 
+//
 //  PaymentSettingsView.swift
+//  BelDetailing
+//
 
-/*
 import SwiftUI
-import RswiftResources
+import StripePaymentSheet
 
 struct PaymentSettingsView: View {
-    @Environment(\.dismiss) private var dismiss
+
+    @StateObject private var vm: PaymentSettingsViewModel
+    private let engine: Engine
+
     init(engine: Engine) {
-        _vm = StateObject(wrappedValue: PaymentSettingsViewModel(engine: engine))
+        self.engine = engine
+        _vm = StateObject(
+            wrappedValue: PaymentSettingsViewModel(engine: engine)
+        )
     }
-    
+
+    // ✅ Binding SAFE : la sheet ne peut s’ouvrir QUE si elle existe
+    private var isShowingPaymentSheet: Binding<Bool> {
+        Binding(
+            get: {
+                vm.isPresentingPaymentSheet && vm.paymentSheet != nil
+            },
+            set: { newValue in
+                if !newValue {
+                    vm.isPresentingPaymentSheet = false
+                    vm.paymentSheet = nil
+                }
+            }
+        )
+    }
+
     var body: some View {
-        ZStack(alignment: .topLeading) {
+        ZStack {
             Color(.systemGroupedBackground)
                 .ignoresSafeArea()
-            
+
             ScrollView(showsIndicators: false) {
-                VStack(alignment: .leading, spacing: 24) {
-                    
-                    // MARK: - Back
-                    Button {
-                        dismiss()
-                    } label: {
-                        Image(systemName: "chevron.left")
-                            .font(.system(size: 20, weight: .semibold))
-                            .foregroundColor(.black)
-                            .padding(.vertical, 4)
-                    }
-                    
-                    // MARK: - Title
-                    VStack(alignment: .leading, spacing: 4) {
-                        Text(R.string.localizable.paymentsTitle())
+                VStack(alignment: .leading, spacing: 28) {
+
+                    // MARK: - Header
+                    VStack(alignment: .leading, spacing: 6) {
+                        Text("Paiements & versements")
                             .font(.system(size: 28, weight: .bold))
-                        Text(R.string.localizable.paymentsSubtitle())
-                            .font(.system(size: 16))
-                            .foregroundColor(.gray)
+
+                        Text("Gérez vos cartes et consultez l’historique")
+                            .foregroundColor(.secondary)
                     }
-                    .padding(.top, 4)
-                    
-                    // MARK: - Section: Payment Methods
-                    HStack {
-                        Text(R.string.localizable.paymentsMethodsTitle())
-                            .font(.system(size: 18, weight: .semibold))
-                        Spacer()
-                        Button {
-                            // plus tard: ajouter une carte
-                        } label: {
-                            HStack(spacing: 8) {
-                                Image(systemName: "plus")
-                                    .font(.system(size: 14, weight: .bold))
-                                Text(R.string.localizable.paymentsAddButton())
-                                    .font(.system(size: 15, weight: .semibold))
-                            }
-                            .padding(.horizontal, 18)
-                            .padding(.vertical, 10)
-                            .background(Color.black)
-                            .foregroundColor(.white)
-                            .clipShape(Capsule())
-                        }
-                    }
-                    
-                  /*  VStack(spacing: 12) {
-                        ForEach(vm.paymentMethods) { method in
-                            PaymentMethodRow(
-                                method: method,
-                                onSetDefault: { vm.setDefault(method) },
-                                onDelete: { vm.delete(method) }
-                            )
-                        }
-                    }*/
-                    
-                    // MARK: - Section: Transactions
-                    Text(R.string.localizable.paymentsHistoryTitle())
-                        .font(.system(size: 18, weight: .semibold))
-                        .padding(.top, 8)
-                    
-                    PaymentTransactionsCard(transactions: vm.transactions)
-                    
-                    Spacer(minLength: 20)
+
+                    // MARK: - Sections
+                    paymentMethodsSection
+                    transactionsSection
                 }
-                .padding(.horizontal, 20)
-                .padding(.bottom, 24)
-                .padding(.top, 8)
-                .navigationBarBackButtonHidden(true)
+                .padding(20)
+            }
+
+            // MARK: - Loading overlay
+            if vm.isLoading {
+                Color.black.opacity(0.15)
+                    .ignoresSafeArea()
+
+                ProgressView()
+                    .progressViewStyle(.circular)
+            }
+
+            // ✅ LA CLÉ : Stripe PaymentSheet attachée à une VRAIE VIEW
+            if let sheet = vm.paymentSheet {
+                PaymentSheetHost(
+                    isPresented: isShowingPaymentSheet,
+                    paymentSheet: sheet
+                ) { result in
+                    switch result {
+                    case .completed:
+                        Task { await vm.load() }
+
+                    case .failed(let error):
+                        vm.errorText = error.localizedDescription
+
+                    case .canceled:
+                        break
+                    }
+
+                    // Nettoyage
+                    vm.paymentSheet = nil
+                    vm.isPresentingPaymentSheet = false
+                }
+            }
+        }
+        .task {
+            await vm.load()
+        }
+        .navigationBarTitleDisplayMode(.inline)
+        .alert(
+            "Erreur",
+            isPresented: Binding(
+                get: { vm.errorText != nil },
+                set: { if !$0 { vm.errorText = nil } }
+            )
+        ) {
+            Button("OK") { vm.errorText = nil }
+        } message: {
+            Text(vm.errorText ?? "")
+        }
+    }
+
+    // MARK: - Payment Methods Section
+    private var paymentMethodsSection: some View {
+        VStack(alignment: .leading, spacing: 16) {
+
+            HStack {
+                Text("Moyens de paiement")
+                    .font(.system(size: 20, weight: .bold))
+
+                Spacer()
+
+                Button {
+                    Task { await vm.addPaymentMethod() }
+                } label: {
+                    Label("Ajouter", systemImage: "plus")
+                        .font(.system(size: 14, weight: .semibold))
+                        .padding(.horizontal, 14)
+                        .padding(.vertical, 8)
+                        .background(Color.black)
+                        .foregroundColor(.white)
+                        .clipShape(Capsule())
+                }
+                .disabled(vm.isLoading)
+            }
+
+            if vm.paymentMethods.isEmpty {
+                emptyPaymentMethods
+            } else {
+                VStack(spacing: 12) {
+                    ForEach(vm.paymentMethods) { method in
+                        PaymentMethodCard(method: method)
+                    }
+                }
             }
         }
     }
+
+    // MARK: - Transactions Section
+    private var transactionsSection: some View {
+        VStack(alignment: .leading, spacing: 16) {
+
+            Text("Historique des transactions")
+                .font(.system(size: 20, weight: .bold))
+
+            if vm.transactions.isEmpty {
+                emptyTransactions
+            } else {
+                VStack(spacing: 12) {
+                    ForEach(vm.transactions) { transaction in
+                        TransactionRow(transaction: transaction)
+                    }
+                }
+            }
+        }
+    }
+
+    // MARK: - Empty states
+    private var emptyPaymentMethods: some View {
+        VStack(spacing: 10) {
+            Image(systemName: "creditcard")
+                .font(.system(size: 32))
+                .foregroundColor(.gray)
+
+            Text("Aucune carte enregistrée")
+                .font(.system(size: 15, weight: .medium))
+
+            Text("Ajoutez une carte pour payer rapidement vos réservations.")
+                .font(.caption)
+                .foregroundColor(.secondary)
+                .multilineTextAlignment(.center)
+        }
+        .frame(maxWidth: .infinity)
+        .padding()
+        .background(Color(.secondarySystemBackground))
+        .cornerRadius(16)
+    }
+
+    private var emptyTransactions: some View {
+        VStack(spacing: 10) {
+            Image(systemName: "clock.arrow.circlepath")
+                .font(.system(size: 32))
+                .foregroundColor(.gray)
+
+            Text("Aucune transaction")
+                .font(.system(size: 15, weight: .medium))
+
+            Text("Vos paiements et remboursements apparaîtront ici.")
+                .font(.caption)
+                .foregroundColor(.secondary)
+                .multilineTextAlignment(.center)
+        }
+        .frame(maxWidth: .infinity)
+        .padding()
+        .background(Color(.secondarySystemBackground))
+        .cornerRadius(16)
+    }
 }
 
-// MARK: - Subviews
+private struct PaymentSheetHost: View {
+    @Binding var isPresented: Bool
+    let paymentSheet: PaymentSheet
+    let onResult: (PaymentSheetResult) -> Void
 
-private struct PaymentMethodRow: View {
-    let method: PaymentMethod
-    let onSetDefault: () -> Void
-    let onDelete: () -> Void
-    
     var body: some View {
-        HStack(spacing: 16) {
-            ZStack {
-                RoundedRectangle(cornerRadius: 16)
-                    .fill(Color(.systemGray6))
-                    .frame(width: 52, height: 52)
-                Image(systemName: "creditcard")
-                    .font(.system(size: 22, weight: .semibold))
-            }
-            
-            VStack(alignment: .leading, spacing: 4) {
-                Text("\(method.brand) •••• \(method.last4)")
-                    .font(.system(size: 16, weight: .semibold))
-                Text("\(R.string.localizable.paymentsExpiresPrefix()) \(String(format: "%02d", method.expMonth))/\(String(method.expYear % 100))")
-                    .font(.system(size: 14))
-                    .foregroundColor(.gray)
-            }
-            
-            Spacer()
-            
-            if method.isDefault {
-                Text(R.string.localizable.paymentsDefaultBadge())
-                    .font(.system(size: 13, weight: .semibold))
-                    .padding(.horizontal, 12)
-                    .padding(.vertical, 6)
-                    .background(Color.orange)
-                    .foregroundColor(.white)
-                    .clipShape(Capsule())
-            }
-            
-            Button(role: .destructive) {
-                onDelete()
-            } label: {
-                Image(systemName: "trash")
-                    .font(.system(size: 18))
-                    .foregroundColor(.red)
-            }
-        }
-        .padding(.horizontal, 16)
-        .padding(.vertical, 14)
-        .background(Color.white)
-        .clipShape(RoundedRectangle(cornerRadius: 22, style: .continuous))
-        .shadow(color: .black.opacity(0.03), radius: 5, x: 0, y: 2)
+        Color.clear
+            .paymentSheet(
+                isPresented: $isPresented,
+                paymentSheet: paymentSheet,
+                onCompletion: onResult
+            )
     }
 }
-
-private struct PaymentTransactionsCard: View {
-    let transactions: [PaymentTransaction]
-    
-    var body: some View {
-        VStack(spacing: 0) {
-            ForEach(transactions, id: \.id) { tx in
-                HStack {
-                    VStack(alignment: .leading, spacing: 4) {
-                        Text(tx.title)
-                            .font(.system(size: 16, weight: .semibold))
-                        
-                        Text(DateFormatters.shortDate.string(from: tx.date))
-                            .font(.system(size: 14))
-                            .foregroundColor(.gray)
-                    }
-                    Spacer()
-                    Text(amountText(tx.amount))
-                        .font(.system(size: 16, weight: .semibold))
-                        .foregroundColor(tx.amount >= 0 ? .green : .black)
-                }
-                .padding(.horizontal, 16)
-                .padding(.vertical, 12)
-                
-                if tx.id != transactions.last?.id {
-                    Divider()
-                        .padding(.leading, 16)
-                }
-            }
-        }
-        .background(Color.white)
-        .clipShape(RoundedRectangle(cornerRadius: 22, style: .continuous))
-        .shadow(color: .black.opacity(0.03), radius: 5, x: 0, y: 2)
-    }
-    
-    private func amountText(_ amount: Double) -> String {
-        let sign = amount >= 0 ? "+" : ""
-        return "\(sign)\(Int(amount))€"
-    }
-}
-*/

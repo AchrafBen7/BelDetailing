@@ -23,7 +23,10 @@ final class Engine {
     let searchService: SearchService
     let mediaService: MediaService
 
-    // MARK: - Init (ONLY LIVE MODE)
+    // NEW: Products
+    let productService: ProductService
+
+    // MARK: - Init (LIVE MODE - par défaut)
     init() {
         self.networkClient = NetworkClient(server: .prod)
 
@@ -37,5 +40,27 @@ final class Engine {
         self.applicationService = ApplicationServiceNetwork(networkClient: networkClient)
         self.searchService = SearchServiceNetwork(networkClient: networkClient)
         self.mediaService = MediaServiceNetwork(networkClient: networkClient)
+
+        // NEW: Products
+        self.productService = ProductServiceNetwork(networkClient: networkClient)
+    }
+
+    // MARK: - Init (LIVE MODE - avec NetworkClient injecté)
+    init(networkClient: NetworkClient) {
+        self.networkClient = networkClient
+
+        self.cityService = CityServiceNetwork(networkClient: networkClient)
+        self.userService = UserServiceNetwork(networkClient: networkClient)
+        self.detailerService = DetailerServiceNetwork(networkClient: networkClient)
+        self.bookingService = BookingServiceNetwork(networkClient: networkClient)
+        self.offerService = OfferServiceNetwork(networkClient: networkClient)
+        self.reviewService = ReviewServiceNetwork(networkClient: networkClient)
+        self.paymentService = PaymentServiceNetwork(networkClient: networkClient)
+        self.applicationService = ApplicationServiceNetwork(networkClient: networkClient)
+        self.searchService = SearchServiceNetwork(networkClient: networkClient)
+        self.mediaService = MediaServiceNetwork(networkClient: networkClient)
+
+        // NEW: Products
+        self.productService = ProductServiceNetwork(networkClient: networkClient)
     }
 }

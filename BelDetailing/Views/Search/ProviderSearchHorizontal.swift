@@ -15,10 +15,11 @@ struct ProviderSearchHorizontal: View {
     private let cardSize = CGSize(width: 260, height: 180)
     private let corner: CGFloat = 20
     private var priceText: String {
-        if provider.minPrice <= 0 {
+        let min = provider.minPriceValue // safe: 0 si nil
+        if min <= 0 {
             return R.string.localizable.priceOnRequest() // "Sur devis"
         } else {
-            return R.string.localizable.priceWithCurrency("\(Int(provider.minPrice))")
+            return R.string.localizable.priceWithCurrency("\(Int(min))")
         }
     }
 
@@ -103,8 +104,4 @@ struct ProviderSearchHorizontal: View {
             .background(Color(R.color.secondaryOrange))
             .clipShape(Capsule())
     }
-}
-
-#Preview {
-    ProviderSearchHorizontal(provider: Detailer.sampleValues.first!)
 }

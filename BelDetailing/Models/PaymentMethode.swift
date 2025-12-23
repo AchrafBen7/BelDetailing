@@ -7,32 +7,32 @@
 
 import Foundation
 
+
 struct PaymentMethod: Codable, Identifiable, Hashable {
     let id: String
-    let brand: String          // "Visa", "Mastercard"…
+    let brand: String
     let last4: String
     let expMonth: Int
     let expYear: Int
     let isDefault: Bool
+
+    var displayName: String {
+        brand.capitalized + " •••• \(last4)"
+    }
+
+    var iconName: String {
+        switch brand.lowercased() {
+        case "visa": return "visa"
+        case "mastercard": return "mastercard"
+        case "amex": return "amex"
+        default: return "creditcard"
+        }
+    }
 }
 
 extension PaymentMethod {
-    static let sampleValues: [PaymentMethod] = [
-        PaymentMethod(
-            id: "pm_visa_4242",
-            brand: "Visa",
-            last4: "4242",
-            expMonth: 12,
-            expYear: 2025,
-            isDefault: true
-        ),
-        PaymentMethod(
-            id: "pm_mc_8888",
-            brand: "Mastercard",
-            last4: "8888",
-            expMonth: 6,
-            expYear: 2026,
-            isDefault: false
-        )
-    ]
+    var expiryFormatted: String {
+        String(format: "%02d/%d", expMonth, expYear)
+    }
 }
+

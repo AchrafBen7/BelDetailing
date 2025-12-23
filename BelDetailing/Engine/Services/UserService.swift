@@ -62,11 +62,9 @@ final class UserServiceNetwork: UserService {
     private func handleAuthSuccess(_ session: AuthSession) {
         currentUser = session.user
 
-        // ⬇️ Ici tu utilises ton StorageManager à toi
         StorageManager.shared.saveAccessToken(session.accessToken)
         StorageManager.shared.saveRefreshToken(session.refreshToken)
 
-        // Et tu mets à jour le header global
         NetworkClient.defaultHeaders["Authorization"] = "Bearer \(session.accessToken)"
     }
 
@@ -75,7 +73,6 @@ final class UserServiceNetwork: UserService {
     func register(payload: [String: Any]) async -> APIResponse<RegisterResponse> {
         await networkClient.call(endPoint: .register, dict: payload)
     }
-
 
     func login(email: String, password: String) async -> APIResponse<AuthSession> {
         let response: APIResponse<AuthSession> = await networkClient.call(
@@ -118,7 +115,7 @@ final class UserServiceNetwork: UserService {
     func logout() async -> APIResponse<Bool> {
         let response: APIResponse<EmptyResponse> = await networkClient.call(
             endPoint: .logout,
-            dict: nil    // important → PAS de body vide "{ }"
+            dict: nil
         )
 
         switch response {
@@ -136,7 +133,7 @@ final class UserServiceNetwork: UserService {
 
     func resendConfirmationEmail(email: String) async -> APIResponse<Bool> {
         let response: APIResponse<EmptyResponse> = await networkClient.call(
-            endPoint: .login,   // ❗️ SUPABASE trick : envoie lien magique
+            endPoint: .login,
             dict: [
                 "email": email,
                 "shouldSendVerification": true
@@ -166,7 +163,6 @@ final class UserServiceNetwork: UserService {
             return .failure(error)
         }
     }
-
 
     // MARK: - Social
 
@@ -222,13 +218,15 @@ final class UserServiceNetwork: UserService {
     func recommendedProviders(limit: Int?) async -> APIResponse<[Detailer]> {
         await networkClient.call(
             endPoint: .providersList,
-            urlDict: ["sort": "rating,-priceMin", "limit": limit]
+            urlDict: ["sort": "rating,-priceMin", "limit": limit],
+            wrappedInData: true
         )
     }
-    func allProviders() async -> APIResponse<[Detailer]> {
-           await networkClient.call(
-               endPoint: .providersList
-           )
-       }
-}
 
+    func allProviders() async -> APIResponse<[Detailer]> {
+        await networkClient.call(
+            endPoint: .providersList,
+            wrappedInData: true
+        )
+    }
+}

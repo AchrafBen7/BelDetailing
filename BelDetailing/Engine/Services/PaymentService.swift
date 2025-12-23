@@ -1,47 +1,77 @@
+import Foundation
+@_spi(STP) import StripeCore
+
 protocol PaymentService {
-    func createPaymentIntent(bookingId: String, amount: Double, currency: String) async -> APIResponse<PaymentIntent>
+    func createPaymentIntent(
+        bookingId: String,
+        amount: Double,
+        currency: String
+    ) async -> APIResponse<PaymentIntent>
+
     func capturePayment(paymentIntentId: String) async -> APIResponse<Bool>
     func refundPayment(paymentIntentId: String) async -> APIResponse<Bool>
+
+    func createSetupIntent() async -> APIResponse<SetupIntentResponse>
+    func fetchPaymentMethods() async -> APIResponse<[PaymentMethod]>
+    func fetchTransactions() async -> APIResponse<[PaymentTransaction]>
 }
+
 
 final class PaymentServiceNetwork: PaymentService {
 
     private let networkClient: NetworkClient
+
     init(networkClient: NetworkClient) {
         self.networkClient = networkClient
     }
 
-    func createPaymentIntent(bookingId: String, amount: Double, currency: String) async -> APIResponse<PaymentIntent> {
-
-        let dict: [String: Any] = [
-            "bookingId": bookingId,
-            "amount": amount,
-            "currency": currency
-        ]
-
-        return await networkClient.call(
+    func createPaymentIntent(
+        bookingId: String,
+        amount: Double,
+        currency: String
+    ) async -> APIResponse<PaymentIntent> {
+        await networkClient.call(
             endPoint: .paymentIntent,
-            dict: dict
+            dict: [
+                "bookingId": bookingId,
+                "amount": amount,
+                "currency": currency
+            ]
         )
     }
 
     func capturePayment(paymentIntentId: String) async -> APIResponse<Bool> {
-
-        let dict = ["paymentIntentId": paymentIntentId]
-
-        return await networkClient.call(
+        await networkClient.call(
             endPoint: .paymentCapture,
-            dict: dict
+            dict: ["paymentIntentId": paymentIntentId]
         )
     }
 
     func refundPayment(paymentIntentId: String) async -> APIResponse<Bool> {
-
-        let dict = ["paymentIntentId": paymentIntentId]
-
-        return await networkClient.call(
+        await networkClient.call(
             endPoint: .paymentRefund,
-            dict: dict
+            dict: ["paymentIntentId": paymentIntentId]
+        )
+    }
+
+    func createSetupIntent() async -> APIResponse<SetupIntentResponse> {
+        await networkClient.call(
+            endPoint: .paymentSetupIntent
+        )
+    }
+
+    func fetchPaymentMethods() async -> APIResponse<[PaymentMethod]> {
+        await networkClient.call(
+            endPoint: .paymentMethods,
+            wrappedInData: true
+        )
+    }
+
+    func fetchTransactions() async -> APIResponse<[PaymentTransaction]> {
+        await networkClient.call(
+            endPoint: .paymentTransactions,
+            wrappedInData: true
         )
     }
 }
+

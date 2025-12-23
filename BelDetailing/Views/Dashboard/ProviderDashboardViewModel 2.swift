@@ -8,6 +8,17 @@
 import SwiftUI
 import Combine
 
+enum ToastKind {
+    case error
+    case success
+    case info
+}
+
+struct ToastState: Equatable {
+    let message: String
+    let kind: ToastKind
+}
+
 @MainActor
 final class ProviderDashboardViewModel: ObservableObject {
     @Published var selectedDate: Date = Date()
@@ -17,9 +28,11 @@ final class ProviderDashboardViewModel: ObservableObject {
     @Published var bookings: [Booking] = []
     @Published var stats: DetailerStats? = nil
 
+    // Ancienne alerte → remplacée par un toast
+    @Published var bookingActionError: String? = nil // gardé pour compat, mais non utilisé par l’UI
+    @Published var toast: ToastState? = nil          // 👈 état du toast
+
     // Expose popular services for StatsPlaceholder
-    // Pour l’instant, DetailerStats ne contient pas ces données,
-    // on renvoie donc un tableau vide. À mapper quand l’API les expose.
     var popularServices: [PopularServiceUI] {
         return []
     }
@@ -96,7 +109,6 @@ final class ProviderDashboardViewModel: ObservableObject {
 
     func loadBookings() {
         Task {
-            // Backend reads provider from JWT; scope must be "provider"
             let response = await engine.bookingService.getBookings(scope: "provider", status: nil)
             switch response {
             case .success(let list):
@@ -114,8 +126,28 @@ final class ProviderDashboardViewModel: ObservableObject {
     func confirmBooking(_ id: String) {
         Task {
             let res = await engine.bookingService.confirmBooking(id: id)
-            if case .success = res {
+            switch res {
+            case .success:
+                bookingActionError = nil
+                showToast(message: "Réservation confirmée ✅", kind: .success)
                 loadBookings()
+            case .failure(let err):
+                let rawMessage: String
+                if let localized = (err as NSError).userInfo[NSLocalizedDescriptionKey] as? String {
+                    rawMessage = localized
+                } else {
+                    rawMessage = err.localizedDescription
+                }
+
+                if rawMessage.localizedCaseInsensitiveContains("Confirmation window expired") ||
+                   rawMessage.localizedCaseInsensitiveContains("24h") {
+                    showToast(
+                        message: "Trop tard. Vous ne pouvez plus accepter une réservation dans les 24h précédant l'heure prévue.",
+                        kind: .error
+                    )
+                } else {
+                    showToast(message: rawMessage, kind: .error)
+                }
             }
         }
     }
@@ -123,8 +155,27 @@ final class ProviderDashboardViewModel: ObservableObject {
     func declineBooking(_ id: String) {
         Task {
             let res = await engine.bookingService.declineBooking(id: id)
-            if case .success = res {
+            switch res {
+            case .success:
+                bookingActionError = nil
+                showToast(message: "Réservation refusée.", kind: .info)
                 loadBookings()
+            case .failure(let err):
+                showToast(message: err.localizedDescription, kind: .error)
+            }
+        }
+    }
+
+    // MARK: - Toast helper
+    private func showToast(message: String, kind: ToastKind) {
+        withAnimation(.spring(response: 0.35, dampingFraction: 0.9)) {
+            toast = ToastState(message: message, kind: kind)
+        }
+        // Auto-hide after 3s
+        Task { @MainActor in
+            try? await Task.sleep(nanoseconds: 3_000_000_000)
+            withAnimation(.easeOut(duration: 0.25)) {
+                if toast?.message == message { toast = nil }
             }
         }
     }
@@ -173,4 +224,3 @@ extension ProviderDashboardViewModel {
         )
     }
 }
-

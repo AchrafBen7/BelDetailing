@@ -7,94 +7,116 @@ struct ProviderServiceCardView: View {
     let onEdit: () -> Void
     let onDelete: () -> Void
 
+    private let buttonHeight: CGFloat = 48
+    private let corner: CGFloat = 14
+
     var body: some View {
-        VStack(alignment: .leading, spacing: 20) {
+        VStack(spacing: 0) {
+            VStack(alignment: .leading, spacing: 0) {
+                // HEADER: Titre + Statut + Prix
+                HStack(spacing: 12) {
+                    VStack(alignment: .leading, spacing: 6) {
+                        Text(service.name)
+                            .font(.system(size: 20, weight: .bold))
+                            .foregroundColor(Color(R.color.primaryText))
+                            .lineLimit(2)
 
-            // MARK: - Title + Status Dot
-            HStack(alignment: .center) {
-
-                Text(service.name)
-                    .textView(style: .sectionTitle)
-
-                Spacer()
-
-                Circle()
-                    .fill(service.isAvailable ? Color.green : Color.red.opacity(0.6))
-                    .frame(width: 10, height: 10)
-            }
-
-            // MARK: - Description
-            if let desc = service.description, !desc.isEmpty {
-                Text(desc)
-                    .textView(style: .description, color: Color(R.color.secondaryText))
-            }
-
-            // MARK: - Price + Duration + Reservations
-            HStack(spacing: 28) {
-
-                // PRICE
-                VStack(alignment: .leading, spacing: 2) {
-                    Text(String(format: "%.0f€", service.price))
-                        .font(.system(size: 28, weight: .semibold))   // EXACT comme la photo
-                        .foregroundColor(Color(R.color.primaryText))
-
-                    Text(service.formattedDuration)
-                        .textView(style: .caption)
-                        .foregroundColor(Color.gray)
-                }
-
-                Divider().frame(height: 40)
-
-                // RESERVATION COUNT
-                VStack(alignment: .leading, spacing: 2) {
-                    Text("\(service.reservationCount ?? 0)")
-                        .font(.system(size: 28, weight: .semibold))
-                        .foregroundColor(Color(R.color.primaryText))
-
-                    Text(R.string.localizable.dashboardReservations())
-                        .textView(style: .caption)
-                        .foregroundColor(Color.gray)
-
-                }
-            }
-
-            // MARK: - Buttons
-            HStack(spacing: 12) {
-
-                // EDIT BUTTON
-                Button(action: onEdit) {
-                    HStack(spacing: 6) {
-                        Image(systemName: "square.and.pencil")
-                            .font(.system(size: 16, weight: .semibold))
-
-                        Text(R.string.localizable.dashboardEdit())
-                            .font(.system(size: 16, weight: .semibold))   // ⬅️ plus petit
-                            .baselineOffset(0)                            // ⬅️ parfait alignement
+                        // Statut dans une capsule neutre avec icône
+                        HStack(spacing: 6) {
+                            Image(systemName: service.isAvailable ? "checkmark.circle.fill" : "xmark.circle.fill")
+                                .font(.system(size: 13, weight: .semibold))
+                                .foregroundColor(service.isAvailable ? .green : .red)
+                            Text(service.isAvailable ? "Disponible" : "Indisponible")
+                                .font(.system(size: 13, weight: .semibold))
+                                .foregroundColor(service.isAvailable ? .green : .red)
+                        }
+                        .padding(.horizontal, 10)
+                        .padding(.vertical, 6)
+                        .background(Color.gray.opacity(0.10))
+                        .clipShape(Capsule())
                     }
-                    .foregroundColor(Color(R.color.primaryText))
-                    .frame(maxWidth: .infinity)
-                    .padding(.vertical, 12)      // ⬅️ un peu plus compact que 10
-                    .background(
-                        RoundedRectangle(cornerRadius: 24)
-                            .stroke(Color.black.opacity(0.15), lineWidth: 1)
-                    )
-                }
 
-                // DELETE BUTTON
-                Button(action: onDelete) {
-                    Image(systemName: "trash")
-                        .foregroundColor(.black)
-                        .font(.system(size: 18, weight: .bold))
-                        .frame(width: 44, height: 44)
-                        .background(Color.black.opacity(0.05))
-                        .clipShape(Circle())
+                    Spacer()
+
+                    // Prix principal bien lisible
+                    Text("€\(Int(service.price))")
+                        .font(.system(size: 24, weight: .bold))
+                        .foregroundColor(Color(R.color.primaryText))
                 }
+                .padding(.top, 14)
+                .padding(.bottom, 12)
+
+                Divider().background(Color.black.opacity(0.06))
+
+                // MIDDLE: Description + Meta (durée / réservations)
+                VStack(alignment: .leading, spacing: 12) {
+                    if let desc = service.description, !desc.isEmpty {
+                        Text(desc)
+                            .font(.system(size: 15))
+                            .foregroundColor(.gray)
+                            .lineLimit(3)
+                    }
+
+                    HStack(spacing: 14) {
+                        metaItem(icon: "clock", title: service.formattedDuration)
+                        Rectangle().fill(Color.black.opacity(0.08)).frame(width: 1, height: 16)
+                        metaItem(icon: "calendar", title: "\(service.reservationCount ?? 0) réservations")
+                        Spacer(minLength: 0)
+                    }
+                }
+                .padding(.vertical, 12)
+
+                // FOOTER: Actions (primary + secondary)
+                HStack(spacing: 10) {
+                    // EDIT — bouton principal noir, contenu centré
+                    Button(action: onEdit) {
+                        HStack(spacing: 8) {
+                            Image(systemName: "square.and.pencil")
+                            Text(R.string.localizable.dashboardEdit())
+                        }
+                        .font(.system(size: 16, weight: .semibold))
+                        .foregroundColor(.white)
+                        .frame(maxWidth: .infinity)
+                        .frame(height: buttonHeight) // hauteur fixe
+                        .background(Color.black)
+                        .clipShape(RoundedRectangle(cornerRadius: corner, style: .continuous))
+                    }
+
+                    // DELETE — même hauteur, style secondaire
+                    Button(action: onDelete) {
+                        Image(systemName: "trash")
+                            .font(.system(size: 17, weight: .semibold))
+                            .foregroundColor(.black)
+                            .frame(maxWidth: .infinity)
+                            .frame(height: buttonHeight)
+                            .background(Color.black.opacity(0.06))
+                            .clipShape(RoundedRectangle(cornerRadius: corner, style: .continuous))
+                    }
+                    .frame(width: 56) // largeur compacte mais même hauteur
+                }
+                .padding(.bottom, 14)
             }
-
+            .padding(.horizontal, 16) // padding commun pour aligner tous les blocs
         }
-        .padding(20)
         .background(Color.white)
-        .clipShape(RoundedRectangle(cornerRadius: 22))
-        .shadow(color: .black.opacity(0.06), radius: 8, y: 4)
+        .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
+        .overlay(
+            RoundedRectangle(cornerRadius: 18, style: .continuous)
+                .stroke(Color.black.opacity(0.08), lineWidth: 1)
+        )
+        .shadow(color: .black.opacity(0.05), radius: 8, y: 4)
+    }
+
+    // MARK: - Subviews
+    private func metaItem(icon: String, title: String) -> some View {
+        HStack(spacing: 6) {
+            Image(systemName: icon)
+                .font(.system(size: 14, weight: .semibold))
+                .foregroundColor(.gray)
+            Text(title)
+                .font(.system(size: 14, weight: .semibold))
+                .foregroundColor(.gray)
+        }
+        .frame(alignment: .leading)
     }
 }

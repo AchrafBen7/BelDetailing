@@ -27,8 +27,7 @@ struct ProfileView: View {
                                 
                                 // MARK: - Groot schermtitel
                                 Text(R.string.localizable.profileTitle() + ".")
-                                    .font(.system(size: 34, weight: .bold))
-                                    .foregroundColor(.black)
+                                    .textView(style: .heroTitle, color: .black)
                                     .padding(.top, 8)
                                 
                                 // MARK: - Hoofd kaart met avatar + naam
@@ -59,14 +58,14 @@ struct ProfileView: View {
                                     
                                     // MARK: - Payments & payouts
                                     NavigationLink {
-                                        /* PaymentSettingsView(engine: engine)*/
+                                        PaymentSettingsView(engine: engine)
                                     } label: {
                                         ProfileSettingRow(
                                             systemIcon: "creditcard",
                                             title: R.string.localizable.profileSettingsPaymentsPayouts()
                                         )
                                     }
-                                    
+
                                     // MARK: - Taxes
                                     NavigationLink {
                                         TaxesView(engine: engine)
@@ -126,4 +125,3 @@ struct ProfileView: View {
         }
     }
 }
-

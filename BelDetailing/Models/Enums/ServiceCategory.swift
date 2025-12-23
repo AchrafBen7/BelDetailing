@@ -6,17 +6,19 @@
 import Foundation
 import RswiftResources
 
+// Raw values aligned to backend tokens
 enum ServiceCategory: String, Codable, CaseIterable, Hashable {
-  case carCleaning
-  case carPolishing
-  case interiorDetailing
-  case exteriorDetailing
-  case ceramicCoating
-  case paintCorrection
-  case headlightRestoration
-  case engineBay
-  case wheelsTires
-  case waxSealant
+  case interiorDetailing = "interior"
+  case exteriorDetailing = "exterior"
+  case carCleaning       = "full"             // backend sends "full" (full detailing)
+
+  case carPolishing      = "polishing"
+  case ceramicCoating    = "ceramic"
+  case paintCorrection   = "paint_correction"
+  case headlightRestoration = "headlight"
+  case engineBay         = "engine_bay"
+  case wheelsTires       = "wheels_tires"
+  case waxSealant        = "wax_sealant"
 
   /// 🔁 Réutilise les localisables des filtres (mêmes libellés)
   var localizedTitle: String {

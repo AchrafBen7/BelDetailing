@@ -21,10 +21,23 @@ final class NetworkClient {
     ]
     let endpointMapperClass: EndpointMapper.Type
     let server: Server
-    init(server: Server, endpointMapperClass: EndpointMapper.Type = BelDetailingEndpointMapper.self) {
+
+    // Managers globaux (optionnels)
+    weak var loadingManager: LoadingOverlayManager?
+    weak var downloadProgressManager: DownloadProgressManager?   // ⬅️ AJOUT
+
+    init(
+        server: Server,
+        endpointMapperClass: EndpointMapper.Type = BelDetailingEndpointMapper.self,
+        loadingManager: LoadingOverlayManager? = nil,
+        downloadProgressManager: DownloadProgressManager? = nil
+    ) {
         self.endpointMapperClass = endpointMapperClass
         self.server = server
+        self.loadingManager = loadingManager
+        self.downloadProgressManager = downloadProgressManager
     }
+
     // MARK: - Logging
     static func logRequest(request: URLRequest, urlResponse: HTTPURLResponse, data: Data) {
         print(
@@ -81,6 +94,9 @@ final class NetworkClient {
         allowAutoRefresh: Bool = true,
         wrappedInData: Bool = false   // ✅ ICI, c'est normal
     ) async -> APIResponse<T> {
+        await MainActor.run { loadingManager?.begin() }
+        defer { Task { @MainActor in loadingManager?.end() } }
+
         guard var url = url(endPoint: endPoint) else {
             return .failure(.urlError)
         }
@@ -149,7 +165,6 @@ final class NetworkClient {
     }
     
     // MARK: - File Upload (multipart/form-data)
-    // MARK: - File Upload (multipart/form-data)
     func call<T: Decodable>(
         endPoint: APIEndPoint,
         fileData: Data,
@@ -157,6 +172,9 @@ final class NetworkClient {
         mimeType: String,
         timeout: TimeInterval = 60
     ) async -> APIResponse<T> {
+        await MainActor.run { loadingManager?.begin() }
+        defer { Task { @MainActor in loadingManager?.end() } }
+
         guard let url = url(endPoint: endPoint) else {
             return .failure(.urlError)
         }
@@ -240,6 +258,9 @@ extension NetworkClient {
         timeout: TimeInterval = 60
     ) async -> APIResponse<Data> {
 
+        await MainActor.run { loadingManager?.begin() }
+        defer { Task { @MainActor in loadingManager?.end() } }
+
         guard var url = url(endPoint: endPoint) else {
             return .failure(.urlError)
         }
@@ -271,4 +292,3 @@ extension NetworkClient {
 }
 
 extension NetworkClient: NetworkClientProtocol {}
-

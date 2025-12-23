@@ -9,8 +9,10 @@ import Foundation
 
 // MARK: - Protocol
 protocol ReviewService {
-    /// Liste des avis pour un prestataire
+    /// Liste des avis pour un prestataire (public by provider id)
     func getReviews(providerId: String) async -> APIResponse<[Review]>
+    /// Liste des avis pour le prestataire connecté (JWT "me")
+    func getMyReviews() async -> APIResponse<[Review]>   // ✅ NEW
     /// Crée un nouvel avis (après une réservation)
     func createReview(_ data: [String: Any]) async -> APIResponse<Review>
 }
@@ -22,6 +24,10 @@ final class ReviewServiceNetwork: ReviewService {
 
     func getReviews(providerId: String) async -> APIResponse<[Review]> {
         await networkClient.call(endPoint: .providerReviews(providerId: providerId))
+    }
+
+    func getMyReviews() async -> APIResponse<[Review]> {
+        await networkClient.call(endPoint: .providerMyReviews)   // ✅ NEW
     }
 
     func createReview(_ data: [String: Any]) async -> APIResponse<Review> {   
@@ -36,6 +42,11 @@ final class ReviewServiceMock: MockService, ReviewService {
         await randomWait()
         let items = Review.sampleValues.filter { $0.providerId == providerId }
         return .success(items)
+    }
+
+    func getMyReviews() async -> APIResponse<[Review]> {
+        await randomWait()
+        return .success(Review.sampleValues)
     }
 
     func createReview(_ data: [String: Any]) async -> APIResponse<Review> {

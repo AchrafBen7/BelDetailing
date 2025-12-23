@@ -24,7 +24,7 @@ struct ProviderCard: View {
                 
                 Spacer()
                 
-                Text(String(format: "€ %.0f+", provider.minPrice))
+                Text(provider.minPrice.map { String(format: "€ %.0f+", $0) } ?? "€ —")
                     .font(.system(size: 14, weight: .semibold))
                     .padding(.horizontal, 10)
                     .padding(.vertical, 6)
@@ -69,10 +69,4 @@ struct ProviderCard: View {
             }
         }
     }
-}
-
-#Preview {
-    ProviderCard(provider: Detailer.sampleValues.first!)
-        .padding()
-        .background(Color(R.color.mainBackground.name))
 }

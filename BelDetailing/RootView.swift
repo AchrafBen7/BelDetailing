@@ -10,32 +10,40 @@ struct RootView: View {
 
     let engine: Engine
 
-    var body: some View {
-        Group {
-            if !hasSeenOnboarding {
-                OnboardingView {
-                    hasSeenOnboarding = true
-                }
-            } else if isLoggedIn {
-                MainTabView(engine: engine)
-                    .environmentObject(tabBarVisibility)
-                    .environmentObject(mainTabSelection)
-            } else {
-                AuthFlowView(
-                    engine: engine,
-                    isLoggedIn: $isLoggedIn
-                )
-            }
-        }
-        .onAppear {
-            if let token = StorageManager.shared.getAccessToken(),
-               !token.isEmpty {
-                isLoggedIn = true
-            }
-        }
-        .onReceive(NotificationCenter.default.publisher(for: .userDidLogout)) { _ in
-            isLoggedIn = false
-        }
+    @EnvironmentObject var loadingManager: LoadingOverlayManager
 
+    var body: some View {
+        ZStack {
+            Group {
+                if !hasSeenOnboarding {
+                    OnboardingView {
+                        hasSeenOnboarding = true
+                    }
+                } else if isLoggedIn {
+                    MainTabView(engine: engine)
+                        .environmentObject(tabBarVisibility)
+                        .environmentObject(mainTabSelection)
+                } else {
+                    AuthFlowView(
+                        engine: engine,
+                        isLoggedIn: $isLoggedIn
+                    )
+                }
+            }
+            .onAppear {
+                if let token = StorageManager.shared.getAccessToken(),
+                   !token.isEmpty {
+                    isLoggedIn = true
+                }
+            }
+            .onReceive(NotificationCenter.default.publisher(for: .userDidLogout)) { _ in
+                isLoggedIn = false
+            }
+
+            if loadingManager.isLoading {
+                LoadingOverlayView()
+                    .transition(.opacity)
+            }
+        }
     }
 }
