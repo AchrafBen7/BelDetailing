@@ -16,6 +16,7 @@ protocol DetailerService {
     // Dashboard (JWT-based)
     func getMyStats() async -> APIResponse<DetailerStats>
     func getMyServices() async -> APIResponse<[Service]>
+    func createMyService(data: [String: Any?]) async -> APIResponse<Service>
 
     // Legacy/id-based (public provider detail screens)
     func getStats(id: String) async -> APIResponse<DetailerStats>
@@ -45,7 +46,30 @@ final class DetailerServiceNetwork: DetailerService {
     }
 
     func getMyServices() async -> APIResponse<[Service]> {
-        await networkClient.call(endPoint: .providerMyServices)
+        let res: APIResponse<[ProviderServiceDTO]> = await networkClient.call(endPoint: .providerMyServices)
+        switch res {
+        case .success(let dtos):
+            let mapped = dtos.compactMap { $0.toDomain() }
+            return .success(mapped)
+        case .failure(let err):
+            return .failure(err)
+        }
+    }
+
+    func createMyService(data: [String: Any?]) async -> APIResponse<Service> {
+        let res: APIResponse<ProviderServiceDTO> = await networkClient.call(endPoint: .providerServiceCreate, dict: data)
+        switch res {
+        case .success(let dto):
+            if let service = dto.toDomain() {
+                return .success(service)
+            } else {
+                return .failure(.decodingError(decodingError: NSError(domain: "DetailerServiceNetwork", code: -1, userInfo: [
+                    NSLocalizedDescriptionKey: "Invalid category value: \(dto.category)"
+                ])))
+            }
+        case .failure(let err):
+            return .failure(err)
+        }
     }
 
     // MARK: Legacy/id-based (still used on public provider screens)
@@ -88,6 +112,11 @@ final class DetailerServiceMock: MockService, DetailerService {
         return .success(Service.sampleValues)
     }
 
+    func createMyService(data: [String : Any?]) async -> APIResponse<Service> {
+        await randomWait()
+        return .success(Service.sampleValues.first!)
+    }
+
     func getStats(id: String) async -> APIResponse<DetailerStats> {
         await randomWait()
         return .failure(.serverError(statusCode: 501))
@@ -98,3 +127,4 @@ final class DetailerServiceMock: MockService, DetailerService {
         return .success(Service.sampleValues)
     }
 }
+

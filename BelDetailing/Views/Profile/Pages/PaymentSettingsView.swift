@@ -139,13 +139,27 @@ struct PaymentSettingsView: View {
 
             if vm.paymentMethods.isEmpty {
                 emptyPaymentMethods
-            } else {
-                VStack(spacing: 12) {
-                    ForEach(vm.paymentMethods) { method in
-                        PaymentMethodCard(method: method)
+                } else {
+                    VStack(spacing: 12) {
+                        ForEach(vm.paymentMethods) { method in
+                            PaymentMethodCard(method: method)
+                                .swipeActions(edge: .trailing, allowsFullSwipe: true) {
+
+                                    // ❌ On empêche la suppression de la carte par défaut
+                                    if !method.isDefault {
+                                        Button(role: .destructive) {
+                                            Task {
+                                                await vm.delete(method: method)
+                                            }
+                                        } label: {
+                                            Label("Supprimer", systemImage: "trash")
+                                        }
+                                    }
+                                }
+                        }
                     }
                 }
-            }
+
         }
     }
 

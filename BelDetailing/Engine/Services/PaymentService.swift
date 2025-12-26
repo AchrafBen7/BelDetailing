@@ -14,8 +14,8 @@ protocol PaymentService {
     func createSetupIntent() async -> APIResponse<SetupIntentResponse>
     func fetchPaymentMethods() async -> APIResponse<[PaymentMethod]>
     func fetchTransactions() async -> APIResponse<[PaymentTransaction]>
+    func deletePaymentMethod(id: String) async -> APIResponse<Bool>
 }
-
 
 final class PaymentServiceNetwork: PaymentService {
 
@@ -73,5 +73,10 @@ final class PaymentServiceNetwork: PaymentService {
             wrappedInData: true
         )
     }
-}
 
+    func deletePaymentMethod(id: String) async -> APIResponse<Bool> {
+        await networkClient.call(
+            endPoint: .paymentMethodDelete(id: id) // label id: requis par APIEndPoint
+        )
+    }
+}

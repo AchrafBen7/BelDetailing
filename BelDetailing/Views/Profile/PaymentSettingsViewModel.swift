@@ -79,7 +79,7 @@ final class PaymentSettingsViewModel: ObservableObject {
             self.isLoading = false
 
             await Task.yield()
-            
+
             // 2) Déclencher la présentation côté Vue (modifier conditionnel)
             self.isPresentingPaymentSheet = true
             print("📣 [PaymentsVM] isPresentingPaymentSheet = true (should present)")
@@ -91,5 +91,24 @@ final class PaymentSettingsViewModel: ObservableObject {
         }
 
         print("🔵 [PaymentsVM] addPaymentMethod() END")
+    }
+
+    func delete(method: PaymentMethod) async {
+        guard !method.isDefault else {
+            errorText = "Impossible de supprimer la carte par défaut"
+            return
+        }
+
+        isLoading = true
+        defer { isLoading = false }
+
+        let res = await engine.paymentService.deletePaymentMethod(id: method.id)
+
+        switch res {
+        case .success:
+            await load()
+        case .failure(let err):
+            errorText = err.localizedDescription
+        }
     }
 }
