@@ -21,6 +21,9 @@ protocol DetailerService {
     // Legacy/id-based (public provider detail screens)
     func getStats(id: String) async -> APIResponse<DetailerStats>
     func getServices(id: String) async -> APIResponse<[Service]>
+
+    // NEW: Update logged-in provider profile (/providers/me)
+    func updateMyProfile(data: [String: Any]) async -> APIResponse<Detailer>
 }
 
 // MARK: - Network Implementation
@@ -80,6 +83,11 @@ final class DetailerServiceNetwork: DetailerService {
     func getServices(id: String) async -> APIResponse<[Service]> {
         await networkClient.call(endPoint: .providerServices(providerId: id))
     }
+
+    // MARK: NEW: Update logged-in provider profile
+    func updateMyProfile(data: [String: Any]) async -> APIResponse<Detailer> {
+        await networkClient.call(endPoint: .providerMeUpdate, dict: data)
+    }
 }
 
 // MARK: - Mock Implementation
@@ -125,6 +133,11 @@ final class DetailerServiceMock: MockService, DetailerService {
     func getServices(id: String) async -> APIResponse<[Service]> {
         await randomWait()
         return .success(Service.sampleValues)
+    }
+
+    func updateMyProfile(data: [String : Any]) async -> APIResponse<Detailer> {
+        await randomWait()
+        return .success(Detailer.sampleValues.first!)
     }
 }
 

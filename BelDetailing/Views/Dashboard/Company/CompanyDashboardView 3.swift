@@ -82,11 +82,11 @@ struct CompanyDashboardView: View {
                         .clipShape(Circle())
 
                     VStack(alignment: .leading, spacing: 2) {
-                        Text("Entreprise")
+                        Text(R.string.localizable.companyRole())
                             .font(.system(size: 13))
                             .foregroundColor(.white.opacity(0.7))
 
-                        Text("Marketplace")
+                        Text(R.string.localizable.companyMarketplace())
                             .font(.system(size: 26, weight: .bold))
                             .foregroundColor(.white)
                     }
@@ -110,7 +110,7 @@ struct CompanyDashboardView: View {
             Button(action: vm.onCreateOffer) {
                 HStack(spacing: 8) {
                     Image(systemName: "plus")
-                    Text("Créer une offre")
+                    Text(R.string.localizable.companyCreateOffer())
                         .font(.system(size: 17, weight: .semibold))
                 }
                 .foregroundColor(.black)
@@ -130,8 +130,8 @@ struct CompanyDashboardView: View {
     // MARK: - Tabs
     private var tabs: some View {
         HStack(spacing: 0) {
-            tabButton(.marketplace, title: "Offres du marché")
-            tabButton(.myOffers, title: "Mes offres")
+            tabButton(.marketplace, title: R.string.localizable.companyTabMarketplace())
+            tabButton(.myOffers, title: R.string.localizable.companyTabMyOffers())
         }
         .padding(4)
         .background(Color.white)
@@ -143,6 +143,10 @@ struct CompanyDashboardView: View {
     private func tabButton(_ tab: CompanyDashboardViewModel.Tab, title: String) -> some View {
         Button {
             vm.selectedTab = tab
+            // Recharger les données quand on change d'onglet
+            Task {
+                await vm.load()
+            }
         } label: {
             Text(title)
                 .font(.system(size: 15, weight: .semibold))
@@ -204,15 +208,37 @@ struct CompanyDashboardView: View {
 
     // MARK: - Offers list
     private var offersList: some View {
-        VStack(spacing: 16) {
-            ForEach(vm.filteredCurrentOffers) { offer in
-                NavigationLink(value: offer) {
-                    OfferMarketplaceCardView(offer: offer)
+        Group {
+            if vm.filteredCurrentOffers.isEmpty {
+                VStack(spacing: 16) {
+                    Image(systemName: vm.selectedTab == .marketplace ? "briefcase" : "doc.text")
+                        .font(.system(size: 48))
+                        .foregroundColor(.gray.opacity(0.5))
+                        .padding(.top, 60)
+                    
+                    Text(vm.selectedTab == .marketplace ? R.string.localizable.companyNoMarketplaceOffers() : R.string.localizable.companyNoMyOffers())
+                        .font(.system(size: 18, weight: .semibold))
+                        .foregroundColor(.gray)
+                    
+                    Text(vm.selectedTab == .marketplace ? R.string.localizable.companyNoMarketplaceOffersMessage() : R.string.localizable.companyNoMyOffersMessage())
+                        .font(.system(size: 14))
+                        .foregroundColor(.gray.opacity(0.8))
+                        .multilineTextAlignment(.center)
+                        .padding(.horizontal, 40)
                 }
-                .buttonStyle(.plain)
+                .frame(maxWidth: .infinity)
+            } else {
+                VStack(spacing: 16) {
+                    ForEach(vm.filteredCurrentOffers) { offer in
+                        NavigationLink(value: offer) {
+                            OfferMarketplaceCardView(offer: offer)
+                        }
+                        .buttonStyle(.plain)
+                    }
+                }
+                .padding(.horizontal, 20)
             }
         }
-        .padding(.horizontal, 20)
     }
 }
 

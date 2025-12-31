@@ -6,6 +6,7 @@ import RswiftResources
 struct ProfileView: View {
     @StateObject private var vm: ProfileViewModel
     private let engine: Engine           // 👈 on garde l’engine pour pousser les vues
+    @State private var showProfileDetail = false
     
     init(engine: Engine) {
         self.engine = engine
@@ -35,9 +36,19 @@ struct ProfileView: View {
                                     user: user,
                                     subtitle: R.string.localizable.profileHeaderSubtitle()
                                 ) {
-                                    // Plus tard: détail du profil
-                                    print("Profile tapped")
+                                    // Ouvre la vue détail selon le rôle (le détail gère déjà les sections)
+                                    showProfileDetail = true
                                 }
+                                
+                                // NavigationLink programmatique vers le détail de profil
+                                NavigationLink(
+                                    isActive: $showProfileDetail
+                                ) {
+                                    ProfileDetailView(engine: engine, user: user)
+                                } label: {
+                                    EmptyView()
+                                }
+                                .hidden()
                                 
                                 // MARK: - Sectietitel "Settings"
                                 Text(R.string.localizable.profileSettingsTitle())

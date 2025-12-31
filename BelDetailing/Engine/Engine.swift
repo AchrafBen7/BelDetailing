@@ -26,6 +26,15 @@ final class Engine {
     // NEW: Products
     let productService: ProductService
 
+    // NEW: Stripe Connect
+    let stripeConnectService: StripeConnectService
+    
+    // NEW: Calendar Service
+    let calendarService: CalendarService
+    
+    // NEW: Order Service
+    let orderService: OrderService
+
     // MARK: - Init (LIVE MODE - par défaut)
     init() {
         self.networkClient = NetworkClient(server: .prod)
@@ -43,6 +52,15 @@ final class Engine {
 
         // NEW: Products
         self.productService = ProductServiceNetwork(networkClient: networkClient)
+
+        // NEW: Stripe Connect
+        self.stripeConnectService = StripeConnectServiceNetwork(networkClient: networkClient)
+        
+        // NEW: Calendar Service
+        self.calendarService = CalendarServiceEventKit()
+        
+        // NEW: Order Service
+        self.orderService = OrderServiceNetwork(networkClient: networkClient)
     }
 
     // MARK: - Init (LIVE MODE - avec NetworkClient injecté)
@@ -62,5 +80,14 @@ final class Engine {
 
         // NEW: Products
         self.productService = ProductServiceNetwork(networkClient: networkClient)
+
+        // NEW: Stripe Connect
+        self.stripeConnectService = StripeConnectServiceNetwork(networkClient: networkClient)
+        
+        // NEW: Calendar Service
+        self.calendarService = CalendarServiceEventKit()
+        
+        // NEW: Order Service
+        self.orderService = OrderServiceNetwork(networkClient: networkClient)
     }
 }

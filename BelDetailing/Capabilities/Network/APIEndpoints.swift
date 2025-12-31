@@ -37,7 +37,8 @@ enum APIEndPoint: Equatable  {
     case providerMyStats
     case providerMyServices
     case providerMyReviews
-    case providerServiceCreate            // ⬅️ AJOUT: création d’un service (POST /providers/services)
+    case providerServiceCreate            // ⬅️ création d’un service (POST /providers/services)
+    case providerMeUpdate                 // ⬅️ NOUVEAU: PATCH /api/v1/providers/me
     
     // Bookings
     case bookingsList(scope: String?, status: String?)
@@ -46,6 +47,9 @@ enum APIEndPoint: Equatable  {
     case bookingCancel(id: String)
     case bookingConfirm(id: String)
     case bookingDecline(id: String)
+    case bookingStartService(id: String)  // Start service (changes status to started/in_progress)
+    case bookingUpdateProgress(id: String)  // Update service progress (step completion)
+    case bookingCompleteService(id: String)  // Mark service as completed
     
     // Offers
     case offersList
@@ -95,11 +99,24 @@ enum APIEndPoint: Equatable  {
     case products
     case productsRecommended
     case productClick(id: String)
+    case productDetail(id: String)
+    
+    // Orders
+    case ordersList
+    case orderCreate
+    case orderDetail(id: String)
+    case orderCancel(id: String)
 
     // Taxes
     case taxesSummary
     case taxesDocuments
     case taxesDownload(id: String)
+
+    // Stripe Connect (Provider payouts)
+    case stripeConnectCreateAccount
+    case stripeConnectOnboardingLink
+    case stripeConnectAccountStatus
+    case stripeConnectPayoutsSummary
 }
 
 // MARK: - Mapper Protocol
@@ -116,10 +133,11 @@ struct BelDetailingEndpointMapper: EndpointMapper {
             return authPath(for: endPoint)
 
         case .providersList, .providerDetail, .providerReviews, .providerServices, .providerStats, .providerReviewCreate,
-             .providerMyStats, .providerMyServices, .providerMyReviews, .providerServiceCreate:
+             .providerMyStats, .providerMyServices, .providerMyReviews, .providerServiceCreate, .providerMeUpdate:
             return providerPath(for: endPoint)
 
-        case .bookingsList, .bookingCreate, .bookingUpdate, .bookingCancel, .bookingConfirm, .bookingDecline:
+        case .bookingsList, .bookingCreate, .bookingUpdate, .bookingCancel, .bookingConfirm, .bookingDecline,
+             .bookingStartService, .bookingUpdateProgress, .bookingCompleteService:
             return bookingPath(for: endPoint)
 
         case .offersList, .offerDetail, .offerCreate, .offerUpdate, .offerClose, .offerDelete:
@@ -146,39 +164,51 @@ struct BelDetailingEndpointMapper: EndpointMapper {
         case .paymentIntent, .paymentCapture, .paymentRefund, .paymentSetupIntent, .paymentMethods, .paymentTransactions, .paymentMethodDelete:
             return paymentsPath(for: endPoint)
 
-        case .products, .productsRecommended, .productClick:
+        case .products, .productsRecommended, .productClick, .productDetail:
             return productsPath(for: endPoint)
+            
+        case .ordersList, .orderCreate, .orderDetail, .orderCancel:
+            return ordersPath(for: endPoint)
 
         case .taxesSummary, .taxesDocuments, .taxesDownload:
             return taxesPath(for: endPoint)
+
+        case .stripeConnectCreateAccount, .stripeConnectOnboardingLink, .stripeConnectAccountStatus, .stripeConnectPayoutsSummary:
+            return stripeConnectPath(for: endPoint)
         }
     }
 
     static func method(for endPoint: APIEndPoint) -> HTTPVerb {
         switch endPoint {
         case .register, .login, .refresh, .loginApple, .loginGoogle, .logout, .providerReviewCreate, .bookingCreate, .bookingCancel,
-             .bookingConfirm, .bookingDecline, .offerCreate, .offerClose, .offerApply,
+             .bookingConfirm, .bookingDecline, .bookingStartService, .bookingUpdateProgress, .bookingCompleteService,
+             .offerCreate, .offerClose, .offerApply,
              .applicationWithdraw, .applicationAccept, .applicationRefuse,
              .notificationSubscribe, .paymentIntent, .paymentCapture, .paymentRefund, .mediaUpload,
-             .productClick,
+             .productClick, .orderCreate,
              .paymentSetupIntent,
-             .providerServiceCreate:         // ⬅️ AJOUT: POST
+             .providerServiceCreate,
+             .stripeConnectCreateAccount,          // POST
+             .stripeConnectOnboardingLink:         // POST
             return .post
 
-        case .updateProfile, .bookingUpdate, .offerUpdate, .notificationRead:
+        case .updateProfile, .bookingUpdate, .offerUpdate, .notificationRead,
+             .providerMeUpdate:                   // ⬅️ NOUVEAU: PATCH /providers/me
             return .patch
 
         case .providerDetail, .providersList, .providerReviews, .providerServices,
              .providerStats, .providerMyStats, .providerMyServices, .providerMyReviews,
              .offersList, .offerDetail, .bookingsList,
              .cities, .serviceCategories, .searchProviders, .searchOffers,
+             .products, .productsRecommended, .productDetail, .ordersList, .orderDetail,
              .offerApplications, .profile, .notificationsList, .vatValidate,
-             .products, .productsRecommended,
              .paymentMethods, .paymentTransactions,
-             .taxesSummary, .taxesDocuments, .taxesDownload:
+             .taxesSummary, .taxesDocuments, .taxesDownload,
+             .stripeConnectAccountStatus,          // GET
+             .stripeConnectPayoutsSummary:         // GET
             return .get
 
-        case .offerDelete, .mediaDelete, .paymentMethodDelete:
+        case .offerDelete, .mediaDelete, .paymentMethodDelete, .orderCancel:
             return .delete
         }
     }
@@ -231,7 +261,8 @@ private extension BelDetailingEndpointMapper {
         case .providerMyServices: return "api/v1/providers/me/services"
         case .providerMyReviews: return "api/v1/providers/me/reviews"
         case .providerReviewCreate: return "api/v1/reviews"
-        case .providerServiceCreate: return "api/v1/providers/services"   // ⬅️ AJOUT
+        case .providerServiceCreate: return "api/v1/providers/services"
+        case .providerMeUpdate: return "api/v1/providers/me" // ⬅️ NOUVEAU
         default: return ""
         }
     }
@@ -243,6 +274,9 @@ private extension BelDetailingEndpointMapper {
         case .bookingCancel(let id): return "api/v1/bookings/\(id)/cancel"
         case .bookingConfirm(let id): return "api/v1/bookings/\(id)/confirm"
         case .bookingDecline(let id): return "api/v1/bookings/\(id)/decline"
+        case .bookingStartService(let id): return "api/v1/bookings/\(id)/start"
+        case .bookingUpdateProgress(let id): return "api/v1/bookings/\(id)/progress"
+        case .bookingCompleteService(let id): return "api/v1/bookings/\(id)/complete"
         default: return ""
         }
     }
@@ -314,6 +348,17 @@ private extension BelDetailingEndpointMapper {
         case .products: return "api/v1/products"
         case .productsRecommended: return "api/v1/products/recommended"
         case .productClick(let id): return "api/v1/products/\(id)/click"
+        case .productDetail(let id): return "api/v1/products/\(id)"
+        default: return ""
+        }
+    }
+    
+    static func ordersPath(for endPoint: APIEndPoint) -> String {
+        switch endPoint {
+        case .ordersList: return "api/v1/orders"
+        case .orderCreate: return "api/v1/orders"
+        case .orderDetail(let id): return "api/v1/orders/\(id)"
+        case .orderCancel(let id): return "api/v1/orders/\(id)/cancel"
         default: return ""
         }
     }
@@ -326,6 +371,21 @@ private extension BelDetailingEndpointMapper {
             return "api/v1/taxes/documents"
         case .taxesDownload(let id):
             return "api/v1/taxes/documents/\(id)/download"
+        default:
+            return ""
+        }
+    }
+
+    static func stripeConnectPath(for endPoint: APIEndPoint) -> String {
+        switch endPoint {
+        case .stripeConnectCreateAccount:
+            return "api/v1/stripe/connect/account"
+        case .stripeConnectOnboardingLink:
+            return "api/v1/stripe/connect/onboarding-link"
+        case .stripeConnectAccountStatus:
+            return "api/v1/stripe/connect/account-status"
+        case .stripeConnectPayoutsSummary:
+            return "api/v1/stripe/connect/payouts-summary"
         default:
             return ""
         }

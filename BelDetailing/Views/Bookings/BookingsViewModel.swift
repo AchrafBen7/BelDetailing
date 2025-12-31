@@ -134,6 +134,9 @@ final class BookingsViewModel: ObservableObject {
                     historyList.append(booking)
                 }
 
+            case .started, .inProgress:
+                ongoingList.append(booking)
+
             case .completed:
                 completedList.append(booking)
                 historyList.append(booking)

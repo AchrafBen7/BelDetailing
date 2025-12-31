@@ -6,16 +6,26 @@ import StripePaymentSheet
 final class PaymentSettingsViewModel: ObservableObject {
     @Published var paymentMethods: [PaymentMethod] = []
     @Published var transactions: [PaymentTransaction] = []
+    @Published var bookings: [Booking] = [] // Pour mapper transactions -> bookings
     @Published var isLoading = false
     @Published var errorText: String?
 
     @Published var paymentSheet: PaymentSheet?
     @Published var isPresentingPaymentSheet = false
+    @Published var selectedTransaction: PaymentTransaction?
 
     let engine: Engine
 
     init(engine: Engine) {
         self.engine = engine
+    }
+    
+    func bookingForTransaction(_ transactionId: String) -> Booking? {
+        // TODO: Mapper transactionId avec bookingId depuis le backend
+        // Pour l'instant, on cherche par paymentIntentId
+        return bookings.first { booking in
+            booking.paymentIntentId == transactionId
+        }
     }
 
     func load() async {
@@ -42,8 +52,22 @@ final class PaymentSettingsViewModel: ObservableObject {
         case .failure(let error):
             print("❌ [PaymentsVM] fetchTransactions failed:", error.localizedDescription)
         }
+        
+        // 3) Charger les bookings pour mapper avec les transactions
+        await loadBookings()
 
         print("🔵 [PaymentsVM] load() END")
+    }
+    
+    private func loadBookings() async {
+        // Charger les bookings pour pouvoir les mapper avec les transactions
+        switch await engine.bookingService.getBookings(scope: nil, status: nil) {
+        case .success(let bookings):
+            self.bookings = bookings
+        case .failure:
+            // Pas critique si ça échoue
+            break
+        }
     }
 
     func addPaymentMethod() async {

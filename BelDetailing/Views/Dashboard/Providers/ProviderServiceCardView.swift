@@ -68,17 +68,17 @@ struct ProviderServiceCardView: View {
 
                 // FOOTER: Actions (primary + secondary)
                 HStack(spacing: 10) {
-                    // EDIT — bouton principal noir, contenu centré
+                    // EDIT — style gris (comme Delete)
                     Button(action: onEdit) {
                         HStack(spacing: 8) {
                             Image(systemName: "square.and.pencil")
                             Text(R.string.localizable.dashboardEdit())
                         }
                         .font(.system(size: 16, weight: .semibold))
-                        .foregroundColor(.white)
+                        .foregroundColor(.black)
                         .frame(maxWidth: .infinity)
-                        .frame(height: buttonHeight) // hauteur fixe
-                        .background(Color.black)
+                        .frame(height: buttonHeight)
+                        .background(Color.black.opacity(0.06))
                         .clipShape(RoundedRectangle(cornerRadius: corner, style: .continuous))
                     }
 

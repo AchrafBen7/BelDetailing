@@ -28,40 +28,43 @@ struct BookingsView: View {
                 
                 // LIST
                 ScrollView(showsIndicators: false) {
-                    LazyVStack(spacing: 16) {
-                        ForEach(filteredBookings, id: \.id) { booking in
-                            BookingCardView(
-                                booking: booking,
-                                onManage: {
-                                    if booking.isWithin24h {
-                                        print("Impossible de modifier, moins de 24h")
-                                    } else {
-                                        selectedBooking = booking
+                    if filteredBookings.isEmpty {
+                        emptyState
+                    } else {
+                        LazyVStack(spacing: 20) {
+                            ForEach(filteredBookings, id: \.id) { booking in
+                                BookingCardView(
+                                    booking: booking,
+                                    onManage: {
+                                        if booking.isWithin24h {
+                                            showTooLateAlert = true
+                                        } else {
+                                            selectedBooking = booking
+                                        }
+                                    },
+                                    onCancel: {
+                                        if booking.isWithin24h {
+                                            showTooLateAlert = true
+                                        } else {
+                                            bookingToCancel = booking
+                                            showCancelSheet = true
+                                        }
+                                    },
+                                    onRepeat: {
+                                        print("BOOK AGAIN \(booking.id)")
                                     }
-                                },
-                                onCancel: {
-                                    if booking.isWithin24h {
-                                        showTooLateAlert = true
-                                    } else {
-                                        bookingToCancel = booking
-                                        showCancelSheet = true
-                                    }
-                                },
-                                onRepeat: {
-                                    print("BOOK AGAIN \(booking.id)")
+                                )
+                                .alert("Impossible", isPresented: $showTooLateAlert) {
+                                    Button("OK", role: .cancel) {}
+                                } message: {
+                                    Text("Vous ne pouvez plus annuler ou modifier une réservation dans les 24 heures précédant l'heure prévue.")
                                 }
-                            )
-                            .background(Color.yellow.opacity(0.08))
-                            .alert("Impossible", isPresented: $showTooLateAlert) {
-                                Button("OK", role: .cancel) {}
-                            } message: {
-                                Text("Vous ne pouvez plus annuler ou modifier une réservation dans les 24 heures précédant l'heure prévue.")
                             }
                         }
+                        .padding(.horizontal, 20)
+                        .padding(.top, 12)
+                        .padding(.bottom, 20)
                     }
-                    .padding(.horizontal, 16)
-                    .padding(.top, 8)
-                    .padding(.bottom, 12)
                 }
                 .refreshable {
                     await viewModel.reload()
@@ -79,7 +82,7 @@ struct BookingsView: View {
                 await viewModel.loadIfNeeded()
             }
             .sheet(item: $selectedBooking) { booking in
-                BookingManageSheetView(
+                BookingDetailView(
                     booking: booking,
                     engine: engine
                 )
@@ -169,6 +172,25 @@ private extension BookingsView {
         }
         print("🧮 [View] filtered for \(selectedFilter) ->", result.count)
         return result
+    }
+    
+    var emptyState: some View {
+        VStack(spacing: 16) {
+            Image(systemName: "calendar.badge.exclamationmark")
+                .font(.system(size: 64))
+                .foregroundColor(.gray.opacity(0.5))
+            
+            Text("Aucune réservation")
+                .font(.system(size: 20, weight: .semibold))
+                .foregroundColor(.primary)
+            
+            Text("Vous n'avez aucune réservation dans cette catégorie")
+                .font(.system(size: 15))
+                .foregroundColor(.secondary)
+                .multilineTextAlignment(.center)
+        }
+        .frame(maxWidth: .infinity)
+        .padding(.vertical, 60)
     }
 }
 

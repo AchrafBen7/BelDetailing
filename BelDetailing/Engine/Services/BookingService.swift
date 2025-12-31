@@ -18,6 +18,11 @@ protocol BookingService {
     func confirmBooking(id: String) async -> APIResponse<Bool>
     func declineBooking(id: String) async -> APIResponse<Bool>
     func getAvailableSlots(providerId: String, date: String) async -> APIResponse<[String]>
+    
+    // Service Progress Tracking
+    func startService(bookingId: String) async -> APIResponse<Booking>
+    func updateProgress(bookingId: String, stepId: String) async -> APIResponse<Booking>
+    func completeService(bookingId: String) async -> APIResponse<Booking>
 }
 
 
@@ -116,6 +121,30 @@ final class BookingServiceNetwork: BookingService {
         await networkClient.call(
             endPoint: .providerServices(providerId: providerId),
             urlDict: ["date": date]
+        )
+    }
+    
+    // MARK: - Service Progress Tracking
+    
+    func startService(bookingId: String) async -> APIResponse<Booking> {
+        await networkClient.call(
+            endPoint: .bookingStartService(id: bookingId),
+            wrappedInData: true
+        )
+    }
+    
+    func updateProgress(bookingId: String, stepId: String) async -> APIResponse<Booking> {
+        await networkClient.call(
+            endPoint: .bookingUpdateProgress(id: bookingId),
+            dict: ["step_id": stepId],
+            wrappedInData: true
+        )
+    }
+    
+    func completeService(bookingId: String) async -> APIResponse<Booking> {
+        await networkClient.call(
+            endPoint: .bookingCompleteService(id: bookingId),
+            wrappedInData: true
         )
     }
 }

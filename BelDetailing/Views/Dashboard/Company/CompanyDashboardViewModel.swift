@@ -54,7 +54,14 @@ final class CompanyDashboardViewModel: ObservableObject {
     private func loadMyOffers() async {
         let res = await engine.offerService.getOffers(status: nil, type: nil)
         if case let .success(list) = res {
-            myOffers = list
+            // Filtrer pour ne garder que les offres créées par cette company
+            if let currentUserId = engine.userService.fullUser?.id {
+                myOffers = list.filter { $0.createdBy == currentUserId }
+            } else {
+                myOffers = []
+            }
+        } else {
+            myOffers = []
         }
     }
 

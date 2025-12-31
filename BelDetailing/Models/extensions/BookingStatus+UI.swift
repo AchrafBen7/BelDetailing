@@ -17,6 +17,10 @@ extension BookingStatus {
             return R.string.localizable.bookingStatusPending()
         case .confirmed:
             return R.string.localizable.bookingStatusConfirmed()
+        case .started:
+            return R.string.localizable.bookingStatusStarted()
+        case .inProgress:
+            return R.string.localizable.bookingStatusInProgress()
         case .declined:
             return R.string.localizable.bookingStatusDeclined()
         case .cancelled:
@@ -33,6 +37,10 @@ extension BookingStatus {
             return Color(R.color.badgeYellow)      // ou ta couleur
         case .confirmed:
             return Color(R.color.badgeGreen)
+        case .started:
+            return Color(R.color.badgeBlue)
+        case .inProgress:
+            return Color(R.color.badgeBlue)
         case .declined:
             return Color(R.color.badgeRed)
         case .cancelled:

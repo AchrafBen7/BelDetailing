@@ -22,11 +22,28 @@ struct ToastState: Equatable {
 @MainActor
 final class ProviderDashboardViewModel: ObservableObject {
     @Published var selectedDate: Date = Date()
-    @Published var selectedFilter: ProviderDashboardFilter = .offers
+    @Published var selectedFilter: ProviderDashboardFilter = .offers {
+        didSet {
+            // Quand on passe à l’onglet Reviews, charger si nécessaire
+            if selectedFilter == .reviews, myReviews.isEmpty, !isLoadingReviews {
+                Task { await loadMyReviews() }
+            }
+        }
+    }
+
     @Published var services: [Service] = []
     @Published var isLoading = true
+
     @Published var bookings: [Booking] = []
     @Published var stats: DetailerStats? = nil
+    
+    // Offers (companies offers)
+    @Published var availableOffers: [Offer] = []
+    @Published var isLoadingOffers = false
+
+    // Reviews (nouveau)
+    @Published var myReviews: [Review] = []
+    @Published var isLoadingReviews: Bool = false
 
     // Ancienne alerte → remplacée par un toast
     @Published var bookingActionError: String? = nil // gardé pour compat, mais non utilisé par l’UI
@@ -48,6 +65,23 @@ final class ProviderDashboardViewModel: ObservableObject {
         loadServices()
         loadBookings()
         loadStats()
+        loadOffers()
+        // On ne charge pas les reviews ici pour éviter du réseau inutile
+        // Elles seront chargées à l'ouverture de l'onglet .reviews via didSet de selectedFilter
+    }
+    
+    func loadOffers() {
+        Task {
+            isLoadingOffers = true
+            let response = await engine.offerService.getOffers(status: .open, type: nil)
+            switch response {
+            case .success(let offers):
+                availableOffers = offers
+            case .failure:
+                availableOffers = []
+            }
+            isLoadingOffers = false
+        }
     }
 
     func loadStats() {
@@ -119,6 +153,20 @@ final class ProviderDashboardViewModel: ObservableObject {
         }
     }
 
+    // MARK: - Reviews
+    func loadMyReviews() async {
+        isLoadingReviews = true
+        defer { isLoadingReviews = false }
+
+        let response = await engine.reviewService.getMyReviews()
+        switch response {
+        case .success(let items):
+            myReviews = items
+        case .failure:
+            myReviews = []
+        }
+    }
+
     func deleteService(id: String) {
         services.removeAll { $0.id == id }
     }
@@ -182,7 +230,7 @@ final class ProviderDashboardViewModel: ObservableObject {
 }
 
 enum ProviderDashboardFilter {
-    case offers, calendar, stats, reviews
+    case offers, calendar, stats, reviews, stripe
 }
 
 struct CalendarDayStatus {
@@ -210,6 +258,8 @@ extension ProviderDashboardViewModel {
 
             switch booking.status {
             case .confirmed:
+                confirmed.insert(day)
+            case .started, .inProgress:
                 confirmed.insert(day)
             case .pending:
                 pending.insert(day)

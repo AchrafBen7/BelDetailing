@@ -25,6 +25,18 @@
         }
       }
     },
+    "NSCalendarsUsageDescription" : {
+      "comment" : "Privacy - Calendars Usage Description",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "NIOS a besoin d'accéder à votre calendrier pour synchroniser vos réservations et vous rappeler vos rendez-vous."
+          }
+        }
+      }
+    },
     "NSLocationWhenInUseUsageDescription" : {
       "extractionState" : "manual",
       "localizations" : {

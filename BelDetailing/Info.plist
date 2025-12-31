@@ -36,5 +36,7 @@
 		<string>Avenir Next LT Pro It.otf</string>
 		<string>Avenir Next LT Pro Regular.otf</string>
 	</array>
+	<key>NSCalendarsUsageDescription</key>
+	<string>NIOS a besoin d'accéder à votre calendrier pour synchroniser vos réservations et vous rappeler vos rendez-vous.</string>
 </dict>
 </plist>

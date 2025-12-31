@@ -20,6 +20,7 @@ struct Booking: Codable, Identifiable, Hashable {
     let customer: BookingCustomer?
     let providerBannerUrl: String?
     let currency: String
+    let progress: BookingProgress?  // Service progress tracking
 
     enum CodingKeys: String, CodingKey {
         case id
@@ -39,6 +40,7 @@ struct Booking: Codable, Identifiable, Hashable {
         case customer
         case providerBannerUrl
         case currency
+        case progress
     }
 
     // MARK: - Custom Decoder
@@ -132,6 +134,9 @@ struct Booking: Codable, Identifiable, Hashable {
         }
 
         currency = (try? keys.decode(String.self, forKey: .currency)) ?? "eur"
+        
+        // MARK: progress — optional BookingProgress
+        progress = try? keys.decode(BookingProgress.self, forKey: .progress)
     }
 }
 
@@ -182,6 +187,8 @@ struct CreateBookingResponse: Decodable {
 enum BookingStatus: String, Codable {
     case pending
     case confirmed
+    case started      // Service has started
+    case inProgress   // Service is in progress (with progress tracking)
     case declined
     case cancelled
     case completed

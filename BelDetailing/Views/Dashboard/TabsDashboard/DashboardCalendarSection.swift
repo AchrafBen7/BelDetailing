@@ -3,6 +3,7 @@ import SwiftUI
 struct ProviderMonthCalendarView: View {
     @Binding var selectedDate: Date
     let status: CalendarDayStatus// jours du mois avec réservations
+    var onDateTap: ((Date) -> Void)? = nil
     private let calendar = Calendar.current
     var body: some View {
         VStack(spacing: 12) {
@@ -85,7 +86,13 @@ struct ProviderMonthCalendarView: View {
         let isCancelled = status.cancelled.contains(day)
         
         return AnyView(
-            Button { selectedDate = date } label: {
+            Button {
+                if let onDateTap = onDateTap {
+                    onDateTap(date)
+                } else {
+                    selectedDate = date
+                }
+            } label: {
                 ZStack {
                     
                     // ▶️ Sélection

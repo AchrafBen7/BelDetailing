@@ -378,16 +378,3 @@ private struct CompactProductCard: View {
     }
 }
 
-// MARK: - Safari wrapper
-private struct SafariView: UIViewControllerRepresentable, Identifiable {
-    let id = UUID()
-    let url: URL
-
-    func makeUIViewController(context: Context) -> SFSafariViewController {
-        let vc = SFSafariViewController(url: url)
-        vc.dismissButtonStyle = .close
-        return vc
-    }
-
-    func updateUIViewController(_ uiViewController: SFSafariViewController, context: Context) {}
-}

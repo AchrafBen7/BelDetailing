@@ -56,7 +56,7 @@ struct DashboardEntryView: View {
                     CompanyDashboardView(engine: engine)
 
                 case .customer:
-                    CustomerDashboardView(engine: engine)
+                    CustomerShopView(engine: engine)
                 }
             } else {
                 // Not logged in / session missing

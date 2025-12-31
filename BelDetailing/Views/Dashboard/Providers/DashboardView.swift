@@ -37,20 +37,19 @@ struct DashboardProviderView: View {
                             switch viewModel.selectedFilter {
 
                             case .offers:
-                                createButton
-                                servicesListOrLoader
+                                offersListSection
 
                             case .calendar:
-                                calendarSection
+                                ProviderAvailabilityView(engine: viewModel.engine)
 
                             case .stats:
-                                StatsPlaceholder(
-                                    stats: viewModel.stats,
-                                    popularServices: viewModel.popularServices
-                                )
+                                ProviderStatsView(engine: viewModel.engine)
 
                             case .reviews:
-                                MyReviewsView(engine: viewModel.engine)
+                                reviewsSection
+                            
+                            case .stripe:
+                                ProviderStripeView(engine: viewModel.engine)
                             }
                         }
                         .padding(.bottom, 100)
@@ -77,6 +76,9 @@ struct DashboardProviderView: View {
             }
             .navigationDestination(isPresented: $showOffers) {
                 OffersView(engine: viewModel.engine)
+            }
+            .navigationDestination(for: Offer.self) { offer in
+                OfferDetailView(engine: viewModel.engine, offerId: offer.id)
             }
         }
         .navigationBarBackButtonHidden(true)
@@ -115,7 +117,8 @@ struct DashboardProviderView: View {
                 selectedDate: $viewModel.selectedDate,
                 status: viewModel.calendarStatus(
                     forMonth: viewModel.selectedDate
-                )
+                ),
+                onDateTap: nil
             )
             bookingsList
         }
@@ -143,6 +146,49 @@ struct DashboardProviderView: View {
         }
     }
 
+    // MARK: - OFFERS LIST (Companies offers)
+    private var offersListSection: some View {
+        VStack(alignment: .leading, spacing: 16) {
+            Text(R.string.localizable.dashboardAvailableOffers())
+                .font(.system(size: 22, weight: .bold))
+                .padding(.horizontal, 20)
+            
+            if viewModel.isLoadingOffers {
+                ProgressView()
+                    .frame(maxWidth: .infinity)
+                    .padding(.top, 40)
+            } else if viewModel.availableOffers.isEmpty {
+                VStack(spacing: 16) {
+                    Image(systemName: "briefcase")
+                        .font(.system(size: 48))
+                        .foregroundColor(.gray.opacity(0.5))
+                        .padding(.top, 60)
+                    
+                    Text(R.string.localizable.dashboardNoOffersAvailable())
+                        .font(.system(size: 18, weight: .semibold))
+                        .foregroundColor(.gray)
+                    
+                    Text(R.string.localizable.dashboardNoOffersAvailableMessage())
+                        .font(.system(size: 14))
+                        .foregroundColor(.gray.opacity(0.8))
+                        .multilineTextAlignment(.center)
+                        .padding(.horizontal, 40)
+                }
+                .frame(maxWidth: .infinity)
+            } else {
+                VStack(spacing: 16) {
+                    ForEach(viewModel.availableOffers) { offer in
+                        NavigationLink(value: offer) {
+                            OfferCard(offer: offer)
+                        }
+                        .buttonStyle(.plain)
+                    }
+                }
+                .padding(.horizontal, 20)
+            }
+        }
+    }
+    
     // MARK: - SERVICES LIST
     private var servicesListOrLoader: some View {
         Group {
@@ -163,6 +209,33 @@ struct DashboardProviderView: View {
         }
     }
 
+    // MARK: - REVIEWS SECTION (réel)
+    private var reviewsSection: some View {
+        VStack(alignment: .leading, spacing: 16) {
+            Text(R.string.localizable.detailReviewsTitle())
+                .font(.system(size: 22, weight: .bold))
+                .padding(.horizontal, 20)
+
+            if viewModel.isLoadingReviews {
+                ProgressView()
+                    .padding(.top, 12)
+                    .frame(maxWidth: .infinity)
+            } else if viewModel.myReviews.isEmpty {
+                Text("Aucun avis pour le moment.")
+                    .font(.system(size: 15))
+                    .foregroundColor(.gray)
+                    .padding(.horizontal, 20)
+            } else {
+                VStack(spacing: 16) {
+                    ForEach(viewModel.myReviews) { review in
+                        ReviewCardView(review: review)
+                            .padding(.horizontal, 20)
+                    }
+                }
+            }
+        }
+    }
+
     // MARK: - FILTER TABS
     private var filterTabs: some View {
         ScrollView(.horizontal, showsIndicators: false) {
@@ -171,6 +244,7 @@ struct DashboardProviderView: View {
                 filterButton(.calendar, title: R.string.localizable.dashboardTabCalendar())
                 filterButton(.stats, title: R.string.localizable.dashboardTabStats())
                 filterButton(.reviews, title: R.string.localizable.dashboardTabReviews())
+                filterButton(.stripe, title: R.string.localizable.dashboardTabStripe())
             }
             .padding(.horizontal, 16)
             .padding(.vertical, 10)
@@ -217,3 +291,4 @@ struct MyReviewsView: View {
             .padding(.top, 40)
     }
 }
+

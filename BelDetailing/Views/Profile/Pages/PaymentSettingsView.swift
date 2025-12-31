@@ -111,6 +111,13 @@ struct PaymentSettingsView: View {
         } message: {
             Text(vm.errorText ?? "")
         }
+        .sheet(item: $vm.selectedTransaction) { transaction in
+            TransactionDetailView(
+                transaction: transaction,
+                booking: vm.bookingForTransaction(transaction.id),
+                engine: engine
+            )
+        }
     }
 
     // MARK: - Payment Methods Section
@@ -175,7 +182,13 @@ struct PaymentSettingsView: View {
             } else {
                 VStack(spacing: 12) {
                     ForEach(vm.transactions) { transaction in
-                        TransactionRow(transaction: transaction)
+                        TransactionRow(
+                            transaction: transaction,
+                            booking: vm.bookingForTransaction(transaction.id),
+                            onTap: {
+                                vm.selectedTransaction = transaction
+                            }
+                        )
                     }
                 }
             }

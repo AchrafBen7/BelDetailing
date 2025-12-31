@@ -49,6 +49,19 @@
 		9B306D332EC69FF5003EB87F /* OfferStatus+UI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B306D312EC69FF2003EB87F /* OfferStatus+UI.swift */; };
 		9B306D632EC764BB003EB87F /* CachedImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B306D612EC764B2003EB87F /* CachedImage.swift */; };
 		9B306D682EC764C8003EB87F /* ImageLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B306D662EC764C5003EB87F /* ImageLoader.swift */; };
+		9B36ED322EFC9BC1008EF51B /* TaxesModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B36ED312EFC9BC1008EF51B /* TaxesModels.swift */; };
+		9B36ED352EFC9BC5008EF51B /* NetworkClient+Absolute.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B36ED342EFC9BC5008EF51B /* NetworkClient+Absolute.swift */; };
+		9B36ED3A2EFC9C85008EF51B /* NetworkClient+DownloadProgress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B36ED392EFC9C85008EF51B /* NetworkClient+DownloadProgress.swift */; };
+		9B36EE102EFDE171008EF51B /* ProviderCreateServiceViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B36EE0F2EFDE16D008EF51B /* ProviderCreateServiceViewModel.swift */; };
+		9B36EE182EFDEEF1008EF51B /* ProviderCreateServiceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B36EE162EFDEEE8008EF51B /* ProviderCreateServiceView.swift */; };
+		9B36EE1E2EFDF2D9008EF51B /* Chip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B36EE1D2EFDF2D6008EF51B /* Chip.swift */; };
+		9B36EE232EFDF369008EF51B /* WrapStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B36EE212EFDF362008EF51B /* WrapStack.swift */; };
+		9B36EE332EFE0CD3008EF51B /* ProviderServiceDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B36EE322EFE0CD3008EF51B /* ProviderServiceDTO.swift */; };
+		9B36EE4F2EFF6824008EF51B /* ProviderProfileDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B36EE4E2EFF6824008EF51B /* ProviderProfileDetail.swift */; };
+		9B36EE532EFF6848008EF51B /* ProfileDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B36EE522EFF6848008EF51B /* ProfileDetailView.swift */; };
+		9B36EE662F009ADC008EF51B /* ProfileDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B36EE652F009ADC008EF51B /* ProfileDetailViewModel.swift */; };
+		9B36EE712F00A646008EF51B /* EditProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B36EE702F00A646008EF51B /* EditProfileViewModel.swift */; };
+		9B36EE752F00A64D008EF51B /* EditProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B36EE742F00A64D008EF51B /* EditProfileView.swift */; };
 		9B3A135E2EF1D69B006C92ED /* BookingCancelSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B3A135C2EF1D69B006C92ED /* BookingCancelSheetView.swift */; };
 		9B3A135F2EF1D69B006C92ED /* BookingManageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B3A135D2EF1D69B006C92ED /* BookingManageView.swift */; };
 		9B3A136A2EF1D6B7006C92ED /* TaxesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B3A13672EF1D6B7006C92ED /* TaxesView.swift */; };
@@ -177,6 +190,34 @@
 		9BC33E5A2EC809B4008D44B8 /* AuthFlowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BC33E582EC809A1008D44B8 /* AuthFlowView.swift */; };
 		9BC33E742ECA9C46008D44B8 /* ProviderServiceCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BC33E722ECA9C38008D44B8 /* ProviderServiceCardView.swift */; };
 		9BC33E7C2ECA9DDD008D44B8 /* ProviderDashboardHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BC33E7A2ECA9DD9008D44B8 /* ProviderDashboardHeaderView.swift */; };
+		9BF8C8F82F04916500AD8AEA /* TransactionDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BF8C8F62F04916500AD8AEA /* TransactionDetailView.swift */; };
+		9BF8C8FC2F04922600AD8AEA /* BookingStatusBadge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BF8C8FB2F04922600AD8AEA /* BookingStatusBadge.swift */; };
+		9BF8C9012F04937700AD8AEA /* TransactionDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BF8C9002F04937700AD8AEA /* TransactionDetailViewModel.swift */; };
+		9BF8C90D2F049EA400AD8AEA /* BookingDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BF8C9072F049EA400AD8AEA /* BookingDetailView.swift */; };
+		9BF8C90E2F049EA400AD8AEA /* BookingDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BF8C9082F049EA400AD8AEA /* BookingDetailViewModel.swift */; };
+		9BF8C90F2F049EA400AD8AEA /* ServiceProgressTrackingCustomerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BF8C90A2F049EA400AD8AEA /* ServiceProgressTrackingCustomerViewModel.swift */; };
+		9BF8C9102F049EA400AD8AEA /* ServiceProgressTrackingProviderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BF8C90B2F049EA400AD8AEA /* ServiceProgressTrackingProviderView.swift */; };
+		9BF8C9112F049EA400AD8AEA /* ServiceProgressTrackingCustomerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BF8C9092F049EA400AD8AEA /* ServiceProgressTrackingCustomerView.swift */; };
+		9BF8C9122F049EA400AD8AEA /* ServiceProgressTrackingProviderViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BF8C90C2F049EA400AD8AEA /* ServiceProgressTrackingProviderViewModel.swift */; };
+		9BF8C9162F049EE800AD8AEA /* BookingProgress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BF8C9152F049EE800AD8AEA /* BookingProgress.swift */; };
+		9BF8C92C2F04A3EB00AD8AEA /* EditProfileSections.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BF8C92A2F04A3EB00AD8AEA /* EditProfileSections.swift */; };
+		9BF8C92D2F04A3EB00AD8AEA /* EditProfileHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BF8C9282F04A3EB00AD8AEA /* EditProfileHeaderView.swift */; };
+		9BF8C92E2F04A3EB00AD8AEA /* EditProfileComponents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BF8C9272F04A3EB00AD8AEA /* EditProfileComponents.swift */; };
+		9BF8C92F2F04A3EB00AD8AEA /* EditProfileMetricsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BF8C9292F04A3EB00AD8AEA /* EditProfileMetricsView.swift */; };
+		9BF8C9512F04B09700AD8AEA /* ProviderStatsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BF8C94F2F04B09700AD8AEA /* ProviderStatsView.swift */; };
+		9BF8C9522F04B09700AD8AEA /* ProviderStripeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BF8C9502F04B09700AD8AEA /* ProviderStripeView.swift */; };
+		9BF8C9532F04B09700AD8AEA /* ProviderAvailabilityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BF8C94E2F04B09700AD8AEA /* ProviderAvailabilityView.swift */; };
+		9BF8C95D2F04B30800AD8AEA /* SafariView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BF8C95C2F04B30800AD8AEA /* SafariView.swift */; };
+		9BF8C9762F04BADF00AD8AEA /* CartItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BF8C9742F04BADF00AD8AEA /* CartItem.swift */; };
+		9BF8C9772F04BADF00AD8AEA /* BookingProgress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BF8C9732F04BADF00AD8AEA /* BookingProgress.swift */; };
+		9BF8C9782F04BADF00AD8AEA /* Order.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BF8C9752F04BADF00AD8AEA /* Order.swift */; };
+		9BF8C9822F04BB3300AD8AEA /* CartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BF8C97B2F04BB3300AD8AEA /* CartView.swift */; };
+		9BF8C9832F04BB3300AD8AEA /* CustomerShopView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BF8C97D2F04BB3300AD8AEA /* CustomerShopView.swift */; };
+		9BF8C9842F04BB3300AD8AEA /* CheckoutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BF8C97C2F04BB3300AD8AEA /* CheckoutView.swift */; };
+		9BF8C9852F04BB3300AD8AEA /* OrderHistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BF8C97F2F04BB3300AD8AEA /* OrderHistoryView.swift */; };
+		9BF8C9862F04BB3300AD8AEA /* CustomerShopViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BF8C97E2F04BB3300AD8AEA /* CustomerShopViewModel.swift */; };
+		9BF8C9872F04BB3300AD8AEA /* ProductDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BF8C9802F04BB3300AD8AEA /* ProductDetailView.swift */; };
+		9BF8C9982F04C14C00AD8AEA /* PendingBookingsSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BF8C9952F04C14C00AD8AEA /* PendingBookingsSheetView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -242,6 +283,19 @@
 		9B306D312EC69FF2003EB87F /* OfferStatus+UI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OfferStatus+UI.swift"; sourceTree = "<group>"; };
 		9B306D612EC764B2003EB87F /* CachedImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CachedImage.swift; sourceTree = "<group>"; };
 		9B306D662EC764C5003EB87F /* ImageLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageLoader.swift; sourceTree = "<group>"; };
+		9B36ED312EFC9BC1008EF51B /* TaxesModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaxesModels.swift; sourceTree = "<group>"; };
+		9B36ED342EFC9BC5008EF51B /* NetworkClient+Absolute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NetworkClient+Absolute.swift"; sourceTree = "<group>"; };
+		9B36ED392EFC9C85008EF51B /* NetworkClient+DownloadProgress.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NetworkClient+DownloadProgress.swift"; sourceTree = "<group>"; };
+		9B36EE0F2EFDE16D008EF51B /* ProviderCreateServiceViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProviderCreateServiceViewModel.swift; sourceTree = "<group>"; };
+		9B36EE162EFDEEE8008EF51B /* ProviderCreateServiceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProviderCreateServiceView.swift; sourceTree = "<group>"; };
+		9B36EE1D2EFDF2D6008EF51B /* Chip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Chip.swift; sourceTree = "<group>"; };
+		9B36EE212EFDF362008EF51B /* WrapStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WrapStack.swift; sourceTree = "<group>"; };
+		9B36EE322EFE0CD3008EF51B /* ProviderServiceDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProviderServiceDTO.swift; sourceTree = "<group>"; };
+		9B36EE4E2EFF6824008EF51B /* ProviderProfileDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProviderProfileDetail.swift; sourceTree = "<group>"; };
+		9B36EE522EFF6848008EF51B /* ProfileDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileDetailView.swift; sourceTree = "<group>"; };
+		9B36EE652F009ADC008EF51B /* ProfileDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileDetailViewModel.swift; sourceTree = "<group>"; };
+		9B36EE702F00A646008EF51B /* EditProfileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditProfileViewModel.swift; sourceTree = "<group>"; };
+		9B36EE742F00A64D008EF51B /* EditProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditProfileView.swift; sourceTree = "<group>"; };
 		9B3A135C2EF1D69B006C92ED /* BookingCancelSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookingCancelSheetView.swift; sourceTree = "<group>"; };
 		9B3A135D2EF1D69B006C92ED /* BookingManageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookingManageView.swift; sourceTree = "<group>"; };
 		9B3A13622EF1D6B7006C92ED /* ProfileSettingRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileSettingRow.swift; sourceTree = "<group>"; };
@@ -363,6 +417,34 @@
 		9BC33E582EC809A1008D44B8 /* AuthFlowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthFlowView.swift; sourceTree = "<group>"; };
 		9BC33E722ECA9C38008D44B8 /* ProviderServiceCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProviderServiceCardView.swift; sourceTree = "<group>"; };
 		9BC33E7A2ECA9DD9008D44B8 /* ProviderDashboardHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProviderDashboardHeaderView.swift; sourceTree = "<group>"; };
+		9BF8C8F62F04916500AD8AEA /* TransactionDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionDetailView.swift; sourceTree = "<group>"; };
+		9BF8C8FB2F04922600AD8AEA /* BookingStatusBadge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookingStatusBadge.swift; sourceTree = "<group>"; };
+		9BF8C9002F04937700AD8AEA /* TransactionDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionDetailViewModel.swift; sourceTree = "<group>"; };
+		9BF8C9072F049EA400AD8AEA /* BookingDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookingDetailView.swift; sourceTree = "<group>"; };
+		9BF8C9082F049EA400AD8AEA /* BookingDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookingDetailViewModel.swift; sourceTree = "<group>"; };
+		9BF8C9092F049EA400AD8AEA /* ServiceProgressTrackingCustomerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceProgressTrackingCustomerView.swift; sourceTree = "<group>"; };
+		9BF8C90A2F049EA400AD8AEA /* ServiceProgressTrackingCustomerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceProgressTrackingCustomerViewModel.swift; sourceTree = "<group>"; };
+		9BF8C90B2F049EA400AD8AEA /* ServiceProgressTrackingProviderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceProgressTrackingProviderView.swift; sourceTree = "<group>"; };
+		9BF8C90C2F049EA400AD8AEA /* ServiceProgressTrackingProviderViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceProgressTrackingProviderViewModel.swift; sourceTree = "<group>"; };
+		9BF8C9152F049EE800AD8AEA /* BookingProgress.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookingProgress.swift; sourceTree = "<group>"; };
+		9BF8C9272F04A3EB00AD8AEA /* EditProfileComponents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditProfileComponents.swift; sourceTree = "<group>"; };
+		9BF8C9282F04A3EB00AD8AEA /* EditProfileHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditProfileHeaderView.swift; sourceTree = "<group>"; };
+		9BF8C9292F04A3EB00AD8AEA /* EditProfileMetricsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditProfileMetricsView.swift; sourceTree = "<group>"; };
+		9BF8C92A2F04A3EB00AD8AEA /* EditProfileSections.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditProfileSections.swift; sourceTree = "<group>"; };
+		9BF8C94E2F04B09700AD8AEA /* ProviderAvailabilityView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProviderAvailabilityView.swift; sourceTree = "<group>"; };
+		9BF8C94F2F04B09700AD8AEA /* ProviderStatsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProviderStatsView.swift; sourceTree = "<group>"; };
+		9BF8C9502F04B09700AD8AEA /* ProviderStripeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProviderStripeView.swift; sourceTree = "<group>"; };
+		9BF8C95C2F04B30800AD8AEA /* SafariView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SafariView.swift; sourceTree = "<group>"; };
+		9BF8C9732F04BADF00AD8AEA /* BookingProgress.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookingProgress.swift; sourceTree = "<group>"; };
+		9BF8C9742F04BADF00AD8AEA /* CartItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CartItem.swift; sourceTree = "<group>"; };
+		9BF8C9752F04BADF00AD8AEA /* Order.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Order.swift; sourceTree = "<group>"; };
+		9BF8C97B2F04BB3300AD8AEA /* CartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CartView.swift; sourceTree = "<group>"; };
+		9BF8C97C2F04BB3300AD8AEA /* CheckoutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckoutView.swift; sourceTree = "<group>"; };
+		9BF8C97D2F04BB3300AD8AEA /* CustomerShopView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomerShopView.swift; sourceTree = "<group>"; };
+		9BF8C97E2F04BB3300AD8AEA /* CustomerShopViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomerShopViewModel.swift; sourceTree = "<group>"; };
+		9BF8C97F2F04BB3300AD8AEA /* OrderHistoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderHistoryView.swift; sourceTree = "<group>"; };
+		9BF8C9802F04BB3300AD8AEA /* ProductDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductDetailView.swift; sourceTree = "<group>"; };
+		9BF8C9952F04C14C00AD8AEA /* PendingBookingsSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PendingBookingsSheetView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -495,6 +577,8 @@
 				9B2E8FE82EBC259500D76311 /* APIErrors.swift */,
 				9B2E8FED2EBC25A300D76311 /* NetworkClient.swift */,
 				9B2E8FF22EBC25B000D76311 /* NetworkTypes+Helpers.swift */,
+				9B36ED342EFC9BC5008EF51B /* NetworkClient+Absolute.swift */,
+				9B36ED392EFC9C85008EF51B /* NetworkClient+DownloadProgress.swift */,
 			);
 			path = Network;
 			sourceTree = "<group>";
@@ -532,6 +616,12 @@
 		9B2E90BA2EBCE36100D76311 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				9BF8C9732F04BADF00AD8AEA /* BookingProgress.swift */,
+				9BF8C9742F04BADF00AD8AEA /* CartItem.swift */,
+				9BF8C9752F04BADF00AD8AEA /* Order.swift */,
+				9BF8C9152F049EE800AD8AEA /* BookingProgress.swift */,
+				9B36EE4E2EFF6824008EF51B /* ProviderProfileDetail.swift */,
+				9B36EE322EFE0CD3008EF51B /* ProviderServiceDTO.swift */,
 				9B3E99372EFADAEC002F9856 /* SetupIntentResponse.swift */,
 				9B3A13992EF1D75F006C92ED /* AuthSession.swift */,
 				9B3A139A2EF1D75F006C92ED /* Invoice.swift */,
@@ -552,6 +642,7 @@
 				9B2E90BE2EBCE36900D76311 /* Booking.swift */,
 				9B3A14D32EF60EDA006C92ED /* Product.swift */,
 				9B3A14D52EF60EDA006C92ED /* ProductCategory.swift */,
+				9B36ED312EFC9BC1008EF51B /* TaxesModels.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -568,17 +659,13 @@
 		9B306B5A2EC4B290003EB87F /* Dashboard */ = {
 			isa = PBXGroup;
 			children = (
+				9B36EE072EFDE130008EF51B /* Providers */,
 				9B3A14772EF44371006C92ED /* Company */,
 				9B3A14732EF4435E006C92ED /* customers */,
 				9B3A137F2EF1D711006C92ED /* Extensions */,
 				9B3A13802EF1D711006C92ED /* ProviderBookingCardView.swift */,
 				9B3A13822EF1D711006C92ED /* shapes */,
 				9B3A13882EF1D711006C92ED /* TabsDashboard */,
-				9BC33E7A2ECA9DD9008D44B8 /* ProviderDashboardHeaderView.swift */,
-				9BC33E722ECA9C38008D44B8 /* ProviderServiceCardView.swift */,
-				9B306B5D2EC4B296003EB87F /* DashboardView.swift */,
-				9B3A144D2EF411AD006C92ED /* DashboardEntryView.swift */,
-				9B3A14512EF411B7006C92ED /* ProviderDashboardViewModel 2.swift */,
 			);
 			path = Dashboard;
 			sourceTree = "<group>";
@@ -600,6 +687,35 @@
 				9B306D612EC764B2003EB87F /* CachedImage.swift */,
 			);
 			path = images;
+			sourceTree = "<group>";
+		};
+		9B36EE072EFDE130008EF51B /* Providers */ = {
+			isa = PBXGroup;
+			children = (
+				9BF8C9952F04C14C00AD8AEA /* PendingBookingsSheetView.swift */,
+				9BF8C94E2F04B09700AD8AEA /* ProviderAvailabilityView.swift */,
+				9BF8C94F2F04B09700AD8AEA /* ProviderStatsView.swift */,
+				9BF8C9502F04B09700AD8AEA /* ProviderStripeView.swift */,
+				9B36EE1B2EFDF2CF008EF51B /* Components */,
+				9B36EE162EFDEEE8008EF51B /* ProviderCreateServiceView.swift */,
+				9B36EE0F2EFDE16D008EF51B /* ProviderCreateServiceViewModel.swift */,
+				9B306B5D2EC4B296003EB87F /* DashboardView.swift */,
+				9B3A14512EF411B7006C92ED /* ProviderDashboardViewModel 2.swift */,
+				9BC33E7A2ECA9DD9008D44B8 /* ProviderDashboardHeaderView.swift */,
+				9BC33E722ECA9C38008D44B8 /* ProviderServiceCardView.swift */,
+				9B3A144D2EF411AD006C92ED /* DashboardEntryView.swift */,
+				9BF8C95C2F04B30800AD8AEA /* SafariView.swift */,
+			);
+			path = Providers;
+			sourceTree = "<group>";
+		};
+		9B36EE1B2EFDF2CF008EF51B /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				9B36EE212EFDF362008EF51B /* WrapStack.swift */,
+				9B36EE1D2EFDF2D6008EF51B /* Chip.swift */,
+			);
+			path = Components;
 			sourceTree = "<group>";
 		};
 		9B3A13642EF1D6B7006C92ED /* Components */ = {
@@ -784,6 +900,8 @@
 		9B9DA2462EBEBE90006BB3C1 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				9BF8C9812F04BB3300AD8AEA /* Shop */,
+				9BF8C8F72F04916500AD8AEA /* Transactions */,
 				9B306B5A2EC4B290003EB87F /* Dashboard */,
 				9B9DA4622EC2E009006BB3C1 /* Login */,
 				9B9DA38B2EC1605D006BB3C1 /* Signup */,
@@ -840,7 +958,14 @@
 		9B9DA2532EBEC00B006BB3C1 /* Bookings */ = {
 			isa = PBXGroup;
 			children = (
+				9BF8C9072F049EA400AD8AEA /* BookingDetailView.swift */,
+				9BF8C9082F049EA400AD8AEA /* BookingDetailViewModel.swift */,
+				9BF8C9092F049EA400AD8AEA /* ServiceProgressTrackingCustomerView.swift */,
+				9BF8C90A2F049EA400AD8AEA /* ServiceProgressTrackingCustomerViewModel.swift */,
+				9BF8C90B2F049EA400AD8AEA /* ServiceProgressTrackingProviderView.swift */,
+				9BF8C90C2F049EA400AD8AEA /* ServiceProgressTrackingProviderViewModel.swift */,
 				9B3A135C2EF1D69B006C92ED /* BookingCancelSheetView.swift */,
+				9BF8C8FB2F04922600AD8AEA /* BookingStatusBadge.swift */,
 				9B3A135D2EF1D69B006C92ED /* BookingManageView.swift */,
 				9B306CE52EC66DA5003EB87F /* BookingCardView.swift */,
 				9B9DA28F2EBEC106006BB3C1 /* BookingsViewModel.swift */,
@@ -853,12 +978,17 @@
 		9B9DA2562EBEC014006BB3C1 /* Profile */ = {
 			isa = PBXGroup;
 			children = (
+				9BF8C92B2F04A3EB00AD8AEA /* EditProfile */,
 				9B3A13642EF1D6B7006C92ED /* Components */,
 				9B3A13682EF1D6B7006C92ED /* Pages */,
 				9B3A13692EF1D6B7006C92ED /* PaymentSettingsViewModel.swift */,
 				9BC33E2E2EC7F93B008D44B8 /* Components */,
 				9B9DA2992EBEC11E006BB3C1 /* ProfileViewModel.swift */,
 				9B9DA2942EBEC114006BB3C1 /* ProfileView.swift */,
+				9B36EE522EFF6848008EF51B /* ProfileDetailView.swift */,
+				9B36EE652F009ADC008EF51B /* ProfileDetailViewModel.swift */,
+				9B36EE702F00A646008EF51B /* EditProfileViewModel.swift */,
+				9B36EE742F00A64D008EF51B /* EditProfileView.swift */,
 			);
 			path = Profile;
 			sourceTree = "<group>";
@@ -941,6 +1071,39 @@
 				9BC33E322EC7F943008D44B8 /* ProfileSummaryCard.swift */,
 			);
 			path = Components;
+			sourceTree = "<group>";
+		};
+		9BF8C8F72F04916500AD8AEA /* Transactions */ = {
+			isa = PBXGroup;
+			children = (
+				9BF8C9002F04937700AD8AEA /* TransactionDetailViewModel.swift */,
+				9BF8C8F62F04916500AD8AEA /* TransactionDetailView.swift */,
+			);
+			path = Transactions;
+			sourceTree = "<group>";
+		};
+		9BF8C92B2F04A3EB00AD8AEA /* EditProfile */ = {
+			isa = PBXGroup;
+			children = (
+				9BF8C9272F04A3EB00AD8AEA /* EditProfileComponents.swift */,
+				9BF8C9282F04A3EB00AD8AEA /* EditProfileHeaderView.swift */,
+				9BF8C9292F04A3EB00AD8AEA /* EditProfileMetricsView.swift */,
+				9BF8C92A2F04A3EB00AD8AEA /* EditProfileSections.swift */,
+			);
+			path = EditProfile;
+			sourceTree = "<group>";
+		};
+		9BF8C9812F04BB3300AD8AEA /* Shop */ = {
+			isa = PBXGroup;
+			children = (
+				9BF8C97B2F04BB3300AD8AEA /* CartView.swift */,
+				9BF8C97C2F04BB3300AD8AEA /* CheckoutView.swift */,
+				9BF8C97D2F04BB3300AD8AEA /* CustomerShopView.swift */,
+				9BF8C97E2F04BB3300AD8AEA /* CustomerShopViewModel.swift */,
+				9BF8C97F2F04BB3300AD8AEA /* OrderHistoryView.swift */,
+				9BF8C9802F04BB3300AD8AEA /* ProductDetailView.swift */,
+			);
+			path = Shop;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -1137,12 +1300,19 @@
 				9B9DA3B22EC16F50006BB3C1 /* SignupFormView.swift in Sources */,
 				9B9DA2F52EBF7726006BB3C1 /* ButtonsStyles.swift in Sources */,
 				9B9DA2D02EBED531006BB3C1 /* OfferFilterSheet.swift in Sources */,
+				9B36EE662F009ADC008EF51B /* ProfileDetailViewModel.swift in Sources */,
 				9B3A13892EF1D711006C92ED /* StatsPlaceholder.swift in Sources */,
 				9B3A138A2EF1D711006C92ED /* Extensions.swift in Sources */,
 				9B3A138B2EF1D711006C92ED /* ReviewsSummaryCardView.swift in Sources */,
 				9B3A138C2EF1D711006C92ED /* HeaderBackgroundShape.swift in Sources */,
 				9B3A138D2EF1D711006C92ED /* DashboardCalendarSection.swift in Sources */,
 				9B3A138E2EF1D711006C92ED /* ProviderReviewsViewModel.swift in Sources */,
+				9BF8C90D2F049EA400AD8AEA /* BookingDetailView.swift in Sources */,
+				9BF8C90E2F049EA400AD8AEA /* BookingDetailViewModel.swift in Sources */,
+				9BF8C90F2F049EA400AD8AEA /* ServiceProgressTrackingCustomerViewModel.swift in Sources */,
+				9BF8C9102F049EA400AD8AEA /* ServiceProgressTrackingProviderView.swift in Sources */,
+				9BF8C9112F049EA400AD8AEA /* ServiceProgressTrackingCustomerView.swift in Sources */,
+				9BF8C9122F049EA400AD8AEA /* ServiceProgressTrackingProviderViewModel.swift in Sources */,
 				9B3A138F2EF1D711006C92ED /* ProviderBookingCardView.swift in Sources */,
 				9B3A13902EF1D711006C92ED /* ReviewsPlaceholder.swift in Sources */,
 				9B9DA3962EC160FB006BB3C1 /* SignupViewModel.swift in Sources */,
@@ -1166,15 +1336,18 @@
 				9B9DA32B2EC03DE8006BB3C1 /* OnboardingPageView.swift in Sources */,
 				9B9DA25F2EBEC067006BB3C1 /* MainTabView.swift in Sources */,
 				9B9DA31A2EC03740006BB3C1 /* OnboardingView.swift .swift in Sources */,
+				9BF8C8F82F04916500AD8AEA /* TransactionDetailView.swift in Sources */,
 				9BC33E342EC7F947008D44B8 /* ProfileSummaryCard.swift in Sources */,
 				9B2E90FA2EBD7AD400D76311 /* Detailer.swift in Sources */,
 				9B3A13F42EF30567006C92ED /* ProviderDetailView.swift in Sources */,
 				9B3A13F52EF30567006C92ED /* DetailingFilter.swift in Sources */,
+				9BF8C9162F049EE800AD8AEA /* BookingProgress.swift in Sources */,
 				9B3A13F62EF30567006C92ED /* StripeManager.swift in Sources */,
 				9B3A13F72EF30567006C92ED /* ServiceCardsView.swift in Sources */,
 				9B3A144E2EF411AD006C92ED /* DashboardEntryView.swift in Sources */,
 				9B3A13F82EF30567006C92ED /* DetailerActionButton.swift in Sources */,
 				9B3A13F92EF30567006C92ED /* ExtensionServiceCardStep2.swift in Sources */,
+				9BF8C9012F04937700AD8AEA /* TransactionDetailViewModel.swift in Sources */,
 				9B3A14612EF41603006C92ED /* CustomerDashboardView.swift in Sources */,
 				9B3A13FA2EF30567006C92ED /* HomeAllProvidersSection.swift in Sources */,
 				9B3A13FB2EF30567006C92ED /* PaymentSection.swift in Sources */,
@@ -1184,6 +1357,9 @@
 				9B3A13FE2EF30567006C92ED /* UserInput.swift in Sources */,
 				9B3A13FF2EF30567006C92ED /* HomeHeroSection.swift in Sources */,
 				9B3A14002EF30567006C92ED /* PriceDown+Texte.swift in Sources */,
+				9B36EE102EFDE171008EF51B /* ProviderCreateServiceViewModel.swift in Sources */,
+				9B36EE4F2EFF6824008EF51B /* ProviderProfileDetail.swift in Sources */,
+				9B36EE752F00A64D008EF51B /* EditProfileView.swift in Sources */,
 				9B3A14012EF30567006C92ED /* UiApplication.swift in Sources */,
 				9B3A14022EF30567006C92ED /* recapSection.swift in Sources */,
 				9B3A14032EF30567006C92ED /* PromoCodeSection.swift in Sources */,
@@ -1194,22 +1370,34 @@
 				9B3A14082EF30567006C92ED /* BookingStep1View.swift in Sources */,
 				9B3A14092EF30567006C92ED /* ConfirmButton.swift in Sources */,
 				9B3A140A2EF30567006C92ED /* PaymentResult.swift in Sources */,
+				9B36EE532EFF6848008EF51B /* ProfileDetailView.swift in Sources */,
 				9B3A140B2EF30567006C92ED /* ProviderDetailViewModel.swift in Sources */,
 				9B3A140C2EF30567006C92ED /* notesSection.swift in Sources */,
 				9B3A140D2EF30567006C92ED /* CustomBackButton.swift in Sources */,
+				9B36ED3A2EFC9C85008EF51B /* NetworkClient+DownloadProgress.swift in Sources */,
 				9B3A140E2EF30567006C92ED /* startPaymentFlow.swift in Sources */,
+				9B36EE182EFDEEF1008EF51B /* ProviderCreateServiceView.swift in Sources */,
+				9B36EE332EFE0CD3008EF51B /* ProviderServiceDTO.swift in Sources */,
+				9B36ED322EFC9BC1008EF51B /* TaxesModels.swift in Sources */,
 				9B3A140F2EF30567006C92ED /* StripeAuth.swift in Sources */,
 				9B3A14102EF30567006C92ED /* HomeNearbySection.swift in Sources */,
 				9B3A14112EF30567006C92ED /* BookingStep2View.swift in Sources */,
 				9B3A14122EF30567006C92ED /* UserInfoSection.swift in Sources */,
 				9B3A14132EF30567006C92ED /* PaymentCashOrCard.swift in Sources */,
 				9B9DA29F2EBEC12C006BB3C1 /* LoadingView.swift in Sources */,
+				9BF8C9822F04BB3300AD8AEA /* CartView.swift in Sources */,
+				9BF8C9832F04BB3300AD8AEA /* CustomerShopView.swift in Sources */,
+				9BF8C9842F04BB3300AD8AEA /* CheckoutView.swift in Sources */,
+				9BF8C9852F04BB3300AD8AEA /* OrderHistoryView.swift in Sources */,
+				9BF8C9862F04BB3300AD8AEA /* CustomerShopViewModel.swift in Sources */,
+				9BF8C9872F04BB3300AD8AEA /* ProductDetailView.swift in Sources */,
 				9BC33E742ECA9C46008D44B8 /* ProviderServiceCardView.swift in Sources */,
 				9B9DA4672EC2E01A006BB3C1 /* LoginView.swift in Sources */,
 				9B2E8FE62EBC258900D76311 /* APIEndpoints.swift in Sources */,
 				9B9DA3912EC1607D006BB3C1 /* SignupRoleSelectionView.swift in Sources */,
 				9B2E90C02EBCE36F00D76311 /* Booking.swift in Sources */,
 				9B9DA4752EC2E88D006BB3C1 /* EmailLoginView.swift in Sources */,
+				9BF8C9982F04C14C00AD8AEA /* PendingBookingsSheetView.swift in Sources */,
 				9B3A136A2EF1D6B7006C92ED /* TaxesView.swift in Sources */,
 				9B3A148B2EF44A18006C92ED /* CompanyDashboardViewModel.swift in Sources */,
 				9B3A136B2EF1D6B7006C92ED /* PaymentSettingsViewModel.swift in Sources */,
@@ -1229,17 +1417,27 @@
 				9B2E910D2EBD818C00D76311 /* Review.swift in Sources */,
 				9B9DA2912EBEC108006BB3C1 /* BookingsViewModel.swift in Sources */,
 				9B9DA23F2EBEADFF006BB3C1 /* StorageManager.swift in Sources */,
+				9BF8C9762F04BADF00AD8AEA /* CartItem.swift in Sources */,
+				9BF8C9772F04BADF00AD8AEA /* BookingProgress.swift in Sources */,
+				9BF8C9782F04BADF00AD8AEA /* Order.swift in Sources */,
 				9B3A13A82EF1D78E006C92ED /* NetworkClientProtocol.swift in Sources */,
 				9B9DA2702EBEC09C006BB3C1 /* HomeViewModel.swift in Sources */,
 				9B2E91052EBD7E4B00D76311 /* DetailerStats.swift in Sources */,
 				9B9DA3BD2EC173C1006BB3C1 /* RootView.swift in Sources */,
 				9B2E8FDD2EBAD30100D76311 /* String+Extension.swift in Sources */,
+				9BF8C92C2F04A3EB00AD8AEA /* EditProfileSections.swift in Sources */,
+				9BF8C92D2F04A3EB00AD8AEA /* EditProfileHeaderView.swift in Sources */,
+				9BF8C92E2F04A3EB00AD8AEA /* EditProfileComponents.swift in Sources */,
+				9BF8C92F2F04A3EB00AD8AEA /* EditProfileMetricsView.swift in Sources */,
 				9B3A13732EF1D6D1006C92ED /* MapSearchViewModel.swift in Sources */,
 				9B3A13742EF1D6D1006C92ED /* MapSearchView.swift in Sources */,
 				9B9DA2832EBEC0E2006BB3C1 /* OffersView.swift in Sources */,
 				9B2E90E92EBD654600D76311 /* ApplicationOffer.swift in Sources */,
 				9B9DA3252EC037A4006BB3C1 /* OnboardingViewModel.swift in Sources */,
 				9B2E90CD2EBD57B200D76311 /* City.swift in Sources */,
+				9BF8C9512F04B09700AD8AEA /* ProviderStatsView.swift in Sources */,
+				9BF8C9522F04B09700AD8AEA /* ProviderStripeView.swift in Sources */,
+				9BF8C9532F04B09700AD8AEA /* ProviderAvailabilityView.swift in Sources */,
 				9BC33E3D2EC7F9C8008D44B8 /* UserExtension.swift in Sources */,
 				9B9DA2642EBEC081006BB3C1 /* HomeView.swift in Sources */,
 				9B9DA28C2EBEC0FC006BB3C1 /* BookingsView.swift in Sources */,
@@ -1255,6 +1453,7 @@
 				9B2E8FD92EBACDF700D76311 /* AppStyle.swift in Sources */,
 				9B3A13962EF1D73B006C92ED /* TabBarVisibility.swift in Sources */,
 				9B9567982EF780A00067213D /* DownloadProgressManager.swift in Sources */,
+				9B36EE712F00A646008EF51B /* EditProfileViewModel.swift in Sources */,
 				9B3A13972EF1D73B006C92ED /* MainTabSelection.swift in Sources */,
 				9B95675B2EF77B220067213D /* LoadingOverlayView.swift in Sources */,
 				9B3E99392EFADAFE002F9856 /* SetupIntentResponse.swift in Sources */,
@@ -1268,13 +1467,16 @@
 				9B2E90F12EBD70C500D76311 /* CompanyType.swift in Sources */,
 				9B306CF62EC67465003EB87F /* BookingStatus+UI.swift in Sources */,
 				9B9DA2962EBEC116006BB3C1 /* ProfileView.swift in Sources */,
+				9B36EE1E2EFDF2D9008EF51B /* Chip.swift in Sources */,
 				9B306CE72EC66DAB003EB87F /* BookingCardView.swift in Sources */,
 				9B9DA29B2EBEC121006BB3C1 /* ProfileViewModel.swift in Sources */,
+				9B36ED352EFC9BC5008EF51B /* NetworkClient+Absolute.swift in Sources */,
 				9B2E8FEF2EBC25AC00D76311 /* NetworkClient.swift in Sources */,
 				9B2E8FAF2EBA562200D76311 /* ContentView.swift in Sources */,
 				9B9DA2A32EBEC138006BB3C1 /* EmptyStateView.swift in Sources */,
 				9B306CEE2EC6708D003EB87F /* DateFormatter.swift in Sources */,
 				9B3A149C2EF44CE5006C92ED /* OfferDetailView.swift in Sources */,
+				9BF8C95D2F04B30800AD8AEA /* SafariView.swift in Sources */,
 				9B9DA2792EBEC0C2006BB3C1 /* SearchView.swift in Sources */,
 				9B306B5F2EC4B29C003EB87F /* DashboardView.swift in Sources */,
 				9B2E90852EBCDDFD00D76311 /* Engine.swift in Sources */,
@@ -1283,6 +1485,8 @@
 				9B2E90D62EBD5C9A00D76311 /* Offer.swift in Sources */,
 				9B9DA3B62EC16F9D006BB3C1 /* CustomInputField.swift in Sources */,
 				9B2E8FEA2EBC259C00D76311 /* APIErrors.swift in Sources */,
+				9BF8C8FC2F04922600AD8AEA /* BookingStatusBadge.swift in Sources */,
+				9B36EE232EFDF369008EF51B /* WrapStack.swift in Sources */,
 				9B9567562EF77AD20067213D /* LoadingOverlayManager.swift in Sources */,
 				9B9DA2B92EBEC17B006BB3C1 /* OfferCard.swift in Sources */,
 				9B9567D92EF9FF5B0067213D /* TransactionRow.swift in Sources */,
