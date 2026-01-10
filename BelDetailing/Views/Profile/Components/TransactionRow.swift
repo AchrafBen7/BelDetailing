@@ -1,4 +1,13 @@
+//
+//  TransactionRow.swift
+//  BelDetailing
+//
+//  Created by Achraf Benali on 22/12/2025.
+//
+
 import SwiftUI
+import UIKit
+import StripePaymentSheet
 
 struct TransactionRow: View {
     let transaction: PaymentTransaction
@@ -89,7 +98,6 @@ struct TransactionRow: View {
     }
 
     private var formattedAmount: String {
-        // signe simple: refund négatif, sinon positif
         let sign = transaction.type.lowercased() == "refund" ? "-" : "+"
         let amountStr = String(format: "%.2f", transaction.amount)
         return "\(sign)\(amountStr) \(transaction.currency.uppercased())"
@@ -119,4 +127,35 @@ struct TransactionRow: View {
         default: return .gray
         }
     }
+}
+
+// MARK: - PaymentSheetHost Component
+
+struct PaymentSheetHost: UIViewControllerRepresentable {
+    @Binding var isPresented: Bool
+    let paymentSheet: PaymentSheet
+    let onResult: (PaymentSheetResult) -> Void
+    
+    func makeUIViewController(context: Context) -> PaymentSheetHostViewController {
+        PaymentSheetHostViewController()
+    }
+    
+    func updateUIViewController(_ uiViewController: PaymentSheetHostViewController, context: Context) {
+        if isPresented && !uiViewController.hasPresented {
+            DispatchQueue.main.async {
+                uiViewController.hasPresented = true
+                paymentSheet.present(from: uiViewController) { result in
+                    uiViewController.hasPresented = false
+                    isPresented = false
+                    onResult(result)
+                }
+            }
+        } else if !isPresented {
+            uiViewController.hasPresented = false
+        }
+    }
+}
+
+class PaymentSheetHostViewController: UIViewController {
+    var hasPresented = false
 }

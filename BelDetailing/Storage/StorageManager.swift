@@ -47,7 +47,20 @@ final class StorageManager {
 
     // MARK: - USER
 
-    func saveUser(_ user: User?) { save(user, forKey: .userProfile) }
+    func saveUser(_ user: User?) {
+        save(user, forKey: .userProfile)
+        
+        // Configurer Firebase avec les infos utilisateur
+        if let user = user {
+            FirebaseManager.shared.setUser(userId: user.id, email: user.email)
+            FirebaseManager.shared.setUserId(user.id)
+            FirebaseManager.shared.setUserProperty(value: user.role.rawValue, forName: "user_role")
+        } else {
+            // Déconnexion : réinitialiser Firebase
+            FirebaseManager.shared.setUser(userId: "", email: nil)
+            FirebaseManager.shared.setUserId(nil)
+        }
+    }
     func getUser() -> User? { get(User.self, forKey: .userProfile) }
 
     func saveUserRole(_ role: UserRole?) { saveString(role?.rawValue, forKey: .userRole) }

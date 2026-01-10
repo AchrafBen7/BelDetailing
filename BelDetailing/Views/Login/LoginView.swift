@@ -4,46 +4,9 @@
 //
 //  Created by Achraf Benali on 11/11/2025.
 //
-//
-//  LoginView.swift
-//  BelDetailing
-//
-//  Created by Achraf Benali on 11/11/2025.
-//
 
 import SwiftUI
 import RswiftResources
-
-// MARK: - Pill Button
-struct PillLoginButton: View {
-  enum Kind { case filledBlack, outlineLight }
-
-  let kind: Kind
-  let icon: String
-  let title: String
-  var action: () -> Void
-
-  var body: some View {
-    Button(action: action) {
-      HStack(spacing: 10) {
-        Image(systemName: icon)
-          .font(.system(size: 19, weight: .medium))
-        Text(title)
-          .font(.system(size: 17, weight: .semibold))
-      }
-      .frame(maxWidth: .infinity, minHeight: 60)
-      .foregroundColor(kind == .filledBlack ? .white : .black)
-      .background(kind == .filledBlack ? Color.black : Color.white)
-      .overlay(
-        RoundedRectangle(cornerRadius: 30)
-          .stroke(kind == .outlineLight ? Color.gray.opacity(0.4) : .clear, lineWidth: 1)
-      )
-      .clipShape(RoundedRectangle(cornerRadius: 30, style: .continuous))
-      .shadow(color: .black.opacity(0.06), radius: 5, y: 3)
-    }
-    .buttonStyle(.plain)
-  }
-}
 
 // MARK: - Login View
 struct LoginView: View {
@@ -53,139 +16,188 @@ struct LoginView: View {
   var onEmail: () -> Void = {}
   var onShowTerms: () -> Void = {}
   var onShowPrivacy: () -> Void = {}
+  var onSignup: () -> Void = {}
 
   var body: some View {
-    ScrollView(showsIndicators: false) {
-      // 👇 Aligne tout le contenu sur la gauche
-      VStack(alignment: .leading, spacing: 28) {
-
-        // MARK: - ← Retour (localizable) en haut à gauche
-        Button(action: onBack) {
-          HStack(spacing: 6) {
-            Image(systemName: "chevron.left")
-              .font(.system(size: 17, weight: .semibold))
-            Text(R.string.localizable.commonBack())   // "Retour" / "Back" / "Terug"
-              .font(.system(size: 17))
+    ZStack {
+      // MARK: - Fullscreen Background Image
+      GeometryReader { geometry in
+        Image("launchImage")
+          .resizable()
+          .scaledToFill()
+          .frame(width: geometry.size.width, height: geometry.size.height)
+          .clipped()
+          .overlay(
+            // Dark overlay
+            Color.black.opacity(0.65)
+          )
+      }
+      .ignoresSafeArea()
+      
+      // MARK: - Content
+      VStack(spacing: 0) {
+        // Top back button
+        HStack {
+          Button(action: onBack) {
+            ZStack {
+              Circle()
+                .fill(Color.gray.opacity(0.4))
+                .frame(width: 40, height: 40)
+              
+              Image(systemName: "arrow.left")
+                .font(.system(size: 16, weight: .semibold))
+                .foregroundColor(.white)
+            }
           }
-          .foregroundColor(.gray)
+          Spacer()
         }
-        // 👇 Force l’ancrage à gauche de la frame
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(.horizontal, 24)
-        .padding(.top, 8)
-
-        // MARK: - Header icons
-        HStack(spacing: 32) {
-          RoundedRectangle(cornerRadius: 16)
-            .stroke(Color.gray.opacity(0.4), lineWidth: 2)
-            .frame(width: 72, height: 72)
-            .overlay(
-              Image(systemName: "car")
-                .font(.system(size: 28))
-                .foregroundColor(.gray)
-            )
-
-          RoundedRectangle(cornerRadius: 16)
-            .fill(Color.white)
-            .shadow(color: .black.opacity(0.08), radius: 8, y: 4)
-            .frame(width: 72, height: 72)
-            .overlay(
-              Image(systemName: "sparkles")
-                .font(.system(size: 30, weight: .semibold))
-                .foregroundColor(.black)
-            )
-
-          RoundedRectangle(cornerRadius: 16)
-            .stroke(Color.gray.opacity(0.4), lineWidth: 2)
-            .frame(width: 72, height: 72)
-            .overlay(
-              Image(systemName: "shield")
-                .font(.system(size: 28))
-                .foregroundColor(.gray)
-            )
-        }
-        .frame(maxWidth: .infinity)
-        .padding(.top, 12)
-
-        // MARK: - Title + subtitle
-        VStack(spacing: 8) {
-          Text(R.string.localizable.loginTitle())
-            .font(.system(size: 30, weight: .heavy))
-            .multilineTextAlignment(.center)
-            .foregroundColor(.black)
-
-          Text(R.string.localizable.loginSubtitle())
-            .font(.system(size: 17))
-            .foregroundColor(.gray)
-            .multilineTextAlignment(.center)
-
-          Text(R.string.localizable.loginDevices())
-            .font(.system(size: 15, weight: .medium))
-            .foregroundColor(.gray)
-            .multilineTextAlignment(.center)
-        }
-        .padding(.horizontal, 24)
-
-          // MARK: - Buttons
+        .padding(.top, 60)
+        .padding(.horizontal, 20)
+        
+        Spacer()
+        
+        // MARK: - Translucent Card
+        VStack(spacing: 0) {
+          // Title & Subtitle
+          VStack(spacing: 12) {
+            Text(R.string.localizable.loginTitle())
+              .font(.system(size: 32, weight: .bold))
+              .foregroundColor(.white)
+              .multilineTextAlignment(.center)
+            
+            Text(R.string.localizable.loginSubtitleNew())
+              .font(.system(size: 16, weight: .regular))
+              .foregroundColor(.white.opacity(0.9))
+              .multilineTextAlignment(.center)
+          }
+          .padding(.top, 32)
+          .padding(.bottom, 28)
+          
+          // MARK: - Login Buttons
           VStack(spacing: 16) {
-            PillLoginButton(
-              kind: .outlineLight,
-              icon: "applelogo",
-              title: R.string.localizable.loginApple()
-            ) { onApple() }
-
-            PillLoginButton(
-              kind: .outlineLight,
-              icon: "g.circle.fill",
-              title: R.string.localizable.loginGoogle()
-            ) { onGoogle() }
-
-            // ⬇️ Séparateur "OR sign in with"
-            SeparatorChip(text: R.string.localizable.loginOrWithEmail())
-
-            PillLoginButton(
-              kind: .filledBlack,
-              icon: "envelope",
-              title: R.string.localizable.loginEmail()
-            ) { onEmail() }
+            // Apple Button
+            Button(action: onApple) {
+              HStack(spacing: 16) {
+                Image(systemName: "applelogo")
+                  .font(.system(size: 20, weight: .semibold))
+                  .foregroundColor(.black)
+                  .frame(width: 24)
+                Text(R.string.localizable.loginApple())
+                  .font(.system(size: 17, weight: .semibold))
+                  .foregroundColor(.black)
+              }
+              .frame(maxWidth: .infinity)
+              .padding(.horizontal, 28)
+              .padding(.vertical, 18)
+              .background(Color.white)
+              .clipShape(RoundedRectangle(cornerRadius: 18))
+            }
+            .buttonStyle(WelcomeButtonStyle())
+            
+            // Google Button
+            Button(action: onGoogle) {
+              HStack(spacing: 16) {
+                Image(systemName: "g.circle.fill")
+                  .font(.system(size: 20, weight: .medium))
+                  .foregroundColor(.white)
+                  .frame(width: 24)
+                Text(R.string.localizable.loginGoogle())
+                  .font(.system(size: 17, weight: .medium))
+                  .foregroundColor(.white)
+              }
+              .frame(maxWidth: .infinity)
+              .padding(.horizontal, 28)
+              .padding(.vertical, 18)
+              .background(Color.gray.opacity(0.4))
+              .clipShape(RoundedRectangle(cornerRadius: 18))
+            }
+            .buttonStyle(WelcomeButtonStyle())
+            
+            // Separator
+            Text("OR")
+              .font(.system(size: 14, weight: .medium))
+              .foregroundColor(.white.opacity(0.7))
+              .padding(.vertical, 12)
+            
+            // Email Button
+            Button(action: onEmail) {
+              HStack(spacing: 16) {
+                Image(systemName: "envelope")
+                  .font(.system(size: 20, weight: .medium))
+                  .foregroundColor(.white)
+                  .frame(width: 24)
+                Text(R.string.localizable.loginEmail())
+                  .font(.system(size: 17, weight: .medium))
+                  .foregroundColor(.white)
+              }
+              .frame(maxWidth: .infinity)
+              .padding(.horizontal, 28)
+              .padding(.vertical, 18)
+              .background(Color.gray.opacity(0.4))
+              .clipShape(RoundedRectangle(cornerRadius: 18))
+            }
+            .buttonStyle(WelcomeButtonStyle())
           }
           .padding(.horizontal, 24)
-          .padding(.top, 8)
-
-          // MARK: - Footer
+          .padding(.bottom, 24)
+          
+          // MARK: - Legal Text
           VStack(spacing: 6) {
             Text(R.string.localizable.loginFooterPrefix())
-              .font(.system(size: 14))
-              .foregroundColor(.gray)
+              .font(.system(size: 13, weight: .regular))
+              .foregroundColor(.white.opacity(0.7))
               .multilineTextAlignment(.center)
-              .frame(maxWidth: .infinity)
-
-            HStack(spacing: 6) {
+            
+            HStack(spacing: 4) {
               Button(action: onShowTerms) {
                 Text(R.string.localizable.loginFooterTos())
-                  .font(.system(size: 14, weight: .semibold))
+                  .font(.system(size: 13, weight: .semibold))
+                  .foregroundColor(.white)
                   .underline()
-                  .foregroundColor(.black)
               }
+              
               Text(R.string.localizable.loginFooterAnd())
-                .font(.system(size: 14))
-                .foregroundColor(.gray)
+                .font(.system(size: 13, weight: .regular))
+                .foregroundColor(.white.opacity(0.7))
+              
               Button(action: onShowPrivacy) {
                 Text(R.string.localizable.loginFooterPrivacy())
-                  .font(.system(size: 14, weight: .semibold))
+                  .font(.system(size: 13, weight: .semibold))
+                  .foregroundColor(.white)
                   .underline()
-                  .foregroundColor(.black)
               }
             }
-            .frame(maxWidth: .infinity, alignment: .center) // ⬅️ centre la ligne
           }
           .padding(.horizontal, 24)
-          .padding(.top, 8)
-          .padding(.bottom, 40)
-
+          .padding(.bottom, 32)
+        }
+        .padding(.horizontal, 20)
+        .background(
+          ZStack {
+            RoundedRectangle(cornerRadius: 24)
+              .fill(.ultraThinMaterial)
+            RoundedRectangle(cornerRadius: 24)
+              .fill(Color.black.opacity(0.4))
+          }
+        )
+        .padding(.horizontal, 20)
+        
+        Spacer()
+        
+        // MARK: - Signup Link
+        Button(action: onSignup) {
+          HStack(spacing: 4) {
+            Text(R.string.localizable.loginNoAccount())
+              .font(.system(size: 14, weight: .regular))
+              .foregroundColor(.white.opacity(0.8))
+            Text(R.string.localizable.authSignup())
+              .font(.system(size: 14, weight: .semibold))
+              .foregroundColor(.white)
+          }
+        }
+        .padding(.bottom, 50)
       }
     }
-    .background(Color.white.ignoresSafeArea())
     .navigationBarBackButtonHidden(true)
   }
 }

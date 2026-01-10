@@ -7,37 +7,48 @@ import RswiftResources
 struct OffersView: View {
     @StateObject private var vm: OffersViewModel
     @State private var showFilters = false
+    @State private var hasLoaded = false
+    @StateObject private var badgeManager = NotificationBadgeManager.shared
+
+    let engine: Engine
 
     init(engine: Engine) {
+        self.engine = engine
         _vm = StateObject(wrappedValue: OffersViewModel(engine: engine))
     }
 
     var body: some View {
-        NavigationStack {
-            VStack(alignment: .leading, spacing: 0) {
-                header
-                searchBar
-                statusChips        // ⬅️ barre Toutes / Ouvertes / Récentes
-                content
-            }
-            .background(Color.white)
-            .toolbar(.hidden, for: .navigationBar)
-            .sheet(isPresented: $showFilters) {
-                OfferFiltersSheet(
-                    selectedStatus: vm.selectedStatus,
-                    selectedType: vm.selectedType
-                ) { status, type in
-                    Task { await vm.refreshFilters(status: status, type: type) }
-                }
-            }
-            .alert(vm.errorText ?? "",
-                   isPresented: .constant(vm.errorText != nil)) {
-                Button(R.string.localizable.commonOk(), role: .cancel) {
-                    vm.errorText = nil
-                }
+        VStack(alignment: .leading, spacing: 0) {
+            header
+            searchBar
+            statusChips
+            content
+        }
+        .background(Color.white)
+        .toolbar(.hidden, for: .navigationBar)
+        .sheet(isPresented: $showFilters) {
+            OfferFiltersSheet(
+                selectedStatus: vm.selectedStatus,
+                selectedType: vm.selectedType
+            ) { status, type in
+                Task { await vm.refreshFilters(status: status, type: type) }
             }
         }
-        .task { await vm.load() }
+        .alert(vm.errorText ?? "",
+               isPresented: .constant(vm.errorText != nil)) {
+            Button(R.string.localizable.commonOk(), role: .cancel) {
+                vm.errorText = nil
+            }
+        }
+        .task {
+            // Ne charger qu'une seule fois au premier affichage
+            if !hasLoaded {
+                hasLoaded = true
+                await vm.load()
+            }
+            // Réinitialiser le badge quand l'utilisateur ouvre la page
+            badgeManager.resetOfferBadge()
+        }
     }
 }
 
@@ -45,7 +56,6 @@ struct OffersView: View {
 
 private extension OffersView {
 
-    // MARK: Header — titre + petite intro
     var header: some View {
         VStack(alignment: .leading, spacing: 6) {
           (  R.string.localizable.tabOffers() + ".")
@@ -58,18 +68,18 @@ private extension OffersView {
         }
         .padding(.horizontal, 20)
         .padding(.top, 8)
-        .padding(.bottom, 10)   // ⬅️ un peu plus d’espace sous la description
+        .padding(.bottom, 10)
     }
 
-    // MARK: Search Bar + Filter button
     var searchBar: some View {
         HStack(spacing: 12) {
             searchField
             filterButton
         }
         .padding(.horizontal, 16)
-        .padding(.top, 16)   // ⬅️ avant 10 → un peu plus d’air
+        .padding(.top, 16)
     }
+
     var searchField: some View {
         HStack(spacing: 8) {
             Image(systemName: "magnifyingglass")
@@ -116,30 +126,23 @@ private extension OffersView {
         .buttonStyle(.plain)
     }
 
-    // MARK: Chips: Toutes / Ouvertes / Récentes
     var statusChips: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: 12) {
                 chip(
                     title: R.string.localizable.filterAll(),
                     isSelected: vm.selectedQuickFilter == .all
-                ) {
-                    vm.applyQuickFilter(.all)
-                }
+                ) { vm.applyQuickFilter(.all) }
 
                 chip(
                     title: R.string.localizable.filterOpen(),
                     isSelected: vm.selectedQuickFilter == .open
-                ) {
-                    vm.applyQuickFilter(.open)
-                }
+                ) { vm.applyQuickFilter(.open) }
 
                 chip(
                     title: R.string.localizable.filterRecent(),
                     isSelected: vm.selectedQuickFilter == .recent
-                ) {
-                    vm.applyQuickFilter(.recent)
-                }
+                ) { vm.applyQuickFilter(.recent) }
             }
             .padding(.horizontal, 16)
             .padding(.vertical, 8)
@@ -164,26 +167,40 @@ private extension OffersView {
         .buttonStyle(.plain)
     }
 
-    // MARK: Content
+    // MARK: - Content
     @ViewBuilder
     var content: some View {
         if vm.isLoading {
-            LoadingView()
+            SkeletonLoadingView(itemCount: 3)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+        } else if let errorText = vm.errorText {
+            ErrorStateView.networkError {
+                Task {
+                    await vm.load()
+                }
+            }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
         } else if vm.offers.isEmpty {
             EmptyStateView(
                 title: R.string.localizable.offersEmptyTitle(),
-                message: R.string.localizable.offersEmptyMessage()
+                message: R.string.localizable.offersEmptyMessage(),
+                systemIcon: "briefcase"
             )
             .frame(maxWidth: .infinity, maxHeight: .infinity)
         } else {
             ScrollView(showsIndicators: false) {
                 LazyVStack(spacing: 16) {
                     ForEach(vm.offers) { offer in
-                        OfferCard(offer: offer)
+                        NavigationLink {
+                            OfferDetailView(engine: engine, offerId: offer.id)
+                        } label: {
+                            OfferCard(offer: offer)
+                        }
+                        .buttonStyle(.plain)
                     }
                 }
                 .padding(.horizontal, 16)
-                .padding(.top, 8)
+                .padding(.top, 16)
                 .padding(.bottom, 24)
             }
         }

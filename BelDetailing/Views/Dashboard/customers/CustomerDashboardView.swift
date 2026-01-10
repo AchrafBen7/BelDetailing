@@ -1,13 +1,13 @@
 import SwiftUI
 import Combine
 import RswiftResources
-import SafariServices
 
 struct CustomerDashboardView: View {
     let engine: Engine
     @StateObject private var vm: CustomerDashboardViewModel
 
-    @State private var safariURL: URL?
+    @State private var cartItems: [CartItem] = []
+    @State private var selectedProduct: Product?
 
     init(engine: Engine) {
         self.engine = engine
@@ -31,11 +31,12 @@ struct CustomerDashboardView: View {
             .toolbarTitleDisplayMode(.inline)
         }
         .task { await vm.load() }
-        .sheet(isPresented: .constant(safariURL != nil), onDismiss: { safariURL = nil }) {
-            if let url = safariURL {
-                SafariView(url: url)
-                    .ignoresSafeArea()
-            }
+        .sheet(item: $selectedProduct) { product in
+            ProductDetailView(
+                product: product,
+                engine: engine,
+                cartItems: $cartItems
+            )
         }
     }
 
@@ -170,26 +171,14 @@ struct CustomerDashboardView: View {
         }
     }
 
-    // MARK: - Tap produit → tracking + ouverture lien affilié
+    // MARK: - Tap produit → tracking + navigation vers ProductDetailView
     private func handleProductTap(_ product: Product) {
         Task {
             await vm.trackProductClick(product.id)
-            if let url = product.affiliateURL {
-                await MainActor.run {
-                    safariURL = url
-                }
+            await MainActor.run {
+                selectedProduct = product
             }
         }
-    }
-}
-
-// MARK: - UI helpers (existants)
-private struct SectionHeader: View {
-    let title: String
-    var body: some View {
-        Text(title)
-            .font(.system(size: 20, weight: .semibold))
-            .foregroundColor(Color(R.color.primaryText))
     }
 }
 

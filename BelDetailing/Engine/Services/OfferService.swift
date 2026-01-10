@@ -22,7 +22,8 @@ final class OfferServiceNetwork: OfferService {
     init(networkClient: NetworkClient) { self.networkClient = networkClient }
 
     func getOffers(status: OfferStatus? = nil, type: OfferType? = nil) async -> APIResponse<[Offer]> {
-        await networkClient.call(
+        // Les listes peuvent être enveloppées { data: [...] } selon le backend.
+        let response: APIResponse<[Offer]> = await networkClient.call(
             endPoint: .offersList,
             urlDict: [
                 "status": status?.rawValue,
@@ -30,17 +31,39 @@ final class OfferServiceNetwork: OfferService {
             ],
             wrappedInData: true
         )
+        
+        if case .failure(let error) = response,
+           case .decodingError = error {
+            return await networkClient.call(
+                endPoint: .offersList,
+                urlDict: [
+                    "status": status?.rawValue,
+                    "type": type?.rawValue
+                ],
+                wrappedInData: false
+            )
+        }
+        return response
     }
 
     func getOfferDetail(id: String) async -> APIResponse<Offer> {
-        await networkClient.call(
+        // L’endpoint /offers/{id} renvoie un objet brut (pas de { "data": ... }).
+        // On évite le premier essai wrappedInData pour supprimer l’erreur inutile.
+        print("🔄 [OfferService] getOfferDetail(id: \(id)) (raw object expected)")
+        let response: APIResponse<Offer> = await networkClient.call(
             endPoint: .offerDetail(id: id),
-            wrappedInData: true
+            wrappedInData: false
         )
+        switch response {
+        case .success:
+            print("✅ [OfferService] Successfully decoded offer (raw)")
+        case .failure(let error):
+            print("❌ [OfferService] Failed to decode offer (raw): \(error)")
+        }
+        return response
     }
 
     func createOffer(_ data: [String: Any]) async -> APIResponse<Offer> {
-        // data verwacht o.a.: title, category, description, vehicleCount, priceMin, priceMax, city, postalCode, type, attachments[]
         await networkClient.call(
             endPoint: .offerCreate,
             dict: data,

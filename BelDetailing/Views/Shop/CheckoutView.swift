@@ -24,6 +24,7 @@ struct CheckoutView: View {
     @State private var postalCode = ""
     @State private var country = "Belgium"
     @State private var phone = ""
+    @State private var confirmedOrder: Order?
     
     init(engine: Engine, cartItems: [CartItem], onOrderPlaced: @escaping () -> Void) {
         self.engine = engine
@@ -51,23 +52,49 @@ struct CheckoutView: View {
                 Color(.systemGroupedBackground)
                     .ignoresSafeArea()
                 
-                ScrollView(showsIndicators: false) {
-                    VStack(spacing: 20) {
-                        // Order summary
-                        orderSummarySection
-                        
-                        // Shipping address form
-                        shippingAddressSection
-                        
-                        // Total
-                        totalSection
-                        
-                        // Pay button
-                        payButton
+                if let order = confirmedOrder {
+                    // Order Confirmation View
+                    OrderConfirmationView(
+                        order: order,
+                        onDismiss: {
+                            confirmedOrder = nil
+                            onOrderPlaced()
+                            dismiss()
+                        }
+                    )
+                } else if viewModel.showError, let errorMessage = viewModel.errorMessage {
+                    // Error State View
+                    ScrollView {
+                        ErrorStateView.paymentFailed(
+                            onRetry: {
+                                viewModel.showError = false
+                                viewModel.errorMessage = nil
+                            },
+                            onCancel: {
+                                dismiss()
+                            }
+                        )
+                        .padding(.top, 60)
                     }
-                    .padding(.horizontal, 20)
-                    .padding(.top, 20)
-                    .padding(.bottom, 40)
+                } else {
+                    ScrollView(showsIndicators: false) {
+                        VStack(spacing: 20) {
+                            // Order summary
+                            orderSummarySection
+                            
+                            // Shipping address form
+                            shippingAddressSection
+                            
+                            // Total
+                            totalSection
+                            
+                            // Pay button
+                            payButton
+                        }
+                        .padding(.horizontal, 20)
+                        .padding(.top, 20)
+                        .padding(.bottom, 40)
+                    }
                 }
             }
             .navigationTitle(R.string.localizable.shopCheckout())
@@ -82,11 +109,6 @@ struct CheckoutView: View {
                             .font(.system(size: 16, weight: .semibold))
                     }
                 }
-            }
-            .alert(R.string.localizable.shopOrderError(), isPresented: $viewModel.showError) {
-                Button(R.string.localizable.commonOk()) {}
-            } message: {
-                Text(viewModel.errorMessage ?? "")
             }
         }
     }
@@ -156,26 +178,26 @@ struct CheckoutView: View {
             VStack(spacing: 16) {
                 HStack(spacing: 12) {
                     TextField(R.string.localizable.shopFirstName(), text: $firstName)
-                        .textFieldStyle(ShopTextFieldStyle())
+                        .shopTextFieldStyle()
                     
                     TextField(R.string.localizable.shopLastName(), text: $lastName)
-                        .textFieldStyle(ShopTextFieldStyle())
+                        .shopTextFieldStyle()
                 }
                 
                 TextField(R.string.localizable.shopStreet(), text: $street)
-                    .textFieldStyle(ShopTextFieldStyle())
+                    .shopTextFieldStyle()
                 
                 HStack(spacing: 12) {
                     TextField(R.string.localizable.shopCity(), text: $city)
-                        .textFieldStyle(ShopTextFieldStyle())
+                        .shopTextFieldStyle()
                     
                     TextField(R.string.localizable.shopPostalCode(), text: $postalCode)
-                        .textFieldStyle(ShopTextFieldStyle())
+                        .shopTextFieldStyle()
                         .keyboardType(.numberPad)
                 }
                 
                 TextField(R.string.localizable.shopPhone(), text: $phone)
-                    .textFieldStyle(ShopTextFieldStyle())
+                    .shopTextFieldStyle()
                     .keyboardType(.phonePad)
             }
         }
@@ -227,8 +249,8 @@ struct CheckoutView: View {
         } label: {
             HStack {
                 if viewModel.isProcessing {
-                    ProgressView()
-                        .tint(.white)
+                    InlineLoadingView()
+                        .foregroundColor(.white)
                 } else {
                     Text(R.string.localizable.shopPayNow())
                         .font(.system(size: 18, weight: .semibold))
@@ -269,26 +291,18 @@ struct CheckoutView: View {
             shippingAddress: shippingAddress
         )
         
-        await viewModel.createOrderAndPay(request: request) { success in
-            if success {
-                onOrderPlaced()
+        await viewModel.createOrderAndPay(request: request) { order in
+            if let order = order {
+                confirmedOrder = order
             }
         }
     }
 }
 
 // MARK: - Text Field Style
-private struct ShopTextFieldStyle: TextFieldStyle {
-    // Legacy requirement for broad SwiftUI toolchain support
-    // swiftlint:disable identifier_name
-    func _body(configuration: TextField<Self._Label>) -> some View {
-        styled(configuration)
-    }
-    // swiftlint:enable identifier_name
-
-    // Instance helper to avoid static/instance mismatches
-    private func styled<V: View>(_ configuration: V) -> some View {
-        configuration
+private struct ShopTextFieldStyle: ViewModifier {
+    func body(content: Content) -> some View {
+        content
             .padding(16)
             .background(Color(.secondarySystemBackground))
             .foregroundColor(.primary)
@@ -297,6 +311,12 @@ private struct ShopTextFieldStyle: TextFieldStyle {
                 RoundedRectangle(cornerRadius: 12)
                     .stroke(Color(.separator), lineWidth: 0.5)
             )
+    }
+}
+
+extension View {
+    func shopTextFieldStyle() -> some View {
+        modifier(ShopTextFieldStyle())
     }
 }
 
@@ -313,7 +333,7 @@ final class CheckoutViewModel: ObservableObject {
         self.engine = engine
     }
     
-    func createOrderAndPay(request: CreateOrderRequest, completion: @escaping (Bool) -> Void) async {
+    func createOrderAndPay(request: CreateOrderRequest, completion: @escaping (Order?) -> Void) async {
         isProcessing = true
         defer { isProcessing = false }
         
@@ -323,7 +343,7 @@ final class CheckoutViewModel: ObservableObject {
         guard case .success(let response) = orderResult else {
             errorMessage = R.string.localizable.shopOrderCreateError()
             showError = true
-            completion(false)
+            completion(nil)
             return
         }
         
@@ -333,18 +353,52 @@ final class CheckoutViewModel: ObservableObject {
             
             switch paymentResult {
             case .success:
-                completion(true)
+                // Analytics: Payment completed
+                FirebaseManager.shared.logEvent(
+                    FirebaseManager.Event.paymentCompleted,
+                    parameters: [
+                        "order_id": response.order.id,
+                        "amount": response.order.totalAmount
+                    ]
+                )
+                
+                // Notification de paiement réussi
+                NotificationsManager.shared.notifyPaymentSuccess(
+                    transactionId: response.order.id,
+                    amount: response.order.totalAmount
+                )
+                // ✅ Retourner l'order pour afficher la confirmation
+                completion(response.order)
             case .failure(let message):
+                // Analytics: Payment failed
+                FirebaseManager.shared.logEvent(
+                    FirebaseManager.Event.paymentFailed,
+                    parameters: [
+                        "order_id": response.order.id,
+                        "error": message
+                    ]
+                )
+                
+                // Notification de paiement échoué
+                NotificationsManager.shared.notifyPaymentFailed(
+                    transactionId: response.order.id
+                )
                 errorMessage = message
                 showError = true
-                completion(false)
+                completion(nil)
             case .canceled:
                 errorMessage = R.string.localizable.shopPaymentCanceled()
                 showError = true
-                completion(false)
+                completion(nil)
             }
         } else {
-            completion(true)
+            // Si pas de clientSecret, la commande est peut-être gratuite ou déjà payée
+            NotificationsManager.shared.notifyPaymentSuccess(
+                transactionId: response.order.id,
+                amount: response.order.totalAmount
+            )
+            completion(response.order)
         }
     }
 }
+

@@ -24,4 +24,6 @@ struct ProviderProfileDetail: Codable, Equatable {
     let phone: String?
     let email: String?
     let openingHours: String?
+    let transportPricePerKm: Double?
+    let transportEnabled: Bool?
 }

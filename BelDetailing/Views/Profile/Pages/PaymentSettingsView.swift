@@ -5,18 +5,16 @@
 //  Created by Achraf Benali on 21/11/2025.
 //
 
-//
-//  PaymentSettingsView.swift
-//  BelDetailing
-//
-
 import SwiftUI
 import StripePaymentSheet
+import RswiftResources
 
 struct PaymentSettingsView: View {
 
     @StateObject private var vm: PaymentSettingsViewModel
     private let engine: Engine
+    @EnvironmentObject var tabBarVisibility: TabBarVisibility
+    @Environment(\.dismiss) private var dismiss
 
     init(engine: Engine) {
         self.engine = engine
@@ -25,7 +23,6 @@ struct PaymentSettingsView: View {
         )
     }
 
-    // ✅ Binding SAFE : la sheet ne peut s’ouvrir QUE si elle existe
     private var isShowingPaymentSheet: Binding<Bool> {
         Binding(
             get: {
@@ -42,29 +39,29 @@ struct PaymentSettingsView: View {
 
     var body: some View {
         ZStack {
-            Color(.systemGroupedBackground)
+            Color(R.color.mainBackground.name)
                 .ignoresSafeArea()
+                .overlay(
+                    Color.black
+                        .frame(height: 240)
+                        .ignoresSafeArea(edges: .top),
+                    alignment: .top
+                )
 
             ScrollView(showsIndicators: false) {
-                VStack(alignment: .leading, spacing: 28) {
-
-                    // MARK: - Header
-                    VStack(alignment: .leading, spacing: 6) {
-                        Text("Paiements & versements")
-                            .font(.system(size: 28, weight: .bold))
-
-                        Text("Gérez vos cartes et consultez l’historique")
-                            .foregroundColor(.secondary)
+                VStack(spacing: 0) {
+                    header
+                    
+                    VStack(alignment: .leading, spacing: 28) {
+                        paymentMethodsSection
+                        transactionsSection
                     }
-
-                    // MARK: - Sections
-                    paymentMethodsSection
-                    transactionsSection
+                    .padding(.horizontal, 20)
+                    .padding(.top, 24)
+                    .padding(.bottom, 40)
                 }
-                .padding(20)
             }
 
-            // MARK: - Loading overlay
             if vm.isLoading {
                 Color.black.opacity(0.15)
                     .ignoresSafeArea()
@@ -73,7 +70,6 @@ struct PaymentSettingsView: View {
                     .progressViewStyle(.circular)
             }
 
-            // ✅ LA CLÉ : Stripe PaymentSheet attachée à une VRAIE VIEW
             if let sheet = vm.paymentSheet {
                 PaymentSheetHost(
                     isPresented: isShowingPaymentSheet,
@@ -82,24 +78,26 @@ struct PaymentSettingsView: View {
                     switch result {
                     case .completed:
                         Task { await vm.load() }
-
                     case .failed(let error):
                         vm.errorText = error.localizedDescription
-
                     case .canceled:
                         break
                     }
-
-                    // Nettoyage
                     vm.paymentSheet = nil
                     vm.isPresentingPaymentSheet = false
                 }
             }
         }
+        .toolbar(.hidden, for: .navigationBar)
+        .onAppear {
+            tabBarVisibility.isHidden = true
+        }
+        .onDisappear {
+            tabBarVisibility.isHidden = false
+        }
         .task {
             await vm.load()
         }
-        .navigationBarTitleDisplayMode(.inline)
         .alert(
             "Erreur",
             isPresented: Binding(
@@ -119,8 +117,40 @@ struct PaymentSettingsView: View {
             )
         }
     }
+    
+    private var header: some View {
+        VStack(alignment: .leading, spacing: 20) {
+            HStack {
+                Button {
+                    dismiss()
+                } label: {
+                    Image(systemName: "chevron.left")
+                        .font(.system(size: 20, weight: .semibold))
+                        .foregroundColor(.white)
+                        .padding(.vertical, 4)
+                }
+                
+                Spacer()
+            }
+            
+            VStack(alignment: .leading, spacing: 8) {
+                Text("Paiements & versements")
+                    .font(.system(size: 28, weight: .bold))
+                    .foregroundColor(.white)
+                
+                Text("Gérez vos cartes et consultez l'historique")
+                    .font(.system(size: 15))
+                    .foregroundColor(.white.opacity(0.8))
+            }
+        }
+        .padding(20)
+        .background(
+            RoundedCorner(radius: 28, corners: [.bottomLeft, .bottomRight])
+                .fill(Color.black)
+        )
+        .padding(.bottom, 1)
+    }
 
-    // MARK: - Payment Methods Section
     private var paymentMethodsSection: some View {
         VStack(alignment: .leading, spacing: 16) {
 
@@ -130,8 +160,10 @@ struct PaymentSettingsView: View {
 
                 Spacer()
 
-                Button {
-                    Task { await vm.addPaymentMethod() }
+                NavigationLink {
+                    AddPaymentMethodView(engine: engine) {
+                        Task { await vm.load() }
+                    }
                 } label: {
                     Label("Ajouter", systemImage: "plus")
                         .font(.system(size: 14, weight: .semibold))
@@ -146,34 +178,29 @@ struct PaymentSettingsView: View {
 
             if vm.paymentMethods.isEmpty {
                 emptyPaymentMethods
-                } else {
-                    VStack(spacing: 12) {
-                        ForEach(vm.paymentMethods) { method in
-                            PaymentMethodCard(method: method)
-                                .swipeActions(edge: .trailing, allowsFullSwipe: true) {
-
-                                    // ❌ On empêche la suppression de la carte par défaut
-                                    if !method.isDefault {
-                                        Button(role: .destructive) {
-                                            Task {
-                                                await vm.delete(method: method)
-                                            }
-                                        } label: {
-                                            Label("Supprimer", systemImage: "trash")
+            } else {
+                VStack(spacing: 12) {
+                    ForEach(vm.paymentMethods) { method in
+                        PaymentMethodCard(method: method)
+                            .swipeActions(edge: .trailing, allowsFullSwipe: true) {
+                                if !method.isDefault {
+                                    Button(role: .destructive) {
+                                        Task {
+                                            await vm.delete(method: method)
                                         }
+                                    } label: {
+                                        Label("Supprimer", systemImage: "trash")
                                     }
                                 }
-                        }
+                            }
                     }
                 }
-
+            }
         }
     }
 
-    // MARK: - Transactions Section
     private var transactionsSection: some View {
         VStack(alignment: .leading, spacing: 16) {
-
             Text("Historique des transactions")
                 .font(.system(size: 20, weight: .bold))
 
@@ -195,59 +222,20 @@ struct PaymentSettingsView: View {
         }
     }
 
-    // MARK: - Empty states
     private var emptyPaymentMethods: some View {
-        VStack(spacing: 10) {
-            Image(systemName: "creditcard")
-                .font(.system(size: 32))
-                .foregroundColor(.gray)
-
-            Text("Aucune carte enregistrée")
-                .font(.system(size: 15, weight: .medium))
-
-            Text("Ajoutez une carte pour payer rapidement vos réservations.")
-                .font(.caption)
-                .foregroundColor(.secondary)
-                .multilineTextAlignment(.center)
-        }
-        .frame(maxWidth: .infinity)
-        .padding()
-        .background(Color(.secondarySystemBackground))
-        .cornerRadius(16)
+        EmptyStateView(
+            title: "Aucun moyen de paiement",
+            message: "Ajoutez une carte pour commencer.",
+            systemIcon: "creditcard"
+        )
     }
 
     private var emptyTransactions: some View {
-        VStack(spacing: 10) {
-            Image(systemName: "clock.arrow.circlepath")
-                .font(.system(size: 32))
-                .foregroundColor(.gray)
-
-            Text("Aucune transaction")
-                .font(.system(size: 15, weight: .medium))
-
-            Text("Vos paiements et remboursements apparaîtront ici.")
-                .font(.caption)
-                .foregroundColor(.secondary)
-                .multilineTextAlignment(.center)
-        }
-        .frame(maxWidth: .infinity)
-        .padding()
-        .background(Color(.secondarySystemBackground))
-        .cornerRadius(16)
+        EmptyStateView(
+            title: "Aucune transaction",
+            message: "Vos transactions apparaîtront ici.",
+            systemIcon: "clock.arrow.circlepath"
+        )
     }
 }
 
-private struct PaymentSheetHost: View {
-    @Binding var isPresented: Bool
-    let paymentSheet: PaymentSheet
-    let onResult: (PaymentSheetResult) -> Void
-
-    var body: some View {
-        Color.clear
-            .paymentSheet(
-                isPresented: $isPresented,
-                paymentSheet: paymentSheet,
-                onCompletion: onResult
-            )
-    }
-}

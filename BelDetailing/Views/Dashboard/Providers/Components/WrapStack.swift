@@ -36,7 +36,7 @@ private struct FlowLayout: Layout {
         subviews: Subviews,
         cache: inout ()
     ) -> CGSize {
-        let maxWidth = proposal.width ?? .infinity
+        let maxWidth = proposal.width ?? CGFloat.infinity
 
         var width: CGFloat = 0
         var height: CGFloat = 0

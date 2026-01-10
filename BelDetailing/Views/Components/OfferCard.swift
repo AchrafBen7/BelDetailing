@@ -11,90 +11,98 @@ struct OfferCard: View {
     let offer: Offer
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 14) {
-
-            // 🔹 Titre
-            Text(offer.title)
-                .font(.system(size: 20, weight: .semibold))
-                .foregroundColor(.black)
-
-            // 🔹 Catégorie + type
-            VStack(alignment: .leading, spacing: 4) {
-                Text(offer.category.localizedTitle)
-                    .font(.system(size: 15))
-                    .foregroundColor(.gray)
-
-                Text(offer.type.localizedTitle)
-                    .font(.system(size: 15, weight: .semibold))
-                    .foregroundColor(.black)
-            }
-
-            // 🔹 Infos (ligne type Indeed)
-            HStack(spacing: 14) {
-                Label("\(offer.vehicleCount)", systemImage: "car.fill")
-                    .font(.system(size: 14))
-                    .foregroundColor(.gray)
-
-                Label("€\(Int(offer.priceMin))–\(Int(offer.priceMax))", systemImage: "eurosign.circle")
-                    .font(.system(size: 14))
-                    .foregroundColor(.gray)
-
-                Label(offer.city, systemImage: "mappin.and.ellipse")
-                    .font(.system(size: 14))
-                    .foregroundColor(.gray)
-            }
-
-            // 🔹 Nombre de candidatures
-            if let count = offer.applicationsCount, count > 0 {
-                Label("\(count) \(R.string.localizable.offerApplicationsLabel())",
-                      systemImage: "person.2")
-                    .font(.system(size: 13, weight: .medium))
-                    .foregroundColor(.gray)
-            }
-            // 🔹 Boutons: Détails + Postuler
-            HStack(spacing: 8) {
-                Button {
-                    print("Details tapped")
-                } label: {
-                    Text(R.string.localizable.offerButtonDetails())
-                        .font(.system(size: 16, weight: .semibold))
+        VStack(alignment: .leading, spacing: 16) {
+            // Header avec titre et badge de statut
+            HStack(alignment: .top, spacing: 12) {
+                VStack(alignment: .leading, spacing: 8) {
+                    // Titre
+                    Text(offer.title)
+                        .font(.system(size: 20, weight: .bold))
                         .foregroundColor(.black)
-                        .frame(maxWidth: .infinity)
-                        .padding(.vertical, 10)
-                        .background(Color.white)
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 12)
-                                .stroke(Color.black.opacity(0.25), lineWidth: 1)
-                        )
-                }
-
-                Button {
-                    print("Apply tapped")
-                } label: {
-                    Text(R.string.localizable.offerButtonApply())
-                        .font(.system(size: 16, weight: .semibold))
+                        .lineLimit(2)
+                    
+                    // Type badge
+                    Text(offer.type.localizedTitle)
+                        .font(.system(size: 13, weight: .semibold))
                         .foregroundColor(.white)
-                        .frame(maxWidth: .infinity)
-                        .padding(.vertical, 10)
-                        .background(Color.black)
-                        .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+                        .padding(.horizontal, 10)
+                        .padding(.vertical, 5)
+                        .background(Color.orange)
+                        .clipShape(Capsule())
+                }
+                
+                Spacer()
+                
+                // Badge de statut
+                Text(offer.status.localizedTitle)
+                    .font(.system(size: 12, weight: .semibold))
+                    .foregroundColor(.white)
+                    .padding(.horizontal, 10)
+                    .padding(.vertical, 6)
+                    .background(offer.status.badgeBackground)
+                    .clipShape(Capsule())
+            }
+            
+            Divider()
+                .background(Color.gray.opacity(0.2))
+            
+            // Informations principales
+            VStack(alignment: .leading, spacing: 12) {
+                // Budget
+                HStack(spacing: 8) {
+                    Image(systemName: "eurosign.circle.fill")
+                        .font(.system(size: 16))
+                        .foregroundColor(.black.opacity(0.7))
+                    Text("€\(Int(offer.priceMin)) – €\(Int(offer.priceMax))")
+                        .font(.system(size: 17, weight: .semibold))
+                        .foregroundColor(.black)
+                }
+                
+                // Localisation
+                HStack(spacing: 8) {
+                    Image(systemName: "mappin.circle.fill")
+                        .font(.system(size: 16))
+                        .foregroundColor(.black.opacity(0.7))
+                    Text("\(offer.city) • \(offer.postalCode)")
+                        .font(.system(size: 15))
+                        .foregroundColor(.gray)
+                }
+                
+                // Nombre de véhicules
+                HStack(spacing: 8) {
+                    Image(systemName: "car.fill")
+                        .font(.system(size: 16))
+                        .foregroundColor(.black.opacity(0.7))
+                    Text(offer.vehicleCount == 1 ? "\(offer.vehicleCount) véhicule" : "\(offer.vehicleCount) véhicules")
+                        .font(.system(size: 15))
+                        .foregroundColor(.gray)
+                }
+                
+                // Nombre de candidatures (si disponible)
+                if let count = offer.applicationsCount, count > 0 {
+                    HStack(spacing: 8) {
+                        Image(systemName: "person.2.fill")
+                            .font(.system(size: 16))
+                            .foregroundColor(.black.opacity(0.7))
+                        Text("\(count) \(R.string.localizable.offerApplicationsLabel())")
+                            .font(.system(size: 15))
+                            .foregroundColor(.gray)
+                    }
                 }
             }
-        }
-        .padding(18)
-        .background(Color.white)
-        .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
-        // ⬇️ Ombre un peu plus forte qu’avant
-        .shadow(color: .black.opacity(0.16), radius: 10, y: 6)
-        .overlay(alignment: .topTrailing) {
-            Text(offer.status.localizedTitle)
-                .font(.system(size: 12, weight: .semibold))
-                .padding(.horizontal, 10)
+            
+            // Catégorie
+            Text(offer.category.localizedTitle)
+                .font(.system(size: 14, weight: .medium))
+                .foregroundColor(.gray)
+                .padding(.horizontal, 12)
                 .padding(.vertical, 6)
-                .background(offer.status.badgeBackground)
-                .foregroundColor(.white)
+                .background(Color.gray.opacity(0.1))
                 .clipShape(Capsule())
-                .padding(10)
         }
+        .padding(20)
+        .background(Color.white)
+        .clipShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
+        .shadow(color: .black.opacity(0.08), radius: 12, y: 4)
     }
 }

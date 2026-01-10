@@ -10,10 +10,15 @@ import RswiftResources
 import Combine
 import EventKit
 
+// MARK: - Identifiable Date Wrapper
+private struct IdentifiableDate: Identifiable {
+    let id = UUID()
+    let date: Date
+}
+
 struct ProviderAvailabilityView: View {
     @StateObject private var viewModel: ProviderAvailabilityViewModel
-    @State private var showPendingBookingsSheet = false
-    @State private var selectedDateForBookings: Date?
+    @State private var selectedDateForBookings: IdentifiableDate?
     
     init(engine: Engine) {
         _viewModel = StateObject(wrappedValue: ProviderAvailabilityViewModel(engine: engine))
@@ -43,26 +48,36 @@ struct ProviderAvailabilityView: View {
         .task {
             await viewModel.load()
         }
-        .sheet(isPresented: $showPendingBookingsSheet) {
-            if let date = selectedDateForBookings {
+        .sheet(item: $selectedDateForBookings) { identifiableDate in
                 PendingBookingsSheetView(
-                    date: date,
-                    bookings: viewModel.pendingBookings(for: date),
+                    date: identifiableDate.date,
+                    bookings: viewModel.pendingBookings(for: identifiableDate.date),
                     engine: viewModel.engine,
-                    onConfirm: { bookingId in
-                        Task {
-                            await viewModel.confirmBooking(bookingId)
-                            await viewModel.load()
-                        }
+                    viewModel: viewModel,
+                    onConfirm: { @MainActor bookingId in
+                        print("🟢 [ProviderAvailabilityView] onConfirm callback START - id: '\(bookingId)'")
+                        print("🟢 [ProviderAvailabilityView] viewModel: \(type(of: viewModel))")
+                        print("🟢 [ProviderAvailabilityView] On MainActor, calling confirmBooking...")
+                        await viewModel.confirmBooking(bookingId)
+                        print("🟢 [ProviderAvailabilityView] confirmBooking returned, checking errorMessage: \(viewModel.errorMessage ?? "nil")")
+                        print("🟢 [ProviderAvailabilityView] reloading...")
+                        await viewModel.load()
+                        print("🟢 [ProviderAvailabilityView] load() completed")
                     },
-                    onDecline: { bookingId in
-                        Task {
-                            await viewModel.declineBooking(bookingId)
-                            await viewModel.load()
-                        }
+                    onDecline: { @MainActor bookingId in
+                        print("🟢 [ProviderAvailabilityView] onDecline callback START - id: '\(bookingId)'")
+                        print("🟢 [ProviderAvailabilityView] viewModel: \(type(of: viewModel))")
+                        print("🟢 [ProviderAvailabilityView] On MainActor, calling declineBooking...")
+                        await viewModel.declineBooking(bookingId)
+                        print("🟢 [ProviderAvailabilityView] declineBooking returned, checking errorMessage: \(viewModel.errorMessage ?? "nil")")
+                        print("🟢 [ProviderAvailabilityView] reloading...")
+                        await viewModel.load()
+                        print("🟢 [ProviderAvailabilityView] load() completed")
+                    },
+                    onCounterPropose: { booking in
+                        // Le sheet sera géré par PendingBookingsSheetView
                     }
                 )
-            }
         }
     }
     
@@ -112,55 +127,128 @@ struct ProviderAvailabilityView: View {
         .shadow(color: .black.opacity(0.05), radius: 10, y: 4)
     }
     
-    // MARK: - Calendar Section
+    // MARK: - Calendar Section (Amélioré - Plus visible et central)
     private var calendarSection: some View {
-        VStack(spacing: 16) {
-            Text(R.string.localizable.availabilityTitle())
-                .font(.system(size: 22, weight: .bold))
-                .frame(maxWidth: .infinity, alignment: .leading)
+        VStack(spacing: 20) {
+            // Titre avec statistiques rapides
+            HStack {
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(R.string.localizable.availabilityTitle())
+                        .font(.system(size: 24, weight: .bold))
+                    
+                    // Statistiques rapides
+                    HStack(spacing: 16) {
+                        StatBadge(
+                            count: viewModel.bookings.filter { $0.status == .pending && !$0.isExpired }.count,
+                            label: R.string.localizable.availabilityPending(),
+                            color: .orange
+                        )
+                        StatBadge(
+                            count: viewModel.bookings.filter { $0.status == .confirmed || $0.status == .started || $0.status == .inProgress }.count,
+                            label: R.string.localizable.availabilityConfirmed(),
+                            color: .green
+                        )
+                    }
+                    .padding(.top, 4)
+                }
+                Spacer()
+            }
             
-            ProviderMonthCalendarView(
-                selectedDate: $viewModel.selectedDate,
-                status: viewModel.calendarStatus(forMonth: viewModel.selectedDate),
-                onDateTap: { date in
-                    // Vérifier si la date a des bookings pending
-                    let pendingBookings = viewModel.pendingBookings(for: date)
-                    if !pendingBookings.isEmpty {
-                        selectedDateForBookings = date
-                        showPendingBookingsSheet = true
-                    } else {
-                        viewModel.selectedDate = date
+            // Calendrier agrandi et plus visible
+            VStack(spacing: 16) {
+                ProviderMonthCalendarView(
+                    selectedDate: $viewModel.selectedDate,
+                    status: viewModel.calendarStatus(forMonth: viewModel.selectedDate),
+                    onDateTap: { date in
+                        // Vérifier si la date a des bookings pending
+                        let pendingBookings = viewModel.pendingBookings(for: date)
+                        if !pendingBookings.isEmpty {
+                            selectedDateForBookings = IdentifiableDate(date: date)
+                        } else {
+                            viewModel.selectedDate = date
+                        }
+                    }
+                )
+                .padding(.vertical, 12)
+                .background(Color(.secondarySystemBackground).opacity(0.5))
+                .clipShape(RoundedRectangle(cornerRadius: 16))
+                
+                // Légende améliorée
+                legend
+            }
+            
+            // Réservations du jour sélectionné
+            let selectedDateBookings = bookingsForSelectedDate
+            if !selectedDateBookings.isEmpty {
+                VStack(alignment: .leading, spacing: 12) {
+                    Text(R.string.localizable.availabilityBookingsForDate(formatDateOnly(DateFormatters.onlyDate(viewModel.selectedDate))))
+                        .font(.system(size: 18, weight: .semibold))
+                        .padding(.top, 8)
+                    
+                    ForEach(selectedDateBookings.prefix(3)) { booking in
+                        BookingQuickCard(booking: booking)
+                    }
+                    
+                    if selectedDateBookings.count > 3 {
+                        Text(R.string.localizable.availabilityMoreBookings(selectedDateBookings.count - 3))
+                            .font(.system(size: 14))
+                            .foregroundColor(.gray)
+                            .padding(.top, 4)
                     }
                 }
-            )
-            
-            // Légende
-            legend
+                .frame(maxWidth: .infinity, alignment: .leading)
+            }
         }
-        .padding(20)
+        .padding(24)
         .background(Color.white)
-        .clipShape(RoundedRectangle(cornerRadius: 20))
-        .shadow(color: .black.opacity(0.05), radius: 10, y: 4)
+        .clipShape(RoundedRectangle(cornerRadius: 24))
+        .shadow(color: .black.opacity(0.08), radius: 16, y: 6)
     }
     
-    // MARK: - Legend
-    private var legend: some View {
-        HStack(spacing: 20) {
-            legendItem(color: .green, text: R.string.localizable.availabilityConfirmed())
-            legendItem(color: .orange, text: R.string.localizable.availabilityPending())
-            legendItem(color: .red, text: R.string.localizable.availabilityBlocked())
-            legendItem(color: .gray, text: R.string.localizable.availabilityAvailable())
+    // Helper pour les statistiques
+    private var bookingsForSelectedDate: [Booking] {
+        let dateString = DateFormatters.onlyDate(viewModel.selectedDate)
+        return viewModel.bookings
+            .filter { $0.date == dateString }
+            .sorted { ($0.startTime ?? "00:00") < ($1.startTime ?? "00:00") }
+    }
+    
+    // Helper pour formater une date sans heure
+    private func formatDateOnly(_ dateString: String) -> String {
+        guard let date = DateFormatters.isoDate(dateString) else {
+            return dateString
         }
-        .font(.system(size: 12))
+        let formatter = DateFormatter()
+        formatter.locale = Locale.current
+        formatter.timeZone = DateFormatters.tz
+        formatter.dateStyle = .long
+        formatter.timeStyle = .none
+        return formatter.string(from: date)
+    }
+    
+    // MARK: - Legend (Améliorée)
+    private var legend: some View {
+        VStack(spacing: 8) {
+            HStack(spacing: 16) {
+                legendItem(color: .green, text: R.string.localizable.availabilityConfirmed())
+                legendItem(color: .orange, text: R.string.localizable.availabilityPending())
+            }
+            HStack(spacing: 16) {
+                legendItem(color: .red, text: R.string.localizable.availabilityBlocked())
+                legendItem(color: .gray, text: R.string.localizable.availabilityAvailable())
+            }
+        }
+        .font(.system(size: 13, weight: .medium))
+        .padding(.top, 8)
     }
     
     private func legendItem(color: Color, text: String) -> some View {
-        HStack(spacing: 6) {
+        HStack(spacing: 8) {
             Circle()
                 .fill(color)
-                .frame(width: 10, height: 10)
+                .frame(width: 12, height: 12)
             Text(text)
-                .foregroundColor(.gray)
+                .foregroundColor(.black.opacity(0.7))
         }
     }
     
@@ -258,6 +346,65 @@ struct ProviderAvailabilityView: View {
     }
 }
 
+// MARK: - Helper Views
+private struct StatBadge: View {
+    let count: Int
+    let label: String
+    let color: Color
+    
+    var body: some View {
+        HStack(spacing: 6) {
+            Circle()
+                .fill(color)
+                .frame(width: 8, height: 8)
+            Text("\(count) \(label)")
+                .font(.system(size: 13, weight: .medium))
+                .foregroundColor(.black.opacity(0.7))
+        }
+    }
+}
+
+private struct BookingQuickCard: View {
+    let booking: Booking
+    
+    var body: some View {
+        HStack(spacing: 12) {
+            // Status indicator
+            Circle()
+                .fill(statusColor)
+                .frame(width: 10, height: 10)
+            
+            VStack(alignment: .leading, spacing: 4) {
+                Text(booking.displayServiceName)
+                    .font(.system(size: 15, weight: .semibold))
+                
+                if let time = booking.startTime {
+                    Text(time)
+                        .font(.system(size: 13))
+                        .foregroundColor(.gray)
+                }
+            }
+            
+            Spacer()
+            
+            Text(String(format: "%.0f €", booking.price))
+                .font(.system(size: 15, weight: .bold))
+        }
+        .padding(12)
+        .background(Color(.secondarySystemBackground))
+        .clipShape(RoundedRectangle(cornerRadius: 12))
+    }
+    
+    private var statusColor: Color {
+        switch booking.status {
+        case .pending: return .orange
+        case .confirmed, .started, .inProgress: return .green
+        case .declined, .cancelled: return .red
+        case .completed: return .blue
+        }
+    }
+}
+
 // MARK: - Opening Hours Row
 private struct OpeningHoursRow: View {
     let hours: OpeningHours
@@ -348,6 +495,9 @@ final class ProviderAvailabilityViewModel: ObservableObject {
         isLoading = true
         defer { isLoading = false }
         
+        // Nettoyer les bookings expirés (>6h pending) avant de charger
+        _ = await engine.bookingService.cleanupExpiredBookings()
+        
         // Load bookings for calendar
         let bookingsResult = await engine.bookingService.getBookings(scope: "provider", status: nil)
         if case .success(let bookings) = bookingsResult {
@@ -409,6 +559,11 @@ final class ProviderAvailabilityViewModel: ObservableObject {
         var cancelled = Set<Int>()
         
         for booking in bookings {
+            // Exclure les réservations expirées du calendrier
+            if booking.isExpired {
+                continue
+            }
+            
             guard let date = DateFormatters.isoDate(booking.date) else { continue }
             let comps = calendar.dateComponents([.year, .month, .day], from: date)
             
@@ -439,29 +594,80 @@ final class ProviderAvailabilityViewModel: ObservableObject {
         return bookings
             .filter { $0.date == dateString }
             .filter { $0.status == .pending }
+            .filter { !$0.isExpired } // Exclure les réservations expirées (>6h)
             .sorted { ($0.startTime ?? "00:00") < ($1.startTime ?? "00:00") }
     }
     
     func confirmBooking(_ id: String) async {
+        print("🟢 [ProviderAvailabilityVM] confirmBooking START - id: \(id)")
+        defer { print("🟢 [ProviderAvailabilityVM] confirmBooking END") }
+        
+        print("🟢 [ProviderAvailabilityVM] confirmBooking - Calling bookingService.confirmBooking...")
         let res = await engine.bookingService.confirmBooking(id: id)
+        print("🟢 [ProviderAvailabilityVM] confirmBooking - bookingService.confirmBooking returned")
+        
         switch res {
-        case .success:
+        case .success(let success):
+            print("✅ [ProviderAvailabilityVM] confirmBooking - Success: \(success)")
             if let idx = bookings.firstIndex(where: { $0.id == id }) {
-                bookings[idx].status = .confirmed
+                print("🟢 [ProviderAvailabilityVM] confirmBooking - Found booking at index \(idx)")
+                var updated = bookings[idx]
+                updated.status = .confirmed
+                bookings[idx] = updated
+                print("✅ [ProviderAvailabilityVM] confirmBooking - Booking status updated to confirmed")
+                
+                // Analytics: Booking confirmed
+                FirebaseManager.shared.logEvent(
+                    FirebaseManager.Event.bookingConfirmed,
+                    parameters: [
+                        "booking_id": updated.id,
+                        "provider_id": updated.providerId,
+                        "price": updated.price
+                    ]
+                )
+                
+                // Notification pour le customer
+                NotificationsManager.shared.notifyBookingConfirmed(
+                    bookingId: updated.id,
+                    providerName: updated.displayProviderName,
+                    date: updated.date
+                )
+            } else {
+                print("⚠️ [ProviderAvailabilityVM] confirmBooking - Booking not found in local array")
             }
         case .failure(let err):
+            print("❌ [ProviderAvailabilityVM] confirmBooking - Error: \(err.localizedDescription)")
             errorMessage = err.localizedDescription
         }
     }
     
     func declineBooking(_ id: String) async {
+        print("🟢 [ProviderAvailabilityVM] declineBooking START - id: \(id)")
+        defer { print("🟢 [ProviderAvailabilityVM] declineBooking END") }
+        
+        print("🟢 [ProviderAvailabilityVM] declineBooking - Calling bookingService.declineBooking...")
         let res = await engine.bookingService.declineBooking(id: id)
+        print("🟢 [ProviderAvailabilityVM] declineBooking - bookingService.declineBooking returned")
+        
         switch res {
-        case .success:
+        case .success(let success):
+            print("✅ [ProviderAvailabilityVM] declineBooking - Success: \(success)")
             if let idx = bookings.firstIndex(where: { $0.id == id }) {
-                bookings[idx].status = .declined
+                print("🟢 [ProviderAvailabilityVM] declineBooking - Found booking at index \(idx)")
+                var updated = bookings[idx]
+                updated.status = .declined
+                bookings[idx] = updated
+                print("✅ [ProviderAvailabilityVM] declineBooking - Booking status updated to declined")
+                // Notification pour le customer
+                NotificationsManager.shared.notifyBookingDeclined(
+                    bookingId: updated.id,
+                    providerName: updated.displayProviderName
+                )
+            } else {
+                print("⚠️ [ProviderAvailabilityVM] declineBooking - Booking not found in local array")
             }
         case .failure(let err):
+            print("❌ [ProviderAvailabilityVM] declineBooking - Error: \(err.localizedDescription)")
             errorMessage = err.localizedDescription
         }
     }
@@ -596,4 +802,3 @@ struct BlockSlotView: View {
         }
     }
 }
-

@@ -12,13 +12,18 @@ struct BookingDetailView: View {
     let booking: Booking
     let engine: Engine
     
-    @StateObject private var viewModel: BookingDetailViewModel
+    @StateObject var viewModel: BookingDetailViewModel
     @Environment(\.dismiss) private var dismiss
     @EnvironmentObject var tabBarVisibility: TabBarVisibility
-    @StateObject private var session = AppSession.shared
+    @StateObject var session = AppSession.shared
     
-    @State private var showStartServiceConfirmation = false
-    @State private var showProgressTracking = false
+    @State  var showStartServiceConfirmation = false
+    @State  var showProgressTracking = false
+    @State  var showCounterProposal = false
+    @State  var showCounterProposalResponse = false
+    @State  var showReviewPrompt = false
+    @State  var showCreateReview = false
+    @State  var showSmartRebook = false
     
     init(booking: Booking, engine: Engine) {
         self.booking = booking
@@ -34,6 +39,12 @@ struct BookingDetailView: View {
                 
                 ScrollView(showsIndicators: false) {
                     VStack(spacing: 24) {
+                        // Gros titre en heroTitle
+                        Text(R.string.localizable.bookingDetailTitle() + ".")
+                            .textView(style: .heroTitle)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .padding(.top, 8)
+                        
                         // Header avec image
                         bookingHeader
                         
@@ -66,15 +77,8 @@ struct BookingDetailView: View {
                     ProgressView()
                 }
             }
-            .navigationTitle(R.string.localizable.bookingDetailTitle())
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button(R.string.localizable.commonClose()) {
-                        dismiss()
-                    }
-                }
-            }
+            // On cache la barre de navigation pour éviter le doublon avec le header custom
+            .toolbar(.hidden, for: .navigationBar)
             .alert(R.string.localizable.bookingStartServiceConfirmTitle(), isPresented: $showStartServiceConfirmation) {
                 Button(R.string.localizable.commonCancel(), role: .cancel) {}
                 Button(R.string.localizable.bookingStartServiceConfirmButton()) {
@@ -112,174 +116,49 @@ struct BookingDetailView: View {
                 tabBarVisibility.isHidden = true
                 Task {
                     await viewModel.load()
+                    // Afficher le prompt de review si booking completed et customer
+                    if viewModel.booking.status == .completed && session.user?.role == .customer {
+                        // Petit délai pour une meilleure UX
+                        try? await Task.sleep(nanoseconds: 1_000_000_000) // 1 seconde
+                        showReviewPrompt = true
+                    }
                 }
             }
             .onDisappear {
                 tabBarVisibility.isHidden = false
             }
-        }
-    }
-    
-    // MARK: - Booking Header
-    private var bookingHeader: some View {
-        Group {
-            if let urlString = booking.providerBannerUrl,
-               let url = URL(string: urlString) {
-                AsyncImage(url: url) { phase in
-                    switch phase {
-                    case .empty:
-                        Color.gray.opacity(0.2).overlay(ProgressView())
-                    case .success(let image):
-                        image
-                            .resizable()
-                            .scaledToFill()
-                    case .failure:
-                        Color.gray.opacity(0.2)
-                    @unknown default:
-                        Color.gray.opacity(0.2)
+            .onChange(of: viewModel.booking.status) { newStatus in
+                // Afficher le prompt quand le booking devient completed
+                if newStatus == .completed && session.user?.role == .customer {
+                    Task {
+                        // Petit délai pour une meilleure UX
+                        try? await Task.sleep(nanoseconds: 1_000_000_000) // 1 seconde
+                        showReviewPrompt = true
                     }
                 }
-            } else {
-                Color.gray.opacity(0.15)
             }
-        }
-        .frame(height: 200)
-        .clipped()
-        .overlay(alignment: .topTrailing) {
-            BookingStatusBadge(status: viewModel.booking.status, paymentStatus: viewModel.booking.paymentStatus)
-                .padding(10)
-        }
-    }
-    
-    // MARK: - Booking Info Section
-    private var bookingInfoSection: some View {
-        VStack(alignment: .leading, spacing: 16) {
-            Text(R.string.localizable.bookingDetailInformation())
-                .font(.system(size: 20, weight: .bold))
-            
-            VStack(spacing: 12) {
-                InfoRow(label: R.string.localizable.bookingDetailService(), value: booking.displayServiceName)
-                InfoRow(label: R.string.localizable.bookingDetailProvider(), value: booking.displayProviderName)
-                InfoRow(label: R.string.localizable.bookingDetailDate(), value: DateFormatters.humanDate(from: booking.date, time: booking.displayStartTime))
-                InfoRow(label: R.string.localizable.bookingDetailAddress(), value: booking.address)
-                InfoRow(label: R.string.localizable.bookingDetailPrice(), value: String(format: "%.2f €", booking.price))
+            .sheet(isPresented: $showReviewPrompt) {
+                GoogleReviewPromptView(
+                    booking: viewModel.booking,
+                    engine: engine
+                )
+                .presentationDetents([.medium])
+                .presentationDragIndicator(.visible)
             }
-        }
-        .padding(20)
-        .background(Color.white)
-        .clipShape(RoundedRectangle(cornerRadius: 20))
-    }
-    
-    // MARK: - Progress Section
-    private var progressSection: some View {
-        VStack(alignment: .leading, spacing: 16) {
-            HStack {
-                Text(R.string.localizable.bookingDetailProgress())
-                    .font(.system(size: 20, weight: .bold))
-                Spacer()
-                Text("\(viewModel.progressPercentage)%")
-                    .font(.system(size: 24, weight: .bold))
-                    .foregroundColor(.black)
+            .sheet(isPresented: $showCreateReview) {
+                CreateReviewView(
+                    booking: viewModel.booking,
+                    engine: engine
+                )
             }
-            
-            ProgressView(value: Double(viewModel.progressPercentage), total: 100)
-                .tint(.black)
-                .scaleEffect(x: 1, y: 2, anchor: .center)
-            
-            Button {
-                showProgressTracking = true
-            } label: {
-                Text(R.string.localizable.bookingDetailViewProgress())
-                    .font(.system(size: 16, weight: .semibold))
-                    .foregroundColor(.white)
-                    .frame(maxWidth: .infinity)
-                    .padding(.vertical, 14)
-                    .background(Color.black)
-                    .clipShape(RoundedRectangle(cornerRadius: 12))
-            }
-        }
-        .padding(20)
-        .background(Color.white)
-        .clipShape(RoundedRectangle(cornerRadius: 20))
-    }
-    
-    // MARK: - Provider Actions
-    private var providerActionsSection: some View {
-        VStack(spacing: 12) {
-            if viewModel.canStartService {
-                Button {
-                    showStartServiceConfirmation = true
-                } label: {
-                    HStack {
-                        Image(systemName: "play.fill")
-                        Text(R.string.localizable.bookingStartService())
-                    }
-                    .font(.system(size: 18, weight: .semibold))
-                    .foregroundColor(.white)
-                    .frame(maxWidth: .infinity)
-                    .padding(.vertical, 16)
-                    .background(Color.black)
-                    .clipShape(RoundedRectangle(cornerRadius: 14))
+            .sheet(isPresented: $showSmartRebook) {
+                if let suggestion = viewModel.smartRebookSuggestion {
+                    SmartRebookView(
+                        suggestion: suggestion,
+                        engine: engine
+                    )
                 }
             }
-            
-            if viewModel.isServiceInProgress {
-                Button {
-                    showProgressTracking = true
-                } label: {
-                    HStack {
-                        Image(systemName: "chart.bar.fill")
-                        Text(R.string.localizable.bookingViewProgress())
-                    }
-                    .font(.system(size: 18, weight: .semibold))
-                    .foregroundColor(.white)
-                    .frame(maxWidth: .infinity)
-                    .padding(.vertical, 16)
-                    .background(Color.blue)
-                    .clipShape(RoundedRectangle(cornerRadius: 14))
-                }
-            }
-        }
-    }
-    
-    // MARK: - Customer Actions
-    private var customerActionsSection: some View {
-        VStack(spacing: 12) {
-            if viewModel.isServiceInProgress {
-                Button {
-                    showProgressTracking = true
-                } label: {
-                    HStack {
-                        Image(systemName: "chart.bar.fill")
-                        Text(R.string.localizable.bookingViewProgress())
-                    }
-                    .font(.system(size: 18, weight: .semibold))
-                    .foregroundColor(.white)
-                    .frame(maxWidth: .infinity)
-                    .padding(.vertical, 16)
-                    .background(Color.black)
-                    .clipShape(RoundedRectangle(cornerRadius: 14))
-                }
-            }
-        }
-    }
-}
-
-// MARK: - Info Row Component
-private struct InfoRow: View {
-    let label: String
-    let value: String
-    
-    var body: some View {
-        HStack(alignment: .firstTextBaseline) {
-            Text(label)
-                .font(.system(size: 14))
-                .foregroundColor(.gray)
-            Spacer(minLength: 12)
-            Text(value)
-                .font(.system(size: 15, weight: .semibold))
-                .foregroundColor(.black)
-                .multilineTextAlignment(.trailing)
         }
     }
 }

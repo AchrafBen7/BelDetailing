@@ -66,6 +66,13 @@ struct CompanyDashboardView: View {
         .sheet(isPresented: $showFiltersSheet) { filtersSheet }
         .sheet(isPresented: $showLocationSheet) { locationSheet }
         .sheet(isPresented: $showBudgetSheet) { budgetSheet }
+        .sheet(isPresented: $vm.showCreateOffer) {
+            OfferCreateView(engine: vm.engine) {
+                Task {
+                    await vm.load()
+                }
+            }
+        }
     }
 
     // MARK: - Header

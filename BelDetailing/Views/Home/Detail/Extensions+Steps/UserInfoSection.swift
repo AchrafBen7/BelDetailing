@@ -11,51 +11,79 @@ import RswiftResources
 
 extension BookingStep2View {
 
-    var userInfoSection: some View {
-
-        VStack(alignment: .leading, spacing: 22) {
-
+    var personalInformationCard: some View {
+        VStack(alignment: .leading, spacing: 24) {
             // TITLE
-            HStack(spacing: 10) {
-                Image(systemName: "person.fill")
-                    .font(.system(size: 20))
-                Text(R.string.localizable.bookingYourInformation())
-                    .font(.system(size: 22, weight: .bold))
+            HStack(spacing: 12) {
+                ZStack {
+                    Circle()
+                        .fill(Color.black)
+                        .frame(width: 40, height: 40)
+                    Image(systemName: "person.fill")
+                        .font(.system(size: 18, weight: .semibold))
+                        .foregroundColor(.white)
+                }
+                
+                Text("Informations personnelles")
+                    .font(.system(size: 18, weight: .bold))
+                    .foregroundColor(.black)
             }
 
             // FULL NAME
             inputField(
-                title: R.string.localizable.bookingFullName(),
+                title: "NOM COMPLET",
                 text: $fullName,
-                placeholder: R.string.localizable.bookingFullNamePlaceholder()
+                placeholder: "Jean Dupont"
             )
 
             // PHONE
             inputField(
-                title: R.string.localizable.bookingPhone(),
+                title: "TÉLÉPHONE",
                 text: $phone,
-                placeholder: R.string.localizable.bookingPhonePlaceholder()
+                placeholder: "+32 2 123 45 67",
+                keyboard: .phonePad
             )
 
             // EMAIL
             inputField(
-                title: R.string.localizable.bookingEmail(),
+                title: "EMAIL",
                 text: $email,
-                placeholder: R.string.localizable.bookingEmailPlaceholder()
+                placeholder: "jean.dupont@email.com",
+                keyboard: .emailAddress
             )
+            
+            // ADDRESS
             inputField(
-                title: R.string.localizable.bookingAddress(),
+                title: "ADRESSE",
                 text: $address,
-                placeholder: R.string.localizable.bookingAddressPlaceholder()
+                placeholder: "Rue de la Paix 123, 1000 Bruxelles"
             )
 
-            // NOTES
-            inputField(
-                title: R.string.localizable.bookingNotes(),
-                text: $notes,
-                placeholder: R.string.localizable.bookingNotesPlaceholder()
-            )
-
+            // NOTES (OPTIONAL)
+            VStack(alignment: .leading, spacing: 8) {
+                Text("NOTES (OPTIONNEL)")
+                    .font(.system(size: 14, weight: .semibold))
+                    .foregroundColor(.black)
+                
+                ZStack(alignment: .topLeading) {
+                    if notes.isEmpty {
+                        Text("Instructions particulières, accès...")
+                            .foregroundColor(.gray)
+                            .padding(.leading, 16)
+                            .padding(.top, 20)
+                    }
+                    
+                    TextEditor(text: $notes)
+                        .frame(minHeight: 100)
+                        .padding(8)
+                        .scrollContentBackground(.hidden)
+                }
+                .background(Color(.systemGray6))
+                .cornerRadius(12)
+            }
         }
+        .padding(20)
+        .background(Color.white)
+        .cornerRadius(20)
     }
 }

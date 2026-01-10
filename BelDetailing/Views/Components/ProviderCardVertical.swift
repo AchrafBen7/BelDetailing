@@ -83,8 +83,3 @@ struct ProviderCardVertical: View {
     }
 }
 
-#Preview {
-    ProviderCardVertical(provider: Detailer.sampleValues.first!)
-        .padding()
-        .background(Color(R.color.mainBackground.name))
-}

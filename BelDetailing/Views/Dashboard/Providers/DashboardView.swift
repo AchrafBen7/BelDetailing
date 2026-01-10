@@ -7,6 +7,7 @@ struct DashboardProviderView: View {
     @StateObject private var viewModel: ProviderDashboardViewModel
     @State private var showOffers = false
     @State private var showCreateService = false
+    @State private var selectedBooking: Booking?
 
     init(engine: Engine, providerId: String) {
         _viewModel = StateObject(
@@ -37,7 +38,8 @@ struct DashboardProviderView: View {
                             switch viewModel.selectedFilter {
 
                             case .offers:
-                                offersListSection
+                                createButton
+                                servicesListOrLoader
 
                             case .calendar:
                                 ProviderAvailabilityView(engine: viewModel.engine)
@@ -69,6 +71,9 @@ struct DashboardProviderView: View {
                     }
                 }
             }
+            .sheet(item: $selectedBooking) { booking in
+                BookingDetailView(booking: booking, engine: viewModel.engine)
+            }
             .navigationDestination(isPresented: $showCreateService) {
                 ProviderCreateServiceView(engine: viewModel.engine) {
                     await viewModel.loadServices()
@@ -76,9 +81,6 @@ struct DashboardProviderView: View {
             }
             .navigationDestination(isPresented: $showOffers) {
                 OffersView(engine: viewModel.engine)
-            }
-            .navigationDestination(for: Offer.self) { offer in
-                OfferDetailView(engine: viewModel.engine, offerId: offer.id)
             }
         }
         .navigationBarBackButtonHidden(true)
@@ -137,7 +139,10 @@ struct DashboardProviderView: View {
                         ProviderBookingCardView(
                             booking: booking,
                             onConfirm: { viewModel.confirmBooking(booking.id) },
-                            onDecline: { viewModel.declineBooking(booking.id) }
+                            onDecline: { viewModel.declineBooking(booking.id) },
+                            onTap: {
+                                selectedBooking = booking
+                            }
                         )
                     }
                 }
@@ -146,49 +151,6 @@ struct DashboardProviderView: View {
         }
     }
 
-    // MARK: - OFFERS LIST (Companies offers)
-    private var offersListSection: some View {
-        VStack(alignment: .leading, spacing: 16) {
-            Text(R.string.localizable.dashboardAvailableOffers())
-                .font(.system(size: 22, weight: .bold))
-                .padding(.horizontal, 20)
-            
-            if viewModel.isLoadingOffers {
-                ProgressView()
-                    .frame(maxWidth: .infinity)
-                    .padding(.top, 40)
-            } else if viewModel.availableOffers.isEmpty {
-                VStack(spacing: 16) {
-                    Image(systemName: "briefcase")
-                        .font(.system(size: 48))
-                        .foregroundColor(.gray.opacity(0.5))
-                        .padding(.top, 60)
-                    
-                    Text(R.string.localizable.dashboardNoOffersAvailable())
-                        .font(.system(size: 18, weight: .semibold))
-                        .foregroundColor(.gray)
-                    
-                    Text(R.string.localizable.dashboardNoOffersAvailableMessage())
-                        .font(.system(size: 14))
-                        .foregroundColor(.gray.opacity(0.8))
-                        .multilineTextAlignment(.center)
-                        .padding(.horizontal, 40)
-                }
-                .frame(maxWidth: .infinity)
-            } else {
-                VStack(spacing: 16) {
-                    ForEach(viewModel.availableOffers) { offer in
-                        NavigationLink(value: offer) {
-                            OfferCard(offer: offer)
-                        }
-                        .buttonStyle(.plain)
-                    }
-                }
-                .padding(.horizontal, 20)
-            }
-        }
-    }
-    
     // MARK: - SERVICES LIST
     private var servicesListOrLoader: some View {
         Group {

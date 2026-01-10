@@ -21,7 +21,6 @@ struct AuthFlowView: View {
     @Binding var isLoggedIn: Bool
     
     @State private var path: [AuthRoute] = []
-    @State private var tempEmail: String = ""
     @State private var showVerify = false
     @State private var verifyEmailTemp = ""
     
@@ -35,10 +34,16 @@ struct AuthFlowView: View {
                 switch route {
                     
                 case .login:
-                    LoginScreen(engine: engine, onLoginSuccess: {
-                        isLoggedIn = true
-                        path = []
-                    })
+                    LoginScreen(
+                        engine: engine,
+                        onLoginSuccess: {
+                            isLoggedIn = true
+                            path = []
+                        },
+                        onSignup: {
+                            path.append(.signupRole)
+                        }
+                    )
                     
                 case .signupRole:
                     SignupRoleSelectionView(engine: engine) { selectedRole in
@@ -55,11 +60,21 @@ struct AuthFlowView: View {
                         engine: engine,
                         onBack: { path.removeLast() },
                         onSuccess: { email in
-                            verifyEmailTemp = email.lowercased()
-                            showVerify = true         // 🔥 OPEN FULLSCREEN HERE
+                            // 🔥 Afficher la page de vérification d'email
+                            let emailLowercased = email.lowercased().trimmingCharacters(in: .whitespaces)
+                            print("🔍 [AUTH] Setting verifyEmailTemp to: '\(emailLowercased)'")
+                            
+                            // Mettre à jour l'email AVANT d'afficher le fullScreenCover
+                            verifyEmailTemp = emailLowercased
+                            
+                            // Forcer la mise à jour du state avec Task
+                            Task { @MainActor in
+                                // Attendre que le state soit mis à jour
+                                try? await Task.sleep(nanoseconds: 100_000_000) // 0.1 seconde
+                                print("🔍 [AUTH] About to show verify screen, verifyEmailTemp: '\(verifyEmailTemp)'")
+                                showVerify = true
+                            }
                         },
-                        
-                        
                         onLogin: { path = [.login] }
                     )
                     
@@ -69,11 +84,21 @@ struct AuthFlowView: View {
                         engine: engine,
                         onBack: { path.removeLast() },
                         onSuccess: { email in
-                            verifyEmailTemp = email.lowercased()
-                            showVerify = true         // 🔥 OPEN FULLSCREEN HERE
+                            // 🔥 Afficher la page de vérification d'email
+                            let emailLowercased = email.lowercased().trimmingCharacters(in: .whitespaces)
+                            print("🔍 [AUTH] Setting verifyEmailTemp to: '\(emailLowercased)'")
+                            
+                            // Mettre à jour l'email AVANT d'afficher le fullScreenCover
+                            verifyEmailTemp = emailLowercased
+                            
+                            // Forcer la mise à jour du state avec Task
+                            Task { @MainActor in
+                                // Attendre que le state soit mis à jour
+                                try? await Task.sleep(nanoseconds: 100_000_000) // 0.1 seconde
+                                print("🔍 [AUTH] About to show verify screen, verifyEmailTemp: '\(verifyEmailTemp)'")
+                                showVerify = true
+                            }
                         },
-                        
-                        
                         onLogin: { path = [.login] }
                     )
                     
@@ -83,35 +108,64 @@ struct AuthFlowView: View {
                         engine: engine,
                         onBack: { path.removeLast() },
                         onSuccess: { email in
-                            verifyEmailTemp = email.lowercased()
-                            showVerify = true         // 🔥 OPEN FULLSCREEN HERE
+                            // 🔥 Afficher la page de vérification d'email
+                            let emailLowercased = email.lowercased().trimmingCharacters(in: .whitespaces)
+                            print("🔍 [AUTH] Setting verifyEmailTemp to: '\(emailLowercased)'")
+                            
+                            // Mettre à jour l'email AVANT d'afficher le fullScreenCover
+                            verifyEmailTemp = emailLowercased
+                            
+                            // Forcer la mise à jour du state avec Task
+                            Task { @MainActor in
+                                // Attendre que le state soit mis à jour
+                                try? await Task.sleep(nanoseconds: 100_000_000) // 0.1 seconde
+                                print("🔍 [AUTH] About to show verify screen, verifyEmailTemp: '\(verifyEmailTemp)'")
+                                showVerify = true
+                            }
                         },
-                        
                         onLogin: { path = [.login] }
                     )
+                    
                 case .verifyEmail:
                     VerifyEmailView(
-                        email: tempEmail,
+                        email: verifyEmailTemp,
+                        engine: engine,
                         onBackToLogin: { path = [.login] },
-                        onResendEmail: { await engine.userService.resendConfirmationEmail(email: tempEmail) }
+                        onResendEmail: {
+                            try? await engine.userService.resendConfirmationEmail(email: verifyEmailTemp)
+                        },
+                        onVerificationSuccess: {
+                            // Vérification réussie, rediriger vers le login
+                            path = [.login]
+                        },
+                        onSkipVerification: {
+                            path = [.login]
+                        }
                     )
                     
                 }
             }
-            
         }
         .fullScreenCover(isPresented: $showVerify) {
-            VerifyEmailView(
+            VerifyEmailViewWrapper(
                 email: verifyEmailTemp,
+                engine: engine,
                 onBackToLogin: {
                     showVerify = false
                     path = [.login]
                 },
                 onResendEmail: {
-                    await engine.userService.resendConfirmationEmail(email: verifyEmailTemp)
+                    try? await engine.userService.resendConfirmationEmail(email: verifyEmailTemp)
+                },
+                onVerificationSuccess: {
+                    showVerify = false
+                    path = [.login]
+                },
+                onSkipVerification: {
+                    showVerify = false
+                    path = [.login]
                 }
             )
         }
-
     }
 }

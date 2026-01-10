@@ -88,6 +88,16 @@ struct ProviderCreateServiceView: View {
                     }
                 }
 
+                // CARD: Checklist dynamique
+                if vm.category != nil {
+                    ServiceSetupChecklistView(
+                        category: vm.category,
+                        durationMinutes: vm.durationMinutes,
+                        price: vm.price
+                    )
+                    .padding(.horizontal, 20)
+                }
+                
                 // CARD: Prix
                 card {
                     VStack(alignment: .leading, spacing: 12) {

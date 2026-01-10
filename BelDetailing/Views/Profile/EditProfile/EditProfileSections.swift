@@ -42,6 +42,7 @@ struct EditProfileCustomerSections: View {
     var body: some View {
         VStack(spacing: 20) {
             EditProfileContactSection(viewModel: viewModel)
+            EditProfileVehicleSection(viewModel: viewModel)
             EditProfileLocationSection(viewModel: viewModel)
         }
     }
@@ -250,6 +251,21 @@ private struct ProviderLocationContent: View {
             Toggle(R.string.localizable.profileFieldMobileService(), isOn: $viewModel.providerHasMobileService)
                 .padding(.vertical, 4)
             MinPriceControls(viewModel: viewModel)
+            
+            Divider()
+                .padding(.vertical, 8)
+            
+            // Transport fees section
+            // Note: Les frais de transport sont maintenant fixes (zones avec plafond 20€)
+            // Le provider peut uniquement activer/désactiver le service à domicile
+            VStack(alignment: .leading, spacing: 12) {
+                Text(R.string.localizable.profileSectionTransport())
+                    .font(.system(size: 16, weight: .semibold))
+                    .foregroundColor(.black)
+                
+                Toggle(R.string.localizable.profileFieldTransportEnabled(), isOn: $viewModel.providerTransportEnabled)
+                    .padding(.vertical, 4)
+            }
         }
     }
 }
@@ -276,10 +292,72 @@ private struct CustomerLocationContent: View {
     
     var body: some View {
         VStack(spacing: 12) {
-            // Customer doesn't have location fields in the current model
-            Text("—")
-                .font(.system(size: 14))
-                .foregroundColor(.gray)
+            EditableInfoRow(
+                label: R.string.localizable.profileFieldAddress(),
+                value: $viewModel.customerAddress
+            )
+        }
+    }
+}
+
+// MARK: - Vehicle Section (Customer only)
+struct EditProfileVehicleSection: View {
+    @ObservedObject var viewModel: EditProfileViewModel
+    
+    var body: some View {
+        SectionCard(title: R.string.localizable.profileSectionVehicle()) {
+            VehicleTypePicker(selectedVehicleType: $viewModel.customerVehicleType)
+        }
+    }
+}
+
+private struct VehicleTypePicker: View {
+    @Binding var selectedVehicleType: VehicleType?
+    
+    var body: some View {
+        VStack(spacing: 12) {
+            Menu {
+                ForEach(VehicleType.allCases) { vehicleType in
+                    Button {
+                        selectedVehicleType = vehicleType
+                    } label: {
+                        HStack {
+                            Image(systemName: vehicleType.icon)
+                            Text(vehicleType.localizedName)
+                            if selectedVehicleType == vehicleType {
+                                Spacer()
+                                Image(systemName: "checkmark")
+                            }
+                        }
+                    }
+                }
+            } label: {
+                HStack {
+                    if let selected = selectedVehicleType {
+                        Image(systemName: selected.icon)
+                            .foregroundColor(.black)
+                        Text(selected.localizedName)
+                            .foregroundColor(.black)
+                    } else {
+                        Text(R.string.localizable.profileFieldVehicleTypePlaceholder())
+                            .foregroundColor(.gray)
+                    }
+                    Spacer()
+                    Image(systemName: "chevron.down")
+                        .font(.system(size: 12, weight: .medium))
+                        .foregroundColor(.gray)
+                }
+                .padding(.vertical, 12)
+                .padding(.horizontal, 16)
+                .background(Color(.secondarySystemBackground))
+                .cornerRadius(12)
+            }
+            
+            if selectedVehicleType == nil {
+                Text(R.string.localizable.profileFieldVehicleTypeRequired())
+                    .font(.system(size: 13))
+                    .foregroundColor(.orange)
+            }
         }
     }
 }

@@ -26,6 +26,33 @@ final class LoginViewModel: NSObject, ObservableObject {
     // MARK: - Public API
 
     func signInWithApple() {
+        // Vérifier l'état de l'autorisation Apple avant de faire la requête
+        let provider = ASAuthorizationAppleIDProvider()
+        
+        // Vérifier si l'utilisateur a déjà un compte Apple connecté
+        provider.getCredentialState(forUserID: getStoredAppleUserID()) { [weak self] state, error in
+            guard let self = self else { return }
+            
+            Task { @MainActor in
+                switch state {
+                case .authorized:
+                    // L'utilisateur est déjà autorisé, on peut procéder
+                    self.performAppleSignIn()
+                case .revoked, .notFound:
+                    // L'utilisateur a révoqué ou n'a pas de compte, on fait une nouvelle requête
+                    self.performAppleSignIn()
+                case .transferred:
+                    // Compte transféré (rare), on fait une nouvelle requête
+                    self.performAppleSignIn()
+                @unknown default:
+                    // Cas inconnu, on essaie quand même
+                    self.performAppleSignIn()
+                }
+            }
+        }
+    }
+    
+    private func performAppleSignIn() {
         let provider = ASAuthorizationAppleIDProvider()
         let request = provider.createRequest()
         request.requestedScopes = [.fullName, .email]
@@ -37,6 +64,16 @@ final class LoginViewModel: NSObject, ObservableObject {
 
         isLoading = true
         errorMessage = nil
+    }
+    
+    private func getStoredAppleUserID() -> String {
+        // Récupérer l'ID Apple stocké (si disponible)
+        return UserDefaults.standard.string(forKey: "apple_user_id") ?? ""
+    }
+    
+    private func storeAppleUserID(_ userID: String) {
+        // Stocker l'ID Apple pour les vérifications futures
+        UserDefaults.standard.set(userID, forKey: "apple_user_id")
     }
 
     func signInWithGoogle() {
@@ -80,6 +117,10 @@ final class LoginViewModel: NSObject, ObservableObject {
             return
         }
 
+        // Stocker l'ID Apple pour les vérifications futures
+        let appleUserID = credential.user
+        storeAppleUserID(appleUserID)
+
         let authCodeString: String?
         if let authCodeData = credential.authorizationCode {
             authCodeString = String(data: authCodeData, encoding: .utf8)
@@ -97,33 +138,98 @@ final class LoginViewModel: NSObject, ObservableObject {
             fullNameString = nil
         }
 
-        let email = credential.email // dispo seulement la 1ère fois
-
-        let response = await userService.loginWithApple(
-            identityToken: identityToken,
-            authorizationCode: authCodeString,
-            fullName: fullNameString,
-            email: email
-        )
-
-        switch response {
-        case .success:
-            self.isLoading = false
-            self.errorMessage = nil
-            self.onLoginSuccess()// 👉 ici tu peux envoyer une notification ou callback
-        case .failure(let error):
-            self.isLoading = false
-            self.errorMessage = error.localizedDescription
+        // ⚠️ GESTION EMAIL MASQUÉ
+        // Si email est nil (masqué), on utilise l'ID Apple comme identifiant
+        // Le backend devra gérer ce cas
+        var email = credential.email
+        
+        // Si email est masqué et qu'on a déjà un compte, on peut récupérer l'email depuis le backend
+        if email == nil {
+            // Essayer de récupérer l'email depuis le profil utilisateur existant
+            // Si l'utilisateur a déjà un compte, le backend devrait le reconnaître via l'ID Apple
+            print("⚠️ [Apple Sign In] Email masqué, utilisation de l'ID Apple comme identifiant")
         }
+
+        // Retry logic avec maximum 2 tentatives
+        var attempts = 0
+        let maxAttempts = 2
+        
+        while attempts < maxAttempts {
+            let response = await userService.loginWithApple(
+                identityToken: identityToken,
+                authorizationCode: authCodeString,
+                fullName: fullNameString,
+                email: email
+            )
+
+            switch response {
+            case .success(let session):
+                self.isLoading = false
+                self.errorMessage = nil
+                
+                // ✅ ASSOCIER USER ID AVEC ONESIGNAL
+                let userId = session.user.id
+                NotificationsManager.shared.loginOneSignal(userId: userId)
+                
+                // Analytics: User logged in
+                FirebaseManager.shared.logEvent(
+                    FirebaseManager.Event.userLoggedIn,
+                    parameters: ["method": "apple"]
+                )
+                
+                self.onLoginSuccess()
+                return // ✅ Succès, on sort
+                
+            case .failure(let error):
+                attempts += 1
+                
+                // Si c'est une erreur réseau et qu'on n'a pas atteint le max, on réessaie
+                if attempts < maxAttempts && isNetworkError(error) {
+                    print("⚠️ [Apple Sign In] Erreur réseau, nouvelle tentative (\(attempts)/\(maxAttempts))")
+                    // Attendre 1 seconde avant de réessayer
+                    try? await Task.sleep(nanoseconds: 1_000_000_000)
+                    continue
+                } else {
+                    // Erreur finale ou erreur non-réseau
+                    self.isLoading = false
+                    self.errorMessage = error.localizedDescription
+                    return
+                }
+            }
+        }
+    }
+    
+    // MARK: - Helper: Détecter erreurs réseau
+    
+    private func isNetworkError(_ error: Error) -> Bool {
+        let nsError = error as NSError
+        // Erreurs réseau courantes
+        return nsError.domain == NSURLErrorDomain && (
+            nsError.code == NSURLErrorNotConnectedToInternet ||
+            nsError.code == NSURLErrorTimedOut ||
+            nsError.code == NSURLErrorNetworkConnectionLost ||
+            nsError.code == NSURLErrorCannotConnectToHost
+        )
     }
 
     private func handleGoogleToken(idToken: String) async {
           let response = await userService.loginWithGoogle(idToken: idToken)
 
           switch response {
-          case .success:
+          case .success(let session):
               self.isLoading = false
               self.errorMessage = nil
+              
+              // ✅ ASSOCIER USER ID AVEC ONESIGNAL
+              let userId = session.user.id
+              NotificationsManager.shared.loginOneSignal(userId: userId)
+              
+              // Analytics: User logged in
+              FirebaseManager.shared.logEvent(
+                  FirebaseManager.Event.userLoggedIn,
+                  parameters: ["method": "google"]
+              )
+              
               self.onLoginSuccess()      // 👈 ICI
           case .failure(let error):
               self.isLoading = false

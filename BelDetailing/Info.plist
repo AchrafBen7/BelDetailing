@@ -38,5 +38,7 @@
 	</array>
 	<key>NSCalendarsUsageDescription</key>
 	<string>NIOS a besoin d'accéder à votre calendrier pour synchroniser vos réservations et vous rappeler vos rendez-vous.</string>
+	<key>OneSignalAppID</key>
+	<string>011c44fa-19de-41c1-8056-25de419cf874</string>
 </dict>
 </plist>

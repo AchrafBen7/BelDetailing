@@ -62,11 +62,7 @@ final class HomeViewModel: ObservableObject {
             if !recommended.isEmpty {
                 print("ℹ️ [HomeVM] using recommended as all, count:", recommended.count)
                 self.allDetailers = recommended
-            } else {
-                // ultimate fallback: samples (optioneel)
-                print("ℹ️ [HomeVM] using samples as all, count:", Detailer.sampleValues.count)
-                self.allDetailers = Detailer.sampleValues
-            }
+            } 
         }
 
         print("🔵 [HomeVM] load() END — recommended:", recommended.count, "all:", allDetailers.count)

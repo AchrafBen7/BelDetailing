@@ -15,168 +15,185 @@ struct WelcomeView: View {
   @State private var contentVisible = false
 
   var body: some View {
-    ScrollView(showsIndicators: false) {
-      VStack(spacing: 0) {
-        // MARK: - Fullscreen Header Image
-        GeometryReader { geometry in
-          Image("launchImage")
-            .resizable()
-            .scaledToFill()
-            .frame(width: geometry.size.width,
-                   height: max(geometry.size.height, 420)) // plus haut = immersion
-            .clipped()
-            .overlay(
-              LinearGradient(
-                gradient: Gradient(colors: [.clear, .white]),
-                startPoint: .center,
-                endPoint: .bottom
-              )
-              .frame(height: 220)
-              .padding(.top, 200),
-              alignment: .bottom
-            )
-            .offset(y: geometry.frame(in: .global).minY > 0 ? -geometry.frame(in: .global).minY : 0)
-        }
-        .frame(height: 420)
-        .ignoresSafeArea(edges: .top)
-
-        // MARK: - Main Content
-        VStack(spacing: 28) {
-          // Titre principal
-          VStack(spacing: 8) {
-            R.string.localizable.welcomeTitle()
-              .textView(style: .title, multilineAlignment: .center)
-            R.string.localizable.welcomeSubtitle()
-              .textView(style: .description, multilineAlignment: .center)
-          }
-          .padding(.horizontal, 28)
-          .padding(.top, -20)
-
-          // MARK: - Avantages (3 cartes)
-          VStack(spacing: 16) {
-            WelcomeFeatureRow(
-              icon: "sparkles",
-              title: R.string.localizable.welcomeProsTitle(),
-              subtitle: R.string.localizable.welcomeProsSubtitle()
-            )
-            WelcomeFeatureRow(
-              icon: "shield",
-              title: R.string.localizable.welcomeSecureTitle(),
-              subtitle: R.string.localizable.welcomeSecureSubtitle()
-            )
-            WelcomeFeatureRow(
-              icon: "clock",
-              title: R.string.localizable.welcomeFastTitle(),
-              subtitle: R.string.localizable.welcomeFastSubtitle()
-            )
-          }
-          .padding(.horizontal, 24)
-
-          // MARK: - Statistiques
-          HStack(spacing: 32) {
-            WelcomeStat(
-              title: R.string.localizable.welcomeStatsProfessionals(),
-              value: "500+"
-            )
-            WelcomeStat(
-              title: R.string.localizable.welcomeStatsRating(),
-              value: "4.9",
-              systemIcon: "star.fill",
-              iconColor: Color(R.color.secondaryOrange)
-            )
-            WelcomeStat(
-              title: R.string.localizable.welcomeStatsBookings(),
-              value: "10k+"
-            )
-          }
-          .padding()
-          .frame(maxWidth: .infinity)
-          .background(.ultraThinMaterial)
-          .clipShape(RoundedRectangle(cornerRadius: 22))
-          .shadow(color: .black.opacity(0.05), radius: 5, y: 3)
-          .padding(.horizontal, 24)
-            // MARK: - Boutons
-            VStack(spacing: 14) {
-              Button(action: onStart) {
-                R.string.localizable.commonStart()
-                  .textView(style: .buttonCTA, multilineAlignment: .center)
-              }
-              .buttonStyle(WelcomePrimaryButton())
-
-                Button(action: onLogin) {
-                  R.string.localizable.authLogin()
-                    .textView(style: .buttonSecondary, multilineAlignment: .center)
-                }
-                .buttonStyle(WelcomeSecondaryButton())
-            }
-
-          .padding(.horizontal, 28)
-          .padding(.bottom, 60)
-        }
-        .opacity(contentVisible ? 1 : 0)
-        .animation(.easeOut(duration: 0.9), value: contentVisible)
+    ZStack {
+      // MARK: - Fullscreen Background Image
+      GeometryReader { geometry in
+        Image("launchImage")
+          .resizable()
+          .scaledToFill()
+          .frame(width: geometry.size.width, height: geometry.size.height)
+          .clipped()
+          .overlay(
+            // Dark overlay
+            Color.black.opacity(0.65)
+          )
       }
+      .ignoresSafeArea()
+      
+      // MARK: - Content
+      VStack(spacing: 0) {
+        // Top badge
+        HStack {
+          brandBadge
+          Spacer()
+        }
+        .padding(.top, 60)
+        .padding(.horizontal, 20)
+        
+        Spacer()
+        
+        // Main content
+        VStack(spacing: 0) {
+          // Title & Subtitle (aligned left)
+          VStack(alignment: .leading, spacing: 12) {
+            Text(R.string.localizable.welcomeTitleNew())
+              .font(.system(size: 34, weight: .bold))
+              .foregroundColor(.white)
+              .multilineTextAlignment(.leading)
+              .lineSpacing(4)
+            
+            Text(R.string.localizable.welcomeSubtitleNew())
+              .font(.system(size: 16, weight: .regular))
+              .foregroundColor(.white.opacity(0.95))
+              .multilineTextAlignment(.leading)
+              .lineSpacing(2)
+          }
+          .padding(.horizontal, 28)
+          .padding(.bottom, 32)
+          .frame(maxWidth: .infinity, alignment: .leading)
+          
+          // Features Box
+          featuresBox
+            .padding(.horizontal, 20)
+            .padding(.bottom, 40) // Plus d'espace avant les boutons
+          
+          // Buttons
+          VStack(spacing: 14) {
+            Button(action: onStart) {
+              HStack(spacing: 12) {
+                Text(R.string.localizable.commonStart())
+                  .font(.system(size: 18, weight: .bold))
+                  .foregroundColor(.black)
+                Image(systemName: "arrow.right")
+                  .font(.system(size: 16, weight: .bold))
+                  .foregroundColor(.black)
+              }
+              .frame(height: 58)
+              .frame(maxWidth: .infinity)
+              .background(Color.white)
+              .clipShape(RoundedRectangle(cornerRadius: 18))
+              .shadow(color: .black.opacity(0.15), radius: 8, y: 4)
+            }
+            .buttonStyle(WelcomeButtonStyle())
+            
+            Button(action: onLogin) {
+              Text(R.string.localizable.authLogin())
+                .font(.system(size: 17, weight: .semibold))
+                .foregroundColor(.white)
+                .frame(maxWidth: .infinity)
+                .frame(height: 58)
+                .background(Color.gray.opacity(0.4))
+                .overlay(
+                  RoundedRectangle(cornerRadius: 18)
+                    .stroke(Color.gray.opacity(0.5), lineWidth: 1)
+                )
+                .clipShape(RoundedRectangle(cornerRadius: 18))
+                .shadow(color: .black.opacity(0.1), radius: 4, y: 2)
+            }
+            .buttonStyle(WelcomeButtonStyle())
+          }
+          .padding(.horizontal, 20)
+          
+          // Bottom stat
+          Text(R.string.localizable.welcomeBottomStat())
+            .font(.system(size: 14, weight: .regular))
+            .foregroundColor(.white.opacity(0.85))
+            .padding(.top, 24)
+        }
+        .padding(.bottom, 50)
+      }
+      .opacity(contentVisible ? 1 : 0)
+      .animation(.easeOut(duration: 0.9), value: contentVisible)
     }
-    .background(Color.white.ignoresSafeArea())
     .onAppear { contentVisible = true }
   }
-}
-
-// MARK: - Feature Card
-struct WelcomeFeatureRow: View {
-  let icon: String
-  let title: String
-  let subtitle: String
-
-  var body: some View {
-    HStack(spacing: 14) {
-      Image(systemName: icon)
-        .font(.system(size: 22))
-        .foregroundColor(.black)
-        .frame(width: 46, height: 46)
-        .background(Color.gray.opacity(0.1))
-        .clipShape(Circle())
-
-      VStack(alignment: .leading, spacing: 3) {
-        Text(title)
-          .font(.system(size: 17, weight: .semibold))
-        Text(subtitle)
-          .font(.system(size: 15))
-          .foregroundColor(.secondary)
-      }
-
-      Spacer()
+  
+  // MARK: - Brand Badge
+  private var brandBadge: some View {
+    HStack(spacing: 6) {
+      Circle()
+        .fill(Color.orange)
+        .frame(width: 8, height: 8)
+      
+      Text("NIOS")
+        .font(.system(size: 13, weight: .bold))
+        .foregroundColor(.white)
+      
+      Text("beldetailing")
+        .font(.system(size: 13, weight: .regular))
+        .foregroundColor(.white.opacity(0.85))
     }
-    .padding(.vertical, 14)
-    .padding(.horizontal, 16)
-    .background(.ultraThinMaterial)
-    .clipShape(RoundedRectangle(cornerRadius: 18))
-    .shadow(color: .black.opacity(0.05), radius: 4, y: 2)
+    .padding(.horizontal, 14)
+    .padding(.vertical, 9)
+    .background(Color.gray.opacity(0.4))
+    .clipShape(RoundedRectangle(cornerRadius: 22))
+  }
+  
+  // MARK: - Features Box
+  private var featuresBox: some View {
+    VStack(alignment: .leading, spacing: 18) {
+      WelcomeFeatureItem(
+        text: R.string.localizable.welcomeFeatureQuality()
+      )
+      WelcomeFeatureItem(
+        text: R.string.localizable.welcomeFeatureFast()
+      )
+      WelcomeFeatureItem(
+        text: R.string.localizable.welcomeFeatureTrust()
+      )
+    }
+    .padding(.vertical, 22)
+    .padding(.horizontal, 20)
+    .background(Color.gray.opacity(0.3))
+    .clipShape(RoundedRectangle(cornerRadius: 22))
   }
 }
 
-// MARK: - Stats
-struct WelcomeStat: View {
-  let title: String
-  let value: String
-  var systemIcon: String? = nil
-  var iconColor: Color = Color(R.color.secondaryOrange)
-
+// MARK: - Feature Item
+struct WelcomeFeatureItem: View {
+  let text: String
+  
   var body: some View {
-    VStack(spacing: 6) {
-      HStack(spacing: 5) {
-        if let systemIcon {
-          Image(systemName: systemIcon)
-            .font(.system(size: 15, weight: .semibold))
-            .foregroundStyle(iconColor)
-        }
-        Text(value)
-          .font(.system(size: 21, weight: .bold))
+    HStack(spacing: 14) {
+      // Checkmark circle
+      ZStack {
+        Circle()
+          .fill(Color.white.opacity(0.25))
+          .frame(width: 26, height: 26)
+        
+        Image(systemName: "checkmark")
+          .font(.system(size: 13, weight: .bold))
+          .foregroundColor(.white)
       }
-      Text(title)
-        .font(.system(size: 14))
-        .foregroundStyle(.secondary)
+      
+      Text(text)
+        .font(.system(size: 16, weight: .medium))
+        .foregroundColor(.white)
+        .lineSpacing(2)
+      
+      
+      Spacer()
     }
+  }
+}
+
+// MARK: - Welcome Button Style
+struct WelcomeButtonStyle: ButtonStyle {
+  func makeBody(configuration: Configuration) -> some View {
+    configuration.label
+      .scaleEffect(configuration.isPressed ? 0.97 : 1.0)
+      .opacity(configuration.isPressed ? 0.9 : 1.0)
+      .animation(.easeInOut(duration: 0.15), value: configuration.isPressed)
   }
 }
 

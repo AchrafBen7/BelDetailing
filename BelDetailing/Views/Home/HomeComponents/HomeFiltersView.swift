@@ -17,7 +17,6 @@ struct HomeFiltersView: View {
       }
       .padding(.horizontal, AppStyle.Padding.small16.rawValue)
       .padding(.vertical, AppStyle.Padding.small16.rawValue)
-      .background(Color.white)
     }
   }
 }

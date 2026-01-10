@@ -11,9 +11,11 @@ final class DetailerDetailViewModel: ObservableObject {
 
     @Published var detailer: Detailer?
     @Published var services: [Service] = []
+    @Published var portfolioPhotos: [PortfolioPhoto] = []
 
     @Published var isLoading = true
     @Published var isLoadingServices = true
+    @Published var isLoadingPortfolio = false
     @Published var errorText: String?
     @Published var reviews: [Review] = []
     @Published var isLoadingReviews = false
@@ -45,6 +47,7 @@ final class DetailerDetailViewModel: ObservableObject {
         // Load services AFTER profile
         await loadServices()
         await loadReviews()
+        await loadPortfolio()
 
     }
 
@@ -77,6 +80,21 @@ final class DetailerDetailViewModel: ObservableObject {
         }
 
         isLoadingReviews = false
+    }
+    
+    func loadPortfolio() async {
+        isLoadingPortfolio = true
+        
+        let response = await engine.providerPortfolioService.getPortfolio(providerId: id)
+        
+        switch response {
+        case .success(let photos):
+            self.portfolioPhotos = photos
+        case .failure:
+            self.portfolioPhotos = []
+        }
+        
+        isLoadingPortfolio = false
     }
 
 }

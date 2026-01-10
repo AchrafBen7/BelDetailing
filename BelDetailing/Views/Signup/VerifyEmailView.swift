@@ -8,163 +8,252 @@ import RswiftResources
 
 struct VerifyEmailView: View {
     let email: String
+    let engine: Engine
     let onBackToLogin: () -> Void
     let onResendEmail: () async -> Void
+    let onVerificationSuccess: (() -> Void)? // Callback quand la vérification réussit
+    let onSkipVerification: (() -> Void)? // Optionnel : pour continuer sans vérification
 
+    @State private var verificationCode = ""
     @State private var secondsLeft = 60
+    @State private var isResending = false
+    @State private var isVerifying = false
+    @State private var showResendSuccess = false
+    @State private var showResendError = false
+    @State private var showVerificationError = false
+    @State private var verificationErrorMessage = ""
 
     var body: some View {
-        VStack(spacing: 28) {
-
-            // Icone
-            ZStack {
-                Circle()
-                    .fill(Color.orange.opacity(0.15))
-                    .frame(width: 120, height: 120)
-
-                Image(systemName: "envelope.fill")
-                    .font(.system(size: 40))
-                    .foregroundColor(.orange)
-
-                VStack {
+        ZStack {
+            // MARK: - Fullscreen Background Image
+            GeometryReader { geometry in
+                Image("launchImage")
+                    .resizable()
+                    .scaledToFill()
+                    .frame(width: geometry.size.width, height: geometry.size.height)
+                    .clipped()
+                    .overlay(
+                        // Dark overlay
+                        Color.black.opacity(0.65)
+                    )
+            }
+            .ignoresSafeArea()
+            
+            // MARK: - Content
+            VStack(spacing: 0) {
+                // MARK: - Back Button (Top Left)
+                HStack {
+                    Button(action: onBackToLogin) {
+                        HStack(spacing: 8) {
+                            Image(systemName: "chevron.left")
+                                .font(.system(size: 17, weight: .semibold))
+                            Text("Retour")
+                                .font(.system(size: 17, weight: .medium))
+                        }
+                        .foregroundColor(.white)
+                        .padding(.horizontal, 16)
+                        .padding(.vertical, 10)
+                        .background(
+                            RoundedRectangle(cornerRadius: 12)
+                                .fill(Color.gray.opacity(0.3))
+                        )
+                    }
                     Spacer()
-                    HStack {
-                        Spacer()
-                        ZStack {
-                            Circle()
-                                .fill(Color.blue)
-                                .frame(width: 36, height: 36)
-                            Image(systemName: "checkmark")
+                }
+                .padding(.top, 60)
+                .padding(.horizontal, 20)
+                
+                Spacer()
+                
+                // MARK: - Main Content (Centered)
+                VStack(spacing: 32) {
+                    // Icon - Shield
+                    RoundedRectangle(cornerRadius: 20)
+                        .fill(Color.brown.opacity(0.8))
+                        .frame(width: 100, height: 100)
+                        .overlay(
+                            Image(systemName: "shield.fill")
+                                .font(.system(size: 50, weight: .regular))
                                 .foregroundColor(.white)
-                                .font(.system(size: 18, weight: .bold))
+                        )
+                    
+                    // Title
+                    Text("Vérification")
+                        .font(.system(size: 32, weight: .bold))
+                        .foregroundColor(.white)
+                    
+                    // Instructions
+                    VStack(spacing: 8) {
+                        Text("Entrez le code à 6 chiffres envoyé à")
+                            .font(.system(size: 16, weight: .regular))
+                            .foregroundColor(.white.opacity(0.9))
+                        
+                        Text(email.isEmpty ? "Email non disponible" : email)
+                            .font(.system(size: 16, weight: .medium))
+                            .foregroundColor(.white)
+                            .onAppear {
+                                print("🔍 [VERIFY] Email in view: '\(email)'")
+                            }
+                    }
+                    
+                    // Code Input Field
+                    CodeInputField(code: $verificationCode, numberOfDigits: 6) {
+                        // Code complet, vérifier automatiquement
+                        verifyCode()
+                    }
+                    .padding(.horizontal, 20)
+                    
+                    // Message d'erreur
+                    if !verificationErrorMessage.isEmpty {
+                        Text(verificationErrorMessage)
+                            .font(.system(size: 14))
+                            .foregroundColor(.red.opacity(0.9))
+                            .multilineTextAlignment(.center)
+                            .padding(.horizontal, 20)
+                    }
+                    
+                    // Bouton Vérifier
+                    Button {
+                        verifyCode()
+                    } label: {
+                        ZStack {
+                            if isVerifying {
+                                ProgressView()
+                                    .progressViewStyle(CircularProgressViewStyle(tint: .white))
+                            } else {
+                                Text("Vérifier")
+                                    .font(.system(size: 17, weight: .semibold))
+                                    .foregroundColor(.white)
+                            }
+                        }
+                        .frame(maxWidth: .infinity)
+                        .frame(height: 56)
+                        .background(Color.white.opacity(0.25))
+                        .clipShape(RoundedRectangle(cornerRadius: 16))
+                    }
+                    .disabled(verificationCode.count != 6 || isVerifying)
+                    .opacity(verificationCode.count == 6 ? 1.0 : 0.6)
+                    .padding(.horizontal, 20)
+                    
+                    // Resend Code Link
+                    Button {
+                        Task {
+                            guard secondsLeft == 0, !isResending else { return }
+                            isResending = true
+                            do {
+                                await onResendEmail()
+                                showResendSuccess = true
+                                resetTimer()
+                            } catch {
+                                showResendError = true
+                            }
+                            isResending = false
+                        }
+                    } label: {
+                        if isResending {
+                            ProgressView()
+                                .progressViewStyle(CircularProgressViewStyle(tint: .white))
+                        } else {
+                            let resendTitle: String = {
+                                if secondsLeft > 0 {
+                                    return "Renvoyer le code (\(secondsLeft)s)"
+                                } else {
+                                    return "Renvoyer le code"
+                                }
+                            }()
+                            
+                            Text(resendTitle)
+                                .font(.system(size: 16, weight: .regular))
+                                .foregroundColor(.white)
+                                .underline()
                         }
                     }
+                    .disabled(secondsLeft > 0 || isResending)
+                    .opacity(secondsLeft > 0 || isResending ? 0.5 : 1.0)
+                    
+                    // Spam folder instruction
+                    Text("Vérifiez votre dossier spam si vous ne voyez pas l'email")
+                        .font(.system(size: 14, weight: .regular))
+                        .foregroundColor(.white.opacity(0.7))
+                        .multilineTextAlignment(.center)
+                        .padding(.horizontal, 40)
+                        .padding(.top, 8)
                 }
-                .frame(width: 120, height: 120)
+                .padding(.vertical, 40)
+                
+                Spacer()
             }
-            .padding(.top, 40)
-
-            // Titre + texte
-            VStack(spacing: 8) {
-                R.string.localizable.verifyEmailTitle()
-                    .textView(style: .sectionTitle)
-
-                R.string.localizable.verifyEmailSubtitle1()
-                    .textView(style: .subtitle)
-
-
-                Text(email)
-                    .font(.system(size: 18, weight: .semibold))
-                    .foregroundColor(.black)
-
-                R.string.localizable.verifyEmailSubtitle2()
-                    .textView(style: .subtitle)
-                    .multilineTextAlignment(.center)
-                    .padding(.horizontal, 24)
-
-            }
-            .padding(.horizontal, 20)
-
-            // Étapes
-            VStack(alignment: .leading, spacing: 18) {
-                verifyStep(
-                    number: 1,
-                    title: Text(R.string.localizable.verifyEmailStep1Title()),
-                    subtitle: Text(R.string.localizable.verifyEmailStep1Subtitle())
-                )
-
-                verifyStep(
-                    number: 2,
-                    title: Text(R.string.localizable.verifyEmailStep2Title()),
-                    subtitle: Text(R.string.localizable.verifyEmailStep2Subtitle())
-                )
-
-                verifyStep(
-                    number: 3,
-                    title: Text(R.string.localizable.verifyEmailStep3Title()),
-                    subtitle: Text(R.string.localizable.verifyEmailStep3Subtitle())
-                )
-            }
-
-            .padding(20)
-            .background(Color.white)
-            .cornerRadius(22)
-            .shadow(color: .black.opacity(0.05), radius: 6, y: 3)
-            .padding(.horizontal, 20)
-
-            // RESEND BUTTON
-            // RESEND BUTTON
-            Button {
-                Task {
-                    guard secondsLeft == 0 else { return }
-                    await onResendEmail()
-                    resetTimer()
-                }
-            } label: {
-                let resendTitle: String = {
-                    if secondsLeft > 0 {
-                        // ⚠️ on passe une String, pas un Int
-                        return R.string.localizable.verifyEmailResendCountdown("\(secondsLeft)")
-                    } else {
-                        return R.string.localizable.verifyEmailResend()
-                    }
-                }()
-
-                Text(resendTitle)
-                    .font(.system(size: 18, weight: .semibold))
-                    .frame(maxWidth: .infinity)
-                    .padding(.vertical, 16)
-                    .background(Color.gray.opacity(secondsLeft > 0 ? 0.4 : 1))
-                    .foregroundColor(.white)
-                    .cornerRadius(16)
-            }
-            .disabled(secondsLeft > 0)
-            .padding(.horizontal, 20)
-
-            // Retour à la connexion
-            Button(action: onBackToLogin) {
-                Text(R.string.localizable.verifyEmailBackToLogin())
-                    .font(.system(size: 16))
-                    .foregroundColor(.black)
-                    .underline()
-            }
-
-            Spacer()
         }
-        .onAppear { startTimer() }
-        .background(Color(.systemGroupedBackground).ignoresSafeArea())
-    }
-
-    private func verifyStep(number: Int, title: Text, subtitle: Text) -> some View {
-        HStack(alignment: .top, spacing: 14) {
-            Circle()
-                .fill(Color.orange.opacity(0.15))
-                .frame(width: 32, height: 32)
-                .overlay(
-                    Text("\(number)")
-                        .font(.system(size: 16, weight: .semibold))
-                        .foregroundColor(.orange)
-                )
-
-            VStack(alignment: .leading, spacing: 4) {
-                title
-                    .font(.system(size: 17, weight: .semibold))
-                    .foregroundColor(.black)
-
-                subtitle
-                    .font(.system(size: 15))
-                    .foregroundColor(.gray)
+        .onAppear { 
+            startTimer()
+            print("🔍 [VERIFY] VerifyEmailView appeared with email: '\(email)'")
+            if email.isEmpty {
+                print("❌ [VERIFY] WARNING: Email is empty!")
             }
-            Spacer()
+        }
+        .alert("Email renvoyé", isPresented: $showResendSuccess) {
+            Button("OK", role: .cancel) { }
+        } message: {
+            Text("Un nouvel email de vérification a été envoyé.")
+        }
+        .alert("Erreur", isPresented: $showResendError) {
+            Button("OK", role: .cancel) { }
+        } message: {
+            Text("Impossible de renvoyer l'email. Veuillez réessayer plus tard.")
+        }
+        .alert("Erreur de vérification", isPresented: $showVerificationError) {
+            Button("OK", role: .cancel) { }
+        } message: {
+            Text(verificationErrorMessage.isEmpty ? "Code invalide ou expiré. Veuillez réessayer." : verificationErrorMessage)
+        }
+    }
+    
+    private func verifyCode() {
+        guard verificationCode.count == 6, !isVerifying else { return }
+        
+        // Vérifier que l'email n'est pas vide
+        guard !email.isEmpty else {
+            print("❌ [VERIFY] Email is empty!")
+            verificationErrorMessage = "Email manquant. Veuillez réessayer."
+            showVerificationError = true
+            return
+        }
+        
+        isVerifying = true
+        verificationErrorMessage = ""
+        
+        let emailToVerify = email.trimmingCharacters(in: .whitespaces).lowercased()
+        let codeToVerify = verificationCode.trimmingCharacters(in: .whitespaces)
+        
+        print("🔍 [VERIFY] Verifying code for email: '\(emailToVerify)', code: '\(codeToVerify)'")
+        
+        Task {
+            let response = await engine.userService.verifyEmail(email: emailToVerify, code: codeToVerify)
+            
+            await MainActor.run {
+                isVerifying = false
+                
+                switch response {
+                case .success:
+                    // Vérification réussie
+                    onVerificationSuccess?()
+                case .failure(let error):
+                    verificationErrorMessage = error.localizedDescription
+                    showVerificationError = true
+                    // Réinitialiser le code pour permettre une nouvelle tentative
+                    verificationCode = ""
+                }
+            }
         }
     }
 
     private func startTimer() {
-        Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { timer in
-            if secondsLeft > 0 {
-                secondsLeft -= 1
-            } else {
-                timer.invalidate()
+        Task {
+            while secondsLeft > 0 {
+                try? await Task.sleep(nanoseconds: 1_000_000_000) // 1 seconde
+                if secondsLeft > 0 {
+                    secondsLeft -= 1
+                }
             }
         }
     }

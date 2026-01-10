@@ -150,56 +150,51 @@ struct TaxesView: View {
     }
     
     var body: some View {
-        ZStack(alignment: .topLeading) {
-            Color(.systemGroupedBackground)
+        ZStack {
+            // Fond global clair
+            Color(R.color.mainBackground.name)
                 .ignoresSafeArea()
+                // Bande noire qui va jusqu'en haut (sous la status bar)
+                .overlay(
+                    Color.black
+                        .frame(height: 240)
+                        .ignoresSafeArea(edges: .top),
+                    alignment: .top
+                )
             
             ScrollView(showsIndicators: false) {
-                VStack(alignment: .leading, spacing: 24) {
-                    
-                    Button {
-                        dismiss()
-                    } label: {
-                        Image(systemName: "chevron.left")
-                            .font(.system(size: 20, weight: .semibold))
-                            .foregroundColor(.black)
-                            .padding(.vertical, 4)
+                VStack(spacing: 0) {
+                    // Header noir
+                    header
+
+                    // Contenu
+                    VStack(alignment: .leading, spacing: 24) {
+                        // MARK: - Sélecteur de mois
+                        monthSelector
+
+                        // MARK: - Résumé (optionnel si backend fournit)
+                        if let sum = vm.summary {
+                            summaryCard(sum)
+                        }
+
+                        // MARK: - TVA Card (existant)
+                        vatCard
+
+                        // MARK: - Invoices (existant)
+                        invoicesSection
+
+                        // MARK: - Documents (nouvelle logique sans mock)
+                        documentsSection
+                        
+                        Spacer(minLength: 20)
                     }
-                    
-                    VStack(alignment: .leading, spacing: 4) {
-                        Text(R.string.localizable.taxesTitle())
-                            .font(.system(size: 28, weight: .bold))
-                        Text(R.string.localizable.taxesSubtitle())
-                            .font(.system(size: 16))
-                            .foregroundColor(.gray)
-                    }
-                    .padding(.top, 4)
-
-                    // MARK: - Sélecteur de mois
-                    monthSelector
-
-                    // MARK: - Résumé (optionnel si backend fournit)
-                    if let sum = vm.summary {
-                        summaryCard(sum)
-                    }
-
-                    // MARK: - TVA Card (existant)
-                    vatCard
-
-                    // MARK: - Invoices (existant)
-                    invoicesSection
-
-                    // MARK: - Documents (nouvelle logique sans mock)
-                    documentsSection
-                    
-                    Spacer(minLength: 20)
+                    .padding(.horizontal, 20)
+                    .padding(.top, 24)
+                    .padding(.bottom, 40)
                 }
-                .padding(.horizontal, 20)
-                .padding(.bottom, 24)
-                .padding(.top, 8)
-                .navigationBarBackButtonHidden(true)
             }
         }
+        .toolbar(.hidden, for: .navigationBar)
         .sheet(item: Binding(
             get: { vm.downloadedFileURL.map { FileWrapperItem(url: $0) } },
             set: { _ in vm.downloadedFileURL = nil }
@@ -207,6 +202,40 @@ struct TaxesView: View {
             ShareLink(item: item.url) { Text("Partager") }
                 .padding()
         }
+    }
+    
+    // MARK: - Header
+    private var header: some View {
+        VStack(alignment: .leading, spacing: 20) {
+            HStack {
+                Button {
+                    dismiss()
+                } label: {
+                    Image(systemName: "chevron.left")
+                        .font(.system(size: 20, weight: .semibold))
+                        .foregroundColor(.white)
+                        .padding(.vertical, 4)
+                }
+                
+                Spacer()
+            }
+            
+            VStack(alignment: .leading, spacing: 8) {
+                Text(R.string.localizable.taxesTitle())
+                    .font(.system(size: 28, weight: .bold))
+                    .foregroundColor(.white)
+                
+                Text(R.string.localizable.taxesSubtitle())
+                    .font(.system(size: 15))
+                    .foregroundColor(.white.opacity(0.8))
+            }
+        }
+        .padding(20)
+        .background(
+            RoundedCorner(radius: 28, corners: [.bottomLeft, .bottomRight])
+                .fill(Color.black)
+        )
+        .padding(.bottom, 1)
     }
 
     // MARK: - Month selector

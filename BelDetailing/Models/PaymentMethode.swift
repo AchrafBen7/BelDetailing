@@ -7,8 +7,7 @@
 
 import Foundation
 
-
-struct PaymentMethod: Codable, Identifiable, Hashable {
+struct AppPaymentMethod: Codable, Identifiable, Hashable {
     let id: String
     let brand: String
     let last4: String
@@ -30,9 +29,8 @@ struct PaymentMethod: Codable, Identifiable, Hashable {
     }
 }
 
-extension PaymentMethod {
+extension AppPaymentMethod {
     var expiryFormatted: String {
         String(format: "%02d/%d", expMonth, expYear)
     }
 }
-

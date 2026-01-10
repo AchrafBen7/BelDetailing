@@ -22,6 +22,7 @@ final class EditProfileViewModel: ObservableObject {
     @Published var customerFirstName: String = ""
     @Published var customerLastName: String = ""
     @Published var customerAddress: String = ""
+    @Published var customerVehicleType: VehicleType?
 
     // COMPANY
     @Published var companyLegalName: String = ""
@@ -47,6 +48,8 @@ final class EditProfileViewModel: ObservableObject {
     @Published var providerBannerUrl: String?
     @Published var providerEmail: String = ""
     @Published var providerOpeningHours: String = ""
+    @Published var providerTransportPricePerKm: Double = 2.0
+    @Published var providerTransportEnabled: Bool = true
 
     // Upload state (images)
     @Published var selectedLogoData: Data?
@@ -77,6 +80,7 @@ final class EditProfileViewModel: ObservableObject {
             customerFirstName = customer.firstName
             customerLastName = customer.lastName
             customerAddress = customer.defaultAddress ?? ""
+            customerVehicleType = customer.vehicleType
         }
 
         // Company
@@ -134,6 +138,7 @@ final class EditProfileViewModel: ObservableObject {
         case .customer:
             if customerFirstName.trimmed.isEmpty { errors.append("Prénom requis.") }
             if customerLastName.trimmed.isEmpty { errors.append("Nom requis.") }
+            if customerVehicleType == nil { errors.append("Type de véhicule requis.") }
 
         case .company:
             if companyLegalName.trimmed.isEmpty { errors.append("Raison sociale requise.") }
@@ -220,6 +225,9 @@ final class EditProfileViewModel: ObservableObject {
         dict["phone"] = phone.nilIfEmpty
         dict["email"] = providerEmail.nilIfEmpty
         dict["opening_hours"] = providerOpeningHours.nilIfEmpty
+        // Note: transport_price_per_km n'est plus utilisé - les frais sont fixes (zones avec plafond 20€)
+        // dict["transport_price_per_km"] = providerTransportPricePerKm
+        dict["transport_enabled"] = providerTransportEnabled
         if let lat = geoLat { dict["lat"] = lat }
         if let lng = geoLng { dict["lng"] = lng }
         return dict
@@ -278,6 +286,7 @@ final class EditProfileViewModel: ObservableObject {
             customerDict["firstName"] = customerFirstName.trimmed
             customerDict["lastName"] = customerLastName.trimmed
             if let address = customerAddress.nilIfEmpty { customerDict["defaultAddress"] = address }
+            if let vehicleType = customerVehicleType { customerDict["vehicleType"] = vehicleType.rawValue }
             payload["customerProfile"] = customerDict
 
         case .company:

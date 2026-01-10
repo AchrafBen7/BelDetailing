@@ -81,7 +81,10 @@ final class NetworkClient {
 
     
     func url(endPoint: APIEndPoint) -> URL? {
-        URL(string: server.rawValue + endpointMapperClass.path(for: endPoint))
+        let path = endpointMapperClass.path(for: endPoint)
+        let fullURL = server.rawValue + path
+        print("🔷 [NetworkClient] url() - endpoint: \(endPoint), path: \(path), fullURL: \(fullURL)")
+        return URL(string: fullURL)
     }
     
     // MARK: - JSON call (classique)
@@ -120,6 +123,11 @@ final class NetworkClient {
             if (200...299).contains(httpResponse.statusCode) {
                 do {
                     if wrappedInData {
+                        // Log raw JSON for debugging
+                        if let jsonString = String(data: data, encoding: .utf8) {
+                            print("📦 [NetworkClient] Raw JSON response (first 500 chars): \(String(jsonString.prefix(500)))")
+                        }
+                        
                         let decoded = try NetworkClient.defaultDecoder.decode(APIContainer<T>.self, from: data)
                         return .success(decoded.data)
                     } else {
@@ -127,16 +135,35 @@ final class NetworkClient {
                         return .success(decoded)
                     }
                 } catch let error {
+                    // Log detailed decoding error
+                    if let decodingError = error as? DecodingError {
+                        print("❌ [NetworkClient] Decoding error details:")
+                        switch decodingError {
+                        case .typeMismatch(let type, let context):
+                            print("   Type mismatch: expected \(type), path: \(context.codingPath)")
+                        case .valueNotFound(let type, let context):
+                            print("   Value not found: \(type), path: \(context.codingPath)")
+                        case .keyNotFound(let key, let context):
+                            print("   Key not found: \(key), path: \(context.codingPath)")
+                        case .dataCorrupted(let context):
+                            print("   Data corrupted: \(context)")
+                        @unknown default:
+                            print("   Unknown decoding error: \(decodingError)")
+                        }
+                    }
                     return .failure(.decodingError(decodingError: error))
                 }
 
             } else if httpResponse.statusCode == 401 {
                 if !allowAutoRefresh || endPoint == .refresh {
+                    print("🔒 [NetworkClient] 401 Unauthorized - Auto refresh disabled or refresh endpoint")
                     StorageManager.shared.clearSession()
                     return .failure(.unauthorized)
                 }
 
+                print("🔄 [NetworkClient] 401 Unauthorized - Attempting token refresh...")
                 if let newAccess = await Self.refreshAccessToken() {
+                    print("✅ [NetworkClient] Token refreshed successfully, retrying request...")
                     NetworkClient.defaultHeaders["Authorization"] = "Bearer \(newAccess)"
                     return await self.call(
                         endPoint: endPoint,
@@ -148,6 +175,7 @@ final class NetworkClient {
                     )
                 }
 
+                print("❌ [NetworkClient] Token refresh failed, clearing session")
                 StorageManager.shared.clearSession()
                 return .failure(.unauthorized)
             }
@@ -216,6 +244,22 @@ final class NetworkClient {
                     return .failure(.decodingError(decodingError: error))
                 }
             } else if httpResponse.statusCode == 401 {
+                // Try to refresh token for file uploads too
+                print("🔄 [NetworkClient] 401 Unauthorized on file upload - Attempting token refresh...")
+                if let newAccess = await Self.refreshAccessToken() {
+                    print("✅ [NetworkClient] Token refreshed, retrying file upload...")
+                    NetworkClient.defaultHeaders["Authorization"] = "Bearer \(newAccess)"
+                    // Retry the request with new token
+                    return await self.call(
+                        endPoint: endPoint,
+                        fileData: fileData,
+                        fileName: fileName,
+                        mimeType: mimeType,
+                        timeout: timeout
+                    )
+                }
+                print("❌ [NetworkClient] Token refresh failed for file upload")
+                StorageManager.shared.clearSession()
                 return .failure(.unauthorized)
             }
 
@@ -230,8 +274,12 @@ final class NetworkClient {
 extension NetworkClient {
     static func refreshAccessToken() async -> String? {
         guard let refresh = StorageManager.shared.getRefreshToken(),
-              !refresh.isEmpty else { return nil }
+              !refresh.isEmpty else {
+            print("❌ [NetworkClient] No refresh token available")
+            return nil
+        }
 
+        print("🔄 [NetworkClient] Refreshing access token...")
         let client = NetworkClient(server: .prod)
         let response: APIResponse<AuthSession> = await client.call(
             endPoint: .refresh,
@@ -240,12 +288,14 @@ extension NetworkClient {
         )
 
         if case let .success(session) = response {
+            print("✅ [NetworkClient] Token refresh successful")
             StorageManager.shared.saveAccessToken(session.accessToken)
             StorageManager.shared.saveRefreshToken(session.refreshToken)
             defaultHeaders["Authorization"] = "Bearer \(session.accessToken)"
             return session.accessToken
         }
 
+        print("❌ [NetworkClient] Token refresh failed: \(response)")
         return nil
     }
 }
@@ -255,37 +305,79 @@ extension NetworkClient {
         endPoint: APIEndPoint,
         dict: [String: Any?]? = nil,
         urlDict: [String: Any?]? = nil,
-        timeout: TimeInterval = 60
+        timeout: TimeInterval = 60,
+        allowAutoRefresh: Bool = true
     ) async -> APIResponse<Data> {
+        print("🔷 [NetworkClient] callRaw START - endpoint: \(endPoint)")
+        defer { print("🔷 [NetworkClient] callRaw END") }
 
         await MainActor.run { loadingManager?.begin() }
         defer { Task { @MainActor in loadingManager?.end() } }
 
         guard var url = url(endPoint: endPoint) else {
+            print("❌ [NetworkClient] callRaw - URL error")
             return .failure(.urlError)
         }
         if let urlDict { url = NetworkClient.urlFor(url: url, urlDict: urlDict) }
+        print("🔷 [NetworkClient] callRaw - URL: \(url.absoluteString)")
+
+        // Ajouter le token d'authentification s'il est disponible
+        var headers = NetworkClient.defaultHeaders
+        if let token = StorageManager.shared.getAccessToken(), !token.isEmpty {
+            headers["Authorization"] = "Bearer \(token)"
+            print("🔷 [NetworkClient] callRaw - Token added to headers (length: \(token.count))")
+        } else {
+            print("⚠️ [NetworkClient] callRaw - No token available")
+        }
 
         var request = URLRequest(url: url)
         request.httpMethod = endpointMapperClass.method(for: endPoint).rawValue
         request.httpBody = dict != nil ? try? JSONSerialization.data(withJSONObject: dict!) : nil
-        request.allHTTPHeaderFields = NetworkClient.defaultHeaders
+        request.allHTTPHeaderFields = headers
         request.timeoutInterval = timeout
 
+        print("🔷 [NetworkClient] callRaw - Making request: \(request.httpMethod ?? "?") \(url.absoluteString)")
+
         do {
+            print("🔷 [NetworkClient] callRaw - Awaiting URLSession.data...")
             let (data, response) = try await URLSession.shared.data(for: request)
+            print("🔷 [NetworkClient] callRaw - URLSession.data returned, data size: \(data.count) bytes")
+            
             guard let http = response as? HTTPURLResponse else {
+                print("❌ [NetworkClient] callRaw - Response is not HTTPURLResponse")
                 return .failure(.unknownError)
             }
 
+            print("🔷 [NetworkClient] callRaw - HTTP Status: \(http.statusCode)")
             NetworkClient.logRequest(request: request, urlResponse: http, data: data)
 
             if (200...299).contains(http.statusCode) {
+                print("✅ [NetworkClient] callRaw - Success (status \(http.statusCode))")
                 return .success(data)
+            } else if http.statusCode == 401 && allowAutoRefresh && endPoint != .refresh {
+                // Essayer de rafraîchir le token
+                print("🔄 [NetworkClient] 401 Unauthorized in callRaw - Attempting token refresh...")
+                if let newAccess = await Self.refreshAccessToken() {
+                    print("✅ [NetworkClient] Token refreshed, retrying callRaw...")
+                    NetworkClient.defaultHeaders["Authorization"] = "Bearer \(newAccess)"
+                    // Retry avec le nouveau token
+                    return await self.callRaw(
+                        endPoint: endPoint,
+                        dict: dict,
+                        urlDict: urlDict,
+                        timeout: timeout,
+                        allowAutoRefresh: false
+                    )
+                }
+                print("❌ [NetworkClient] Token refresh failed in callRaw")
+                StorageManager.shared.clearSession()
+                return .failure(.unauthorized)
             } else {
+                print("❌ [NetworkClient] callRaw - Server error (status \(http.statusCode))")
                 return .failure(.serverError(statusCode: http.statusCode))
             }
         } catch {
+            print("❌ [NetworkClient] callRaw - Exception: \(error.localizedDescription)")
             return .failure(.from(error: error))
         }
     }

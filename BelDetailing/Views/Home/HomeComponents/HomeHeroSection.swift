@@ -82,7 +82,6 @@ struct HomeHeroSection: View {
 
                     Spacer()
                     // === TITLES ===
-                    // === TITLES ===
                     VStack(alignment: .leading, spacing: AppStyle.Padding.small16.rawValue) {
                         Text(title)
                             .font(AppStyle.TextStyle.title.font)       // ⬅️ plus grand (37)
@@ -97,7 +96,7 @@ struct HomeHeroSection: View {
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .padding(.horizontal, AppStyle.Padding.small16.rawValue)
-                    .padding(.bottom, AppStyle.Padding.medium24.rawValue)
+                    .padding(.bottom, AppStyle.Padding.medium24.rawValue + 40) // Remonté de 40px
                     
                 }
                 .frame(width: geo.size.width, height: 420)

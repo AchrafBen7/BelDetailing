@@ -27,36 +27,38 @@ struct EditProfileView: View {
     
     var body: some View {
         ZStack {
-            Color(.systemGroupedBackground).ignoresSafeArea()
+            // Fond global clair
+            Color(R.color.mainBackground.name)
+                .ignoresSafeArea()
+                // Bande noire qui va jusqu'en haut (sous la status bar)
+                .overlay(
+                    Color.black
+                        .frame(height: 240)
+                        .ignoresSafeArea(edges: .top),
+                    alignment: .top
+                )
             
             ScrollView(showsIndicators: false) {
-                EditProfileContent(
-                    viewModel: viewModel,
-                    logoPhotoItem: $logoPhotoItem,
-                    localLogoImage: $localLogoImage
-                )
-                .padding(.horizontal, 20)
-                .padding(.bottom, 28)
-                .padding(.top, 8)
+                VStack(spacing: 0) {
+                    // Header noir
+                    header
+                    
+                    // Contenu
+                    EditProfileContent(
+                        viewModel: viewModel,
+                        logoPhotoItem: $logoPhotoItem,
+                        localLogoImage: $localLogoImage
+                    )
+                    .padding(.horizontal, 20)
+                    .padding(.top, 24)
+                    .padding(.bottom, 40)
+                }
             }
             
             SavingOverlay(isSaving: viewModel.isSaving)
             ToastOverlay(toast: viewModel.toast) { viewModel.toast = nil }
         }
-        .navigationTitle(R.string.localizable.profileEditTitle())
-        .navigationBarTitleDisplayMode(.inline)
-        .toolbar {
-            ToolbarItem(placement: .topBarTrailing) {
-                SaveButton(canSave: viewModel.canSave) {
-                    Task {
-                        let ok = await viewModel.save()
-                        if ok {
-                            dismiss()
-                        }
-                    }
-                }
-            }
-        }
+        .toolbar(.hidden, for: .navigationBar)
         .alert(R.string.localizable.commonError(), isPresented: errorAlertBinding) {
             Button(R.string.localizable.commonOk()) { viewModel.errorText = nil }
         } message: {
@@ -74,6 +76,54 @@ struct EditProfileView: View {
         .onDisappear {
             withAnimation(.easeInOut) { tabBarVisibility.isHidden = false }
         }
+    }
+    
+    // MARK: - Header noir
+    private var header: some View {
+        VStack(alignment: .leading, spacing: 20) {
+            HStack {
+                Button {
+                    dismiss()
+                } label: {
+                    Image(systemName: "chevron.left")
+                        .font(.system(size: 20, weight: .semibold))
+                        .foregroundColor(.white)
+                        .padding(.vertical, 4)
+                }
+                
+                Spacer()
+                
+                Button {
+                    Task {
+                        let ok = await viewModel.save()
+                        if ok {
+                            dismiss()
+                        }
+                    }
+                } label: {
+                    Text(R.string.localizable.commonSave())
+                        .font(.system(size: 16, weight: .semibold))
+                        .foregroundColor(viewModel.canSave ? .white : .white.opacity(0.5))
+                        .padding(.horizontal, 16)
+                        .padding(.vertical, 8)
+                        .background(viewModel.canSave ? Color.white.opacity(0.2) : Color.white.opacity(0.1))
+                        .clipShape(Capsule())
+                }
+                .disabled(!viewModel.canSave)
+            }
+            
+            VStack(alignment: .leading, spacing: 8) {
+                Text(R.string.localizable.profileEditTitle())
+                    .font(.system(size: 28, weight: .bold))
+                    .foregroundColor(.white)
+            }
+        }
+        .padding(20)
+        .background(
+            RoundedCorner(radius: 28, corners: [.bottomLeft, .bottomRight])
+                .fill(Color.black)
+        )
+        .padding(.bottom, 1)
     }
     
     // MARK: - Computed bindings

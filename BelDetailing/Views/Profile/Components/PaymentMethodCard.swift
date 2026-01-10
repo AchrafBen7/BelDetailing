@@ -7,7 +7,7 @@
 import SwiftUI
 
 struct PaymentMethodCard: View {
-    let method: PaymentMethod
+    let method: AppPaymentMethod
 
     var body: some View {
         HStack(spacing: 16) {

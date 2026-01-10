@@ -12,7 +12,7 @@ protocol PaymentService {
     func refundPayment(paymentIntentId: String) async -> APIResponse<Bool>
 
     func createSetupIntent() async -> APIResponse<SetupIntentResponse>
-    func fetchPaymentMethods() async -> APIResponse<[PaymentMethod]>
+    func fetchPaymentMethods() async -> APIResponse<[AppPaymentMethod]>
     func fetchTransactions() async -> APIResponse<[PaymentTransaction]>
     func deletePaymentMethod(id: String) async -> APIResponse<Bool>
 }
@@ -60,7 +60,7 @@ final class PaymentServiceNetwork: PaymentService {
         )
     }
 
-    func fetchPaymentMethods() async -> APIResponse<[PaymentMethod]> {
+    func fetchPaymentMethods() async -> APIResponse<[AppPaymentMethod]> {
         await networkClient.call(
             endPoint: .paymentMethods,
             wrappedInData: true
@@ -76,7 +76,7 @@ final class PaymentServiceNetwork: PaymentService {
 
     func deletePaymentMethod(id: String) async -> APIResponse<Bool> {
         await networkClient.call(
-            endPoint: .paymentMethodDelete(id: id) // label id: requis par APIEndPoint
+            endPoint: .paymentMethodDelete(id: id)
         )
     }
 }

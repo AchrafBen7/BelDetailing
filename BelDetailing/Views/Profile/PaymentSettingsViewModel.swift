@@ -4,7 +4,7 @@ import StripePaymentSheet
 
 @MainActor
 final class PaymentSettingsViewModel: ObservableObject {
-    @Published var paymentMethods: [PaymentMethod] = []
+    @Published var paymentMethods: [AppPaymentMethod] = []
     @Published var transactions: [PaymentTransaction] = []
     @Published var bookings: [Booking] = [] // Pour mapper transactions -> bookings
     @Published var isLoading = false
@@ -21,8 +21,6 @@ final class PaymentSettingsViewModel: ObservableObject {
     }
     
     func bookingForTransaction(_ transactionId: String) -> Booking? {
-        // TODO: Mapper transactionId avec bookingId depuis le backend
-        // Pour l'instant, on cherche par paymentIntentId
         return bookings.first { booking in
             booking.paymentIntentId == transactionId
         }
@@ -60,12 +58,10 @@ final class PaymentSettingsViewModel: ObservableObject {
     }
     
     private func loadBookings() async {
-        // Charger les bookings pour pouvoir les mapper avec les transactions
         switch await engine.bookingService.getBookings(scope: nil, status: nil) {
         case .success(let bookings):
             self.bookings = bookings
         case .failure:
-            // Pas critique si ça échoue
             break
         }
     }
@@ -90,23 +86,15 @@ final class PaymentSettingsViewModel: ObservableObject {
             )
             config.allowsDelayedPaymentMethods = false
 
-            // Création de la PaymentSheet (SetupIntent pour ajout de carte)
-            print("🔧 [PaymentsVM] creating PaymentSheet (setup)…")
             let sheet = PaymentSheet(
                 setupIntentClientSecret: setup.setupIntentClientSecret,
                 configuration: config
             )
             self.paymentSheet = sheet
-            print("🧾 [PaymentsVM] PaymentSheet created")
 
-            // 1) Retirer l’overlay AVANT la présentation
             self.isLoading = false
-
             await Task.yield()
-
-            // 2) Déclencher la présentation côté Vue (modifier conditionnel)
             self.isPresentingPaymentSheet = true
-            print("📣 [PaymentsVM] isPresentingPaymentSheet = true (should present)")
 
         case .failure(let error):
             print("❌ [PaymentsVM] setup-intent failed:", error.localizedDescription)
@@ -117,7 +105,7 @@ final class PaymentSettingsViewModel: ObservableObject {
         print("🔵 [PaymentsVM] addPaymentMethod() END")
     }
 
-    func delete(method: PaymentMethod) async {
+    func delete(method: AppPaymentMethod) async {
         guard !method.isDefault else {
             errorText = "Impossible de supprimer la carte par défaut"
             return

@@ -20,10 +20,28 @@ public enum APIError: Error, LocalizedError {
     if let error = error as? APIError {
       return error
     }
-    if let nsError = error as NSError?, nsError.code == NSURLErrorNotConnectedToInternet {
-      return .noNetwork
+    if let nsError = error as NSError? {
+      if nsError.code == NSURLErrorNotConnectedToInternet {
+        return .noNetwork
+      }
+      // ✅ Ignorer les erreurs "cancelled" (code -999) - ce ne sont pas de vraies erreurs
+      // Cela arrive quand une requête est annulée par une nouvelle requête ou un task SwiftUI
+      if nsError.code == NSURLErrorCancelled {
+        // Retourner une erreur spéciale qu'on peut ignorer
+        return .other(error: error)
+      }
     }
     return .other(error: error)
+  }
+  
+  /// Vérifie si l'erreur est une annulation (pas une vraie erreur réseau)
+  public var isCancellation: Bool {
+    if case .other(let error) = self,
+       let nsError = error as NSError?,
+       nsError.code == NSURLErrorCancelled {
+      return true
+    }
+    return false
   }
   public var localizedDescription: String? {
     switch self {

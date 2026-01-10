@@ -6,9 +6,11 @@ struct LoginScreen: View {
 
     @State private var showEmailLogin = false
     private let engine: Engine
+    var onSignup: (() -> Void)?
 
-    init(engine: Engine, onLoginSuccess: @escaping () -> Void) {
+    init(engine: Engine, onLoginSuccess: @escaping () -> Void, onSignup: (() -> Void)? = nil) {
         self.engine = engine
+        self.onSignup = onSignup
         _viewModel = StateObject(
             wrappedValue: LoginViewModel(engine: engine, onLoginSuccess: onLoginSuccess)
         )
@@ -22,7 +24,11 @@ struct LoginScreen: View {
                 onGoogle: { viewModel.signInWithGoogle() },
                 onEmail: { showEmailLogin = true },
                 onShowTerms: {},
-                onShowPrivacy: {}
+                onShowPrivacy: {},
+                onSignup: {
+                    dismiss()
+                    onSignup?()
+                }
             )
 
             if viewModel.isLoading {

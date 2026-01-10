@@ -27,7 +27,7 @@ final class NotificationServiceNetwork: NotificationService {
     init(networkClient: NetworkClient) { self.networkClient = networkClient }
 
     func getNotifications() async -> APIResponse<[NotificationItem]> {
-        await networkClient.call(endPoint: .notificationsList)
+        await networkClient.call(endPoint: .notificationsList, wrappedInData: true)
     }
 
     func markAsRead(id: String) async -> APIResponse<Bool> {

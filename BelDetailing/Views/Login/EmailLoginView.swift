@@ -14,157 +14,216 @@ struct EmailLoginView: View {
   var onCreateAccount: () -> Void = {}
   var onLoginSuccess: () -> Void = {}
 
-
   @State private var email: String = ""
   @State private var password: String = ""
+  @State private var isLoading: Bool = false
   @FocusState private var focusedField: Field?
 
   enum Field { case email, password }
 
   var body: some View {
-    ScrollView(showsIndicators: false) {
-      VStack(alignment: .leading, spacing: 24) {
-
-        // MARK: - Flèche + texte “Retour” en haut à gauche
-          Button(action: onBack) {
-            HStack(spacing: 4) {
-              Image(systemName: "chevron.left")
-                .font(.system(size: 17, weight: .semibold))
-              Text(R.string.localizable.commonBack())   // ← localizable
-                .font(.system(size: 17))
-            }
-            .foregroundColor(.gray)
-          }
-          .padding(.top, 8)
-
-        // MARK: - Header
-        VStack(alignment: .leading, spacing: 6) {
-          Text(R.string.localizable.emailLoginTitle() + ".") // "email login."
-            .font(Font.custom(R.font.avenirNextLTProBold, size: 42))
-            .foregroundColor(Color(R.color.primaryText))
-
-          Text(R.string.localizable.emailLoginSubtitle()) // "Connectez-vous à votre compte"
-            .font(Font.custom(R.font.avenirNextLTProRegular, size: 18))
-            .foregroundColor(Color(R.color.secondaryText))
-        }
-        .padding(.top, 4)
-        .frame(maxWidth: .infinity, alignment: .leading)
-
-        // MARK: - Email Field
-        VStack(alignment: .leading, spacing: 6) {
-          Text(R.string.localizable.emailLoginEmailLabel())
-            .font(.system(size: 15, weight: .semibold))
-          HStack {
-            Image(systemName: "envelope")
-              .foregroundColor(.gray)
-            TextField(R.string.localizable.emailLoginEmailPlaceholder(), text: $email)
-              .textContentType(.emailAddress)
-              .keyboardType(.emailAddress)
-              .focused($focusedField, equals: .email)
-              .autocapitalization(.none)
-          }
-          .padding()
-          .background(RoundedRectangle(cornerRadius: 14).stroke(Color.gray.opacity(0.2)))
-        }
-
-        // MARK: - Password Field
-        VStack(alignment: .leading, spacing: 6) {
-          HStack {
-            Text(R.string.localizable.emailLoginPasswordLabel())
-              .font(.system(size: 15, weight: .semibold))
-            Spacer()
-            Button(action: { print("Mot de passe oublié ?") }) {
-              Text(R.string.localizable.emailLoginForgot())
-                .font(.system(size: 14))
-                .foregroundColor(.gray)
-            }
-          }
-
-          HStack {
-            Image(systemName: "lock")
-              .foregroundColor(.gray)
-            SecureField("•••••••", text: $password)
-              .focused($focusedField, equals: .password)
-          }
-          .padding()
-          .background(RoundedRectangle(cornerRadius: 14).stroke(Color.gray.opacity(0.2)))
-        }
-          Button {
-              Task {
-                  let response = await engine.userService.login(email: email, password: password)
-                  switch response {
-                  case .success(_):
-                      onLoginSuccess()
-                  case .failure(let err):
-                      print("❌ Login error: \(err.localizedDescription)")
-                  }
-              }
-          } label: {
-              R.string.localizable.emailLoginCTA()
-                  .textView(style: .buttonCTA)
-                  .frame(maxWidth: .infinity, minHeight: 58)
-                  .background(Color.black)
-                  .clipShape(RoundedRectangle(cornerRadius: 30))
-                  .shadow(color: .black.opacity(0.1), radius: 4, y: 3)
-          }
-          .padding(.top, 8)
-
-
-        // MARK: - Signup link
-        HStack(spacing: 4) {
-          Text(R.string.localizable.emailLoginNoAccount())
-            .foregroundColor(.gray)
-          Button(action: onCreateAccount) {
-            Text(R.string.localizable.emailLoginCreateAccount())
-              .fontWeight(.semibold)
-              .foregroundColor(.black)
-          }
-        }
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(.top, 8)
-
-        // MARK: - Divider
-        HStack {
-          Rectangle().fill(Color.gray.opacity(0.2)).frame(height: 1)
-          Text("OU")
-            .font(.system(size: 14, weight: .semibold))
-            .foregroundColor(.gray)
-          Rectangle().fill(Color.gray.opacity(0.2)).frame(height: 1)
-        }
-        .padding(.vertical, 8)
-
-        // MARK: - Social buttons
-        VStack(spacing: 14) {
-          Button(action: { print("Google login") }) {
-            HStack {
-              Image(systemName: "g.circle.fill")
-              Text(R.string.localizable.emailLoginGoogle())
-            }
-            .font(.system(size: 16, weight: .semibold))
-            .foregroundColor(.black)
-            .frame(maxWidth: .infinity, minHeight: 56)
-            .background(Color.white)
-            .overlay(RoundedRectangle(cornerRadius: 28).stroke(Color.gray.opacity(0.4)))
-          }
-
-          Button(action: { print("Apple login") }) {
-            HStack {
-              Image(systemName: "applelogo")
-              Text(R.string.localizable.emailLoginApple())
-            }
-            .font(.system(size: 16, weight: .semibold))
-            .foregroundColor(.black)
-            .frame(maxWidth: .infinity, minHeight: 56)
-            .background(Color.white)
-            .overlay(RoundedRectangle(cornerRadius: 28).stroke(Color.gray.opacity(0.4)))
-          }
-        }
-        .padding(.top, 4)
+    ZStack {
+      // MARK: - Fullscreen Background Image (heroMain - orange tint)
+      GeometryReader { geometry in
+        Image(R.image.heroMain.name)
+          .resizable()
+          .scaledToFill()
+          .frame(width: geometry.size.width, height: geometry.size.height)
+          .clipped()
+          .overlay(
+            // Dark overlay
+            Color.black.opacity(0.65)
+          )
       }
-      .padding(.horizontal, 24)
-      .padding(.bottom, 60)
+      .ignoresSafeArea()
+      
+      // MARK: - Content
+      VStack(spacing: 0) {
+        // Top back button
+        HStack {
+          Button(action: onBack) {
+            ZStack {
+              Circle()
+                .fill(Color.gray.opacity(0.4))
+                .frame(width: 40, height: 40)
+              
+              Image(systemName: "arrow.left")
+                .font(.system(size: 16, weight: .semibold))
+                .foregroundColor(.white)
+            }
+          }
+          Spacer()
+        }
+        .padding(.top, 60)
+        .padding(.horizontal, 20)
+        
+        Spacer()
+        
+        // MARK: - Translucent Card
+        VStack(spacing: 0) {
+          // Title & Subtitle
+          VStack(alignment: .leading, spacing: 12) {
+            Text(R.string.localizable.emailLoginTitle())
+              .font(.system(size: 32, weight: .bold))
+              .foregroundColor(.white)
+              .multilineTextAlignment(.leading)
+            
+            Text(R.string.localizable.emailLoginSubtitle())
+              .font(.system(size: 16, weight: .regular))
+              .foregroundColor(.white.opacity(0.9))
+              .multilineTextAlignment(.leading)
+          }
+          .padding(.top, 32)
+          .padding(.bottom, 28)
+          .padding(.horizontal, 24)
+          .frame(maxWidth: .infinity, alignment: .leading)
+          
+          // MARK: - Form Fields
+          VStack(spacing: 20) {
+            // Email Field
+            VStack(alignment: .leading, spacing: 8) {
+              Text(R.string.localizable.emailLoginEmailLabel())
+                .font(.system(size: 15, weight: .semibold))
+                .foregroundColor(.white.opacity(0.9))
+              
+              HStack(spacing: 12) {
+                Image(systemName: "envelope")
+                  .font(.system(size: 18))
+                  .foregroundColor(.white.opacity(0.7))
+                  .frame(width: 24)
+                
+                TextField(R.string.localizable.emailLoginEmailPlaceholder(), text: $email)
+                  .textContentType(.emailAddress)
+                  .keyboardType(.emailAddress)
+                  .focused($focusedField, equals: .email)
+                  .autocapitalization(.none)
+                  .foregroundColor(.white)
+              }
+              .padding(.horizontal, 16)
+              .padding(.vertical, 16)
+              .background(
+                RoundedRectangle(cornerRadius: 14)
+                  .fill(Color.white.opacity(0.15))
+                  .overlay(
+                    RoundedRectangle(cornerRadius: 14)
+                      .stroke(Color.white.opacity(0.3), lineWidth: 1)
+                  )
+              )
+            }
+            
+            // Password Field
+            VStack(alignment: .leading, spacing: 8) {
+              HStack {
+                Text(R.string.localizable.emailLoginPasswordLabel())
+                  .font(.system(size: 15, weight: .semibold))
+                  .foregroundColor(.white.opacity(0.9))
+                
+                Spacer()
+                
+                Button(action: { print("Mot de passe oublié ?") }) {
+                  Text(R.string.localizable.emailLoginForgot())
+                    .font(.system(size: 14, weight: .regular))
+                    .foregroundColor(.white.opacity(0.8))
+                }
+              }
+              
+              HStack(spacing: 12) {
+                Image(systemName: "lock")
+                  .font(.system(size: 18))
+                  .foregroundColor(.white.opacity(0.7))
+                  .frame(width: 24)
+                
+                SecureField("•••••••", text: $password)
+                  .focused($focusedField, equals: .password)
+                  .foregroundColor(.white)
+              }
+              .padding(.horizontal, 16)
+              .padding(.vertical, 16)
+              .background(
+                RoundedRectangle(cornerRadius: 14)
+                  .fill(Color.white.opacity(0.15))
+                  .overlay(
+                    RoundedRectangle(cornerRadius: 14)
+                      .stroke(Color.white.opacity(0.3), lineWidth: 1)
+                  )
+              )
+            }
+          }
+          .padding(.horizontal, 24)
+          .padding(.bottom, 28)
+          
+          // MARK: - Login Button
+          Button {
+            if isLoading { return }
+            isLoading = true
+            
+            Task {
+              let response = await engine.userService.login(email: email, password: password)
+              switch response {
+              case .success(let session):
+                // ✅ ASSOCIER USER ID AVEC ONESIGNAL
+                let userId = session.user.id
+                NotificationsManager.shared.loginOneSignal(userId: userId)
+                
+                await MainActor.run {
+                  isLoading = false
+                  onLoginSuccess()
+                }
+              case .failure(let err):
+                await MainActor.run {
+                  isLoading = false
+                  print("❌ Login error: \(err.localizedDescription)")
+                }
+              }
+            }
+          } label: {
+            ZStack {
+              if isLoading {
+                ProgressView()
+                  .progressViewStyle(CircularProgressViewStyle(tint: .white))
+              } else {
+                Text(R.string.localizable.emailLoginCTA())
+                  .font(.system(size: 18, weight: .bold))
+                  .foregroundColor(.black)
+              }
+            }
+            .frame(maxWidth: .infinity)
+            .frame(height: 58)
+            .background(Color.white)
+            .clipShape(RoundedRectangle(cornerRadius: 18))
+            .shadow(color: .black.opacity(0.15), radius: 8, y: 4)
+          }
+          .disabled(email.isEmpty || password.isEmpty || isLoading)
+          .opacity((email.isEmpty || password.isEmpty) ? 0.5 : 1.0)
+          .padding(.horizontal, 24)
+          .padding(.bottom, 24)
+          
+          // MARK: - Signup Link
+          Button(action: onCreateAccount) {
+            HStack(spacing: 4) {
+              Text(R.string.localizable.emailLoginNoAccount())
+                .font(.system(size: 14, weight: .regular))
+                .foregroundColor(.white.opacity(0.8))
+              Text(R.string.localizable.emailLoginCreateAccount())
+                .font(.system(size: 14, weight: .semibold))
+                .foregroundColor(.white)
+            }
+          }
+          .padding(.bottom, 32)
+        }
+        .background(
+          ZStack {
+            RoundedRectangle(cornerRadius: 24)
+              .fill(.ultraThinMaterial)
+            RoundedRectangle(cornerRadius: 24)
+              .fill(Color.black.opacity(0.4))
+          }
+        )
+        .padding(.horizontal, 20)
+        
+        Spacer()
+      }
     }
-    .background(Color.white.ignoresSafeArea())
-    .navigationBarBackButtonHidden(true) // ✅ empêche le header centré
+    .navigationBarBackButtonHidden(true)
   }
 }

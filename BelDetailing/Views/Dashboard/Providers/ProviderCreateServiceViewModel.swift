@@ -45,9 +45,19 @@ final class ProviderCreateServiceViewModel: ObservableObject {
 
         switch res {
         case .success:
+            // Analytics: Provider service created
+            FirebaseManager.shared.logEvent(
+                FirebaseManager.Event.providerServiceCreated,
+                parameters: [
+                    "category": category.rawValue,
+                    "price": price,
+                    "duration_minutes": durationMinutes
+                ]
+            )
             return true
         case .failure(let err):
             error = err.localizedDescription
+            FirebaseManager.shared.recordError(err, userInfo: ["action": "create_service"])
             return false
         }
     }

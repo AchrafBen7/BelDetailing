@@ -33,6 +33,11 @@ struct ServiceProgressTrackingCustomerView: View {
                         // Progress Header
                         progressHeader
                         
+                        // Care Mode Button (si activé)
+                        if booking.status == .inProgress || booking.status == .started {
+                            careModeButton
+                        }
+                        
                         // Steps Timeline
                         stepsTimeline
                     }
@@ -114,6 +119,34 @@ struct ServiceProgressTrackingCustomerView: View {
         .padding(20)
         .background(Color.white)
         .clipShape(RoundedRectangle(cornerRadius: 20))
+    }
+    
+    // MARK: - Care Mode Button
+    private var careModeButton: some View {
+        NavigationLink {
+            CareModeCustomerView(booking: booking, engine: engine)
+        } label: {
+            HStack {
+                Image(systemName: "sparkles")
+                    .foregroundColor(.purple)
+                Text("NIOS Care Mode")
+                    .font(.system(size: 17, weight: .semibold))
+                    .foregroundColor(.white)
+                Spacer()
+                Image(systemName: "chevron.right")
+                    .font(.system(size: 14))
+                    .foregroundColor(.white.opacity(0.8))
+            }
+            .padding(16)
+            .background(
+                LinearGradient(
+                    colors: [Color.purple, Color.purple.opacity(0.8)],
+                    startPoint: .leading,
+                    endPoint: .trailing
+                )
+            )
+            .clipShape(RoundedRectangle(cornerRadius: 16))
+        }
     }
 }
 

@@ -12,6 +12,14 @@ struct ProviderBookingCardView: View {
     let booking: Booking
     let onConfirm: () -> Void
     let onDecline: () -> Void
+    let onTap: (() -> Void)?
+
+    init(booking: Booking, onConfirm: @escaping () -> Void, onDecline: @escaping () -> Void, onTap: (() -> Void)? = nil) {
+        self.booking = booking
+        self.onConfirm = onConfirm
+        self.onDecline = onDecline
+        self.onTap = onTap
+    }
 
     var isPast: Bool {
         let time = booking.startTime ?? "00:00"
@@ -90,5 +98,8 @@ struct ProviderBookingCardView: View {
         .background(Color.white)
         .cornerRadius(20)
         .shadow(color: .black.opacity(0.08), radius: 4, y: 3)
+        .onTapGesture {
+            onTap?()
+        }
     }
 }

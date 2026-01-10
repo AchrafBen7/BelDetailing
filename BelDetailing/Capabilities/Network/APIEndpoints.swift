@@ -24,6 +24,8 @@ enum APIEndPoint: Equatable  {
     case loginApple
     case loginGoogle
     case logout
+    case verifyEmail
+    case resendVerificationEmail
     
     // Providers
     case providersList
@@ -48,8 +50,13 @@ enum APIEndPoint: Equatable  {
     case bookingConfirm(id: String)
     case bookingDecline(id: String)
     case bookingStartService(id: String)  // Start service (changes status to started/in_progress)
+    case bookingReportNoShow(id: String)  // Report no-show (client absent)
     case bookingUpdateProgress(id: String)  // Update service progress (step completion)
     case bookingCompleteService(id: String)  // Mark service as completed
+    case bookingCounterPropose(id: String)  // Provider proposes alternative date/time
+    case bookingAcceptCounterProposal(id: String)  // Customer accepts counter-proposal
+    case bookingRefuseCounterProposal(id: String)  // Customer refuses counter-proposal
+    case bookingCleanupExpired  // DELETE /api/v1/bookings/expired - Supprime les bookings pending > 6h
     
     // Offers
     case offersList
@@ -72,6 +79,7 @@ enum APIEndPoint: Equatable  {
     
     // Utilities
     case vatValidate(number: String)
+    case vatLookup  // POST /api/v1/vat/lookup - Recherche complète avec pré-remplissage
     
     // Catalog
     case cities
@@ -117,6 +125,32 @@ enum APIEndPoint: Equatable  {
     case stripeConnectOnboardingLink
     case stripeConnectAccountStatus
     case stripeConnectPayoutsSummary
+    
+    // Chat
+    case chatConversationsList
+    case chatConversationDetail(id: String)
+    case chatConversationCreate
+    case chatMessages(conversationId: String)
+    case chatSendMessage(conversationId: String)
+    case chatMarkAsRead(conversationId: String)
+    
+    // Google Review Prompts
+    case reviewPromptCreate
+    case reviewPromptGet(bookingId: String)
+    case reviewPromptTrackRating(id: String)
+    case reviewPromptGoogleRedirect(id: String)
+    case reviewPromptDismiss(id: String)
+    
+    // Provider Portfolio
+    case providerPortfolio(providerId: String)
+    case providerPortfolioAdd
+    case providerPortfolioDelete(id: String)
+    case providerPortfolioUpdate(id: String)
+    
+    // Service Photos
+    case servicePhotos(serviceId: String)
+    case servicePhotoAdd(serviceId: String)
+    case servicePhotoDelete(serviceId: String, photoId: String)
 }
 
 // MARK: - Mapper Protocol
@@ -129,15 +163,19 @@ protocol EndpointMapper {
 struct BelDetailingEndpointMapper: EndpointMapper {
     static func path(for endPoint: APIEndPoint) -> String {
         switch endPoint {
-        case .register, .login, .refresh, .profile, .updateProfile, .loginApple, .loginGoogle, .logout:
+        case .register, .login, .refresh, .profile, .updateProfile, .loginApple, .loginGoogle, .logout,
+             .verifyEmail, .resendVerificationEmail:
             return authPath(for: endPoint)
 
         case .providersList, .providerDetail, .providerReviews, .providerServices, .providerStats, .providerReviewCreate,
-             .providerMyStats, .providerMyServices, .providerMyReviews, .providerServiceCreate, .providerMeUpdate:
+             .providerMyStats, .providerMyServices, .providerMyReviews, .providerServiceCreate, .providerMeUpdate,
+             .providerPortfolio, .providerPortfolioAdd, .providerPortfolioDelete, .providerPortfolioUpdate:
             return providerPath(for: endPoint)
 
         case .bookingsList, .bookingCreate, .bookingUpdate, .bookingCancel, .bookingConfirm, .bookingDecline,
-             .bookingStartService, .bookingUpdateProgress, .bookingCompleteService:
+             .bookingStartService, .bookingReportNoShow, .bookingUpdateProgress, .bookingCompleteService,
+             .bookingCounterPropose, .bookingAcceptCounterProposal, .bookingRefuseCounterProposal,
+             .bookingCleanupExpired:
             return bookingPath(for: endPoint)
 
         case .offersList, .offerDetail, .offerCreate, .offerUpdate, .offerClose, .offerDelete:
@@ -149,7 +187,7 @@ struct BelDetailingEndpointMapper: EndpointMapper {
         case .offerApplications, .offerApply, .applicationWithdraw, .applicationAccept, .applicationRefuse:
             return applicationPath(for: endPoint)
 
-        case .vatValidate:
+        case .vatValidate, .vatLookup:
             return vatPath(for: endPoint)
 
         case .cities, .serviceCategories:
@@ -157,6 +195,9 @@ struct BelDetailingEndpointMapper: EndpointMapper {
 
         case .mediaUpload, .mediaDelete:
             return mediaPath(for: endPoint)
+            
+        case .servicePhotos, .servicePhotoAdd, .servicePhotoDelete:
+            return servicePhotoPath(for: endPoint)
 
         case .notificationsList, .notificationRead, .notificationSubscribe:
             return notificationPath(for: endPoint)
@@ -175,13 +216,22 @@ struct BelDetailingEndpointMapper: EndpointMapper {
 
         case .stripeConnectCreateAccount, .stripeConnectOnboardingLink, .stripeConnectAccountStatus, .stripeConnectPayoutsSummary:
             return stripeConnectPath(for: endPoint)
+            
+        case .chatConversationsList, .chatConversationDetail, .chatConversationCreate,
+             .chatMessages, .chatSendMessage, .chatMarkAsRead:
+            return chatPath(for: endPoint)
+            
+        case .reviewPromptCreate, .reviewPromptGet, .reviewPromptTrackRating,
+             .reviewPromptGoogleRedirect, .reviewPromptDismiss:
+            return reviewPromptPath(for: endPoint)
         }
     }
 
     static func method(for endPoint: APIEndPoint) -> HTTPVerb {
         switch endPoint {
         case .register, .login, .refresh, .loginApple, .loginGoogle, .logout, .providerReviewCreate, .bookingCreate, .bookingCancel,
-             .bookingConfirm, .bookingDecline, .bookingStartService, .bookingUpdateProgress, .bookingCompleteService,
+             .bookingConfirm, .bookingDecline, .bookingStartService, .bookingReportNoShow, .bookingUpdateProgress, .bookingCompleteService,
+             .bookingCounterPropose, .bookingAcceptCounterProposal, .bookingRefuseCounterProposal,
              .offerCreate, .offerClose, .offerApply,
              .applicationWithdraw, .applicationAccept, .applicationRefuse,
              .notificationSubscribe, .paymentIntent, .paymentCapture, .paymentRefund, .mediaUpload,
@@ -189,11 +239,16 @@ struct BelDetailingEndpointMapper: EndpointMapper {
              .paymentSetupIntent,
              .providerServiceCreate,
              .stripeConnectCreateAccount,          // POST
-             .stripeConnectOnboardingLink:         // POST
+             .stripeConnectOnboardingLink,         // POST
+             .verifyEmail, .resendVerificationEmail,  // POST
+             .vatLookup,  // POST
+             .chatConversationCreate, .chatSendMessage, .chatMarkAsRead,  // POST
+             .reviewPromptCreate, .reviewPromptTrackRating, .reviewPromptGoogleRedirect, .reviewPromptDismiss,  // POST
+             .providerPortfolioAdd, .servicePhotoAdd:  // POST
             return .post
 
         case .updateProfile, .bookingUpdate, .offerUpdate, .notificationRead,
-             .providerMeUpdate:                   // ⬅️ NOUVEAU: PATCH /providers/me
+             .providerMeUpdate, .providerPortfolioUpdate:  // PATCH
             return .patch
 
         case .providerDetail, .providersList, .providerReviews, .providerServices,
@@ -205,10 +260,13 @@ struct BelDetailingEndpointMapper: EndpointMapper {
              .paymentMethods, .paymentTransactions,
              .taxesSummary, .taxesDocuments, .taxesDownload,
              .stripeConnectAccountStatus,          // GET
-             .stripeConnectPayoutsSummary:         // GET
+             .stripeConnectPayoutsSummary,         // GET
+             .chatConversationsList, .chatConversationDetail, .chatMessages,  // GET
+             .reviewPromptGet, .providerPortfolio, .servicePhotos:  // GET
             return .get
 
-        case .offerDelete, .mediaDelete, .paymentMethodDelete, .orderCancel:
+        case .offerDelete, .mediaDelete, .paymentMethodDelete, .orderCancel, .bookingCleanupExpired,
+             .providerPortfolioDelete, .servicePhotoDelete:
             return .delete
         }
     }
@@ -246,6 +304,8 @@ private extension BelDetailingEndpointMapper {
         case .loginGoogle: return "api/v1/auth/google"
         case .profile, .updateProfile: return "api/v1/profile"
         case .logout: return "api/v1/auth/logout"
+        case .verifyEmail: return "api/v1/auth/verify-email"
+        case .resendVerificationEmail: return "api/v1/auth/resend-verification-email"
         default: return ""
         }
     }
@@ -262,7 +322,20 @@ private extension BelDetailingEndpointMapper {
         case .providerMyReviews: return "api/v1/providers/me/reviews"
         case .providerReviewCreate: return "api/v1/reviews"
         case .providerServiceCreate: return "api/v1/providers/services"
-        case .providerMeUpdate: return "api/v1/providers/me" // ⬅️ NOUVEAU
+        case .providerMeUpdate: return "api/v1/providers/me"
+        case .providerPortfolio(let id): return "api/v1/providers/\(id)/portfolio"
+        case .providerPortfolioAdd: return "api/v1/providers/me/portfolio"
+        case .providerPortfolioDelete(let id): return "api/v1/providers/me/portfolio/\(id)"
+        case .providerPortfolioUpdate(let id): return "api/v1/providers/me/portfolio/\(id)"
+        default: return ""
+        }
+    }
+    
+    static func servicePhotoPath(for endPoint: APIEndPoint) -> String {
+        switch endPoint {
+        case .servicePhotos(let serviceId): return "api/v1/services/\(serviceId)/photos"
+        case .servicePhotoAdd(let serviceId): return "api/v1/services/\(serviceId)/photos"
+        case .servicePhotoDelete(let serviceId, let photoId): return "api/v1/services/\(serviceId)/photos/\(photoId)"
         default: return ""
         }
     }
@@ -275,8 +348,13 @@ private extension BelDetailingEndpointMapper {
         case .bookingConfirm(let id): return "api/v1/bookings/\(id)/confirm"
         case .bookingDecline(let id): return "api/v1/bookings/\(id)/decline"
         case .bookingStartService(let id): return "api/v1/bookings/\(id)/start"
+        case .bookingReportNoShow(let id): return "api/v1/bookings/\(id)/no-show"
         case .bookingUpdateProgress(let id): return "api/v1/bookings/\(id)/progress"
         case .bookingCompleteService(let id): return "api/v1/bookings/\(id)/complete"
+        case .bookingCounterPropose(let id): return "api/v1/bookings/\(id)/counter-propose"
+        case .bookingAcceptCounterProposal(let id): return "api/v1/bookings/\(id)/accept-counter-proposal"
+        case .bookingRefuseCounterProposal(let id): return "api/v1/bookings/\(id)/refuse-counter-proposal"
+        case .bookingCleanupExpired: return "api/v1/bookings/expired"
         default: return ""
         }
     }
@@ -314,6 +392,7 @@ private extension BelDetailingEndpointMapper {
     static func vatPath(for endPoint: APIEndPoint) -> String {
         switch endPoint {
         case .vatValidate(let number): return "api/v1/utils/vat/validate?number=\(number)"
+        case .vatLookup: return "api/v1/vat/lookup"
         default: return ""
         }
     }
@@ -386,6 +465,42 @@ private extension BelDetailingEndpointMapper {
             return "api/v1/stripe/connect/account-status"
         case .stripeConnectPayoutsSummary:
             return "api/v1/stripe/connect/payouts-summary"
+        default:
+            return ""
+        }
+    }
+    
+    static func chatPath(for endPoint: APIEndPoint) -> String {
+        switch endPoint {
+        case .chatConversationsList:
+            return "api/v1/chat/conversations"
+        case .chatConversationDetail(let id):
+            return "api/v1/chat/conversations/\(id)"
+        case .chatConversationCreate:
+            return "api/v1/chat/conversations"
+        case .chatMessages(let conversationId):
+            return "api/v1/chat/conversations/\(conversationId)/messages"
+        case .chatSendMessage(let conversationId):
+            return "api/v1/chat/conversations/\(conversationId)/messages"
+        case .chatMarkAsRead(let conversationId):
+            return "api/v1/chat/conversations/\(conversationId)/read"
+        default:
+            return ""
+        }
+    }
+    
+    static func reviewPromptPath(for endPoint: APIEndPoint) -> String {
+        switch endPoint {
+        case .reviewPromptCreate:
+            return "api/v1/reviews/prompt"
+        case .reviewPromptGet(let bookingId):
+            return "api/v1/reviews/prompt/\(bookingId)"
+        case .reviewPromptTrackRating(let id):
+            return "api/v1/reviews/prompt/\(id)/rating"
+        case .reviewPromptGoogleRedirect(let id):
+            return "api/v1/reviews/prompt/\(id)/google-redirect"
+        case .reviewPromptDismiss(let id):
+            return "api/v1/reviews/prompt/\(id)/dismiss"
         default:
             return ""
         }

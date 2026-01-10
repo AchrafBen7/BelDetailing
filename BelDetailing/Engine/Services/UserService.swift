@@ -13,6 +13,29 @@ struct ProfileResponse: Codable {
 
 struct EmptyResponse: Codable {}
 
+// MARK: - VAT Lookup Response
+struct VatLookupResponse: Codable {
+    let valid: Bool
+    let companyName: String?
+    let address: String?
+    let city: String?
+    let postalCode: String?
+    let country: String?
+    let vatNumber: String?
+    let error: String?
+    
+    enum CodingKeys: String, CodingKey {
+        case valid
+        case companyName
+        case address
+        case city
+        case postalCode
+        case country
+        case vatNumber
+        case error
+    }
+}
+
 
 
 // MARK: - Protocol
@@ -27,6 +50,7 @@ protocol UserService {
     func me() async -> APIResponse<User>
     func logout() async -> APIResponse<Bool>
     func resendConfirmationEmail(email: String) async -> APIResponse<Bool>
+    func verifyEmail(email: String, code: String) async -> APIResponse<Bool>
 
     // Social
     func loginWithApple(
@@ -41,6 +65,7 @@ protocol UserService {
     // Profile & TVA
     func updateProfile(data: [String: Any]) async -> APIResponse<User>
     func validateVAT(_ number: String) async -> APIResponse<Bool>
+    func lookupVAT(_ vatNumber: String) async -> APIResponse<VatLookupResponse>
 
     // Providers
     func providersNearby(lat: Double, lng: Double, radius: Double) async -> APIResponse<[Detailer]>
@@ -133,11 +158,22 @@ final class UserServiceNetwork: UserService {
 
     func resendConfirmationEmail(email: String) async -> APIResponse<Bool> {
         let response: APIResponse<EmptyResponse> = await networkClient.call(
-            endPoint: .login,
-            dict: [
-                "email": email,
-                "shouldSendVerification": true
-            ]
+            endPoint: .resendVerificationEmail,
+            dict: ["email": email]
+        )
+
+        switch response {
+        case .success:
+            return .success(true)
+        case .failure(let err):
+            return .failure(err)
+        }
+    }
+    
+    func verifyEmail(email: String, code: String) async -> APIResponse<Bool> {
+        let response: APIResponse<EmptyResponse> = await networkClient.call(
+            endPoint: .verifyEmail,
+            dict: ["email": email, "code": code]
         )
 
         switch response {
@@ -205,6 +241,16 @@ final class UserServiceNetwork: UserService {
 
     func validateVAT(_ number: String) async -> APIResponse<Bool> {
         await networkClient.call(endPoint: .vatValidate(number: number))
+    }
+    
+    // MARK: - VAT Lookup (avec pré-remplissage)
+    
+    func lookupVAT(_ vatNumber: String) async -> APIResponse<VatLookupResponse> {
+        await networkClient.call(
+            endPoint: .vatLookup,
+            dict: ["vatNumber": vatNumber],
+            wrappedInData: false
+        )
     }
 
     func providersNearby(lat: Double, lng: Double, radius: Double) async -> APIResponse<[Detailer]> {

@@ -36,10 +36,6 @@ final class ProviderDashboardViewModel: ObservableObject {
 
     @Published var bookings: [Booking] = []
     @Published var stats: DetailerStats? = nil
-    
-    // Offers (companies offers)
-    @Published var availableOffers: [Offer] = []
-    @Published var isLoadingOffers = false
 
     // Reviews (nouveau)
     @Published var myReviews: [Review] = []
@@ -65,23 +61,8 @@ final class ProviderDashboardViewModel: ObservableObject {
         loadServices()
         loadBookings()
         loadStats()
-        loadOffers()
         // On ne charge pas les reviews ici pour éviter du réseau inutile
         // Elles seront chargées à l'ouverture de l'onglet .reviews via didSet de selectedFilter
-    }
-    
-    func loadOffers() {
-        Task {
-            isLoadingOffers = true
-            let response = await engine.offerService.getOffers(status: .open, type: nil)
-            switch response {
-            case .success(let offers):
-                availableOffers = offers
-            case .failure:
-                availableOffers = []
-            }
-            isLoadingOffers = false
-        }
     }
 
     func loadStats() {

@@ -1,15 +1,26 @@
 import SwiftUI
 import GoogleSignIn
 import StripePaymentSheet
+import UserNotifications
+import FirebaseCore
+#if canImport(OneSignal)
+import OneSignal
+#endif
 
 @main
 struct BelDetailingApp: App {
+    @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     @StateObject private var loadingManager = LoadingOverlayManager()
     @StateObject private var downloadProgress = DownloadProgressManager()
 
     let engine: Engine
-
+    
     init() {
+        // ✅ OneSignal SDK est maintenant initialisé dans AppDelegate.didFinishLaunchingWithOptions
+        // avec launchOptions (selon documentation officielle OneSignal)
+        
+        // Configure notifications (garder pour compatibilité et routing)
+        UNUserNotificationCenter.current().delegate = NotificationsManager.shared
         // Stripe
         if let stripeKey = Bundle.main.object(forInfoDictionaryKey: "StripePublishableKey") as? String {
             StripeAPI.defaultPublishableKey = stripeKey
@@ -32,6 +43,12 @@ struct BelDetailingApp: App {
         // NetworkClient configuré (progress manager branché dans body)
         let client = NetworkClient(server: Server.prod)
         self.engine = Engine(networkClient: client)
+        
+        // Configurer NotificationsManager avec le NotificationService
+        NotificationsManager.shared.configure(notificationService: engine.notificationService)
+        
+        // Configurer Firebase (Crashlytics + Analytics)
+        FirebaseManager.shared.configure()
     }
 
     var body: some Scene {
@@ -39,6 +56,7 @@ struct BelDetailingApp: App {
             RootView(engine: engine)
                 .environmentObject(loadingManager)
                 .environmentObject(downloadProgress)
+                .environmentObject(NotificationRouter.shared)
                 .onAppear {
                     // Brancher les managers dans le client réseau
                     engine.networkClient.loadingManager = loadingManager
@@ -47,3 +65,4 @@ struct BelDetailingApp: App {
         }
     }
 }
+

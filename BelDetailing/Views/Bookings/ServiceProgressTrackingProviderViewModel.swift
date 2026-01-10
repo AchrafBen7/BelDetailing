@@ -63,7 +63,22 @@ final class ServiceProgressTrackingProviderViewModel: ObservableObject {
         let result = await engine.bookingService.updateProgress(bookingId: booking.id, stepId: stepId)
         switch result {
         case .success(let updatedBooking):
+            let previousProgress = booking.progress?.totalProgress ?? 0
             booking = updatedBooking
+            let newProgress = booking.progress?.totalProgress ?? 0
+            
+            // Notification pour le customer si le progress a changé
+            if newProgress > previousProgress, let currentStep = booking.progress?.currentStep {
+                NotificationsManager.shared.notifyProgressUpdate(
+                    bookingId: booking.id,
+                    progress: newProgress,
+                    stepName: currentStep.title
+                )
+                
+                // TODO: Si Care Mode activé, envoyer un message automatique
+                // Ex: "Interior finished – exterior in progress"
+                // await sendCareModeAutoMessage(stepId: currentStep.id, message: "\(currentStep.title) terminé")
+            }
         case .failure(let error):
             errorMessage = error.localizedDescription
         }
@@ -78,8 +93,27 @@ final class ServiceProgressTrackingProviderViewModel: ObservableObject {
         switch result {
         case .success(let updatedBooking):
             booking = updatedBooking
+            
+            // Analytics: Service completed
+            FirebaseManager.shared.logEvent(
+                FirebaseManager.Event.serviceCompleted,
+                parameters: [
+                    "booking_id": booking.id,
+                    "provider_id": booking.providerId,
+                    "service_name": booking.displayServiceName,
+                    "price": booking.price,
+                    "currency": booking.currency
+                ]
+            )
+            
+            // Notification pour le customer
+            NotificationsManager.shared.notifyServiceCompleted(
+                bookingId: booking.id,
+                serviceName: booking.displayServiceName
+            )
         case .failure(let error):
             errorMessage = error.localizedDescription
+            FirebaseManager.shared.recordError(error, userInfo: ["booking_id": booking.id])
         }
     }
 }

@@ -30,6 +30,7 @@ struct Detailer: Codable, Identifiable, Hashable {
     // ✅ Nouveaux champs
     let teamSize: Int            // nombre de membres (1 = solo)
     let yearsOfExperience: Int   // ex: 5 ans
+    let maxRadiusKm: Int?        // Rayon max de déplacement (10, 25, 40, 60 km) - nil = pas de limite
 }
 
 // MARK: - Safe decoding to handle rating as number or string, minPrice as number or null
@@ -55,6 +56,7 @@ extension Detailer {
         case openingHours
         case teamSize
         case yearsOfExperience
+        case maxRadiusKm
     }
     
     init(from decoder: Decoder) throws {
@@ -125,6 +127,7 @@ extension Detailer {
 
         teamSize = (try? container.decode(Int.self, forKey: .teamSize)) ?? 1
         yearsOfExperience = (try? container.decode(Int.self, forKey: .yearsOfExperience)) ?? 0
+        maxRadiusKm = try? container.decode(Int.self, forKey: .maxRadiusKm)
 
         // Decode categories directly (ServiceCategory raw values are backend-aligned)
         serviceCategories = (try? container.decode([ServiceCategory].self, forKey: .serviceCategories)) ?? []
@@ -154,100 +157,6 @@ extension Detailer {
     }
 }
 
-extension Detailer {
-    static var sampleValues: [Detailer] {
-        [
-            Detailer(
-                id: "prov_001",
-                displayName: "Clean & Shine",
-                companyName: "Clean & Shine SPRL",
-                bio: "Experts du detailing automobile haut de gamme à Bruxelles.",
-                city: "Bruxelles",
-                postalCode: "1000",
-                lat: 50.8503,
-                lng: 4.3517,
-                rating: 4.8,
-                reviewCount: 120,
-                minPrice: 80,
-                hasMobileService: true,
-                logoUrl: "https://cdn.example.com/providers/prov_001_logo.jpg",
-                bannerUrl: "https://res.cloudinary.com/dyigkyptj/image/upload/v1762979544/detail2_bm8svh.jpg",
-                serviceCategories: [.carCleaning, .carPolishing, .interiorDetailing],
-                phone: "+32 477 12 34 56",
-                email: "contact@cleanandshine.be",
-                openingHours: "Mon–Sat: 9h–18h",
-                teamSize: 3,
-                yearsOfExperience: 7
-            ),
-            Detailer(
-                id: "prov_002",
-                displayName: "AutoClean Expert",
-                companyName: "AutoClean SRL",
-                bio: "Service rapide et professionnel, nettoyage intérieur/extérieur.",
-                city: "Ixelles",
-                postalCode: "1050",
-                lat: 50.833,
-                lng: 4.366,
-                rating: 4.5,
-                reviewCount: 75,
-                minPrice: 60,
-                hasMobileService: false,
-                logoUrl: nil,
-                bannerUrl: "https://res.cloudinary.com/dyigkyptj/image/upload/e_improve,w_300,h_600,c_thumb,g_auto/v1762979364/detail1_bdupvi.png",
-                serviceCategories: [.carCleaning, .ceramicCoating],
-                phone: "+32 477 12 34 56",
-                email: "contact@cleanandshine.be",
-                openingHours: "Mon–Sat: 9h–18h",
-                teamSize: 1,
-                yearsOfExperience: 4
-            ),
-            Detailer(
-                id: "prov_003",
-                displayName: "AutoClean Expert",
-                companyName: "AutoClean SRL",
-                bio: "Service rapide et professionnel, nettoyage intérieur/extérieur.",
-                city: "Ixelles",
-                postalCode: "1050",
-                lat: 50.833,
-                lng: 4.366,
-                rating: 4.5,
-                reviewCount: 75,
-                minPrice: 60,
-                hasMobileService: false,
-                logoUrl: nil,
-                bannerUrl: "https://res.cloudinary.com/dyigkyptj/image/upload/e_improve,w_300,h_600,c_thumb,g_auto/v1762979364/detail1_bdupvi.png",
-                serviceCategories: [.carCleaning, .ceramicCoating],
-                phone: "+32 477 12 34 56",
-                email: "contact@cleanandshine.be",
-                openingHours: "Mon–Sat: 9h–18h",
-                teamSize: 1,
-                yearsOfExperience: 4
-            ),
-            Detailer(
-                id: "prov_004",
-                displayName: "AutoClean Expert",
-                companyName: "AutoClean SRL",
-                bio: "Service rapide et professionnel, nettoyage intérieur/extérieur.",
-                city: "Ixelles",
-                postalCode: "1050",
-                lat: 50.833,
-                lng: 4.366,
-                rating: 4.5,
-                reviewCount: 75,
-                minPrice: 60,
-                hasMobileService: false,
-                logoUrl: nil,
-                bannerUrl: "https://res.cloudinary.com/dyigkyptj/image/upload/e_improve,w_300,h_600,c_thumb,g_auto/v1762979364/detail1_bdupvi.png",
-                serviceCategories: [.carCleaning, .ceramicCoating],
-                phone: "+32 477 12 34 56",
-                email: "contact@cleanandshine.be",
-                openingHours: "Mon–Sat: 9h–18h",
-                teamSize: 1,
-                yearsOfExperience: 4
-            )
-        ]
-    }
-}
 
 extension Detailer {
   /// En attendant la vraie durée depuis l'API

@@ -128,7 +128,11 @@ final class TransactionDetailViewModel: ObservableObject {
         switch result {
         case .success:
             errorMessage = nil
-            // Le remboursement a été initié avec succès
+            // Notification de refund
+            NotificationsManager.shared.notifyRefundProcessed(
+                transactionId: paymentIntentId,
+                amount: transaction.amount
+            )
         case .failure(let error):
             errorMessage = error.localizedDescription
         }

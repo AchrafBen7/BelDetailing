@@ -37,30 +37,22 @@ struct BookingStep2View: View {
                 .ignoresSafeArea()
 
             VStack(spacing: 0) {
-
-                // === FIXED BACK BUTTON ===
-                CustomBackButton {
-                    dismiss()
-                }
+                // === HEADER ===
+                headerSection
 
                 ScrollView(showsIndicators: false) {
-                    VStack(spacing: 24) {
-
+                    VStack(spacing: 20) {
                         Spacer().frame(height: 20)
 
-                        // === BIG WHITE CARD ===
-                        VStack(alignment: .leading, spacing: 28) {
-                            serviceSummaryCard
-                            userInfoSection
-                        }
-                        .padding(24)
-                        .background(Color.white)
-                        .clipShape(RoundedRectangle(cornerRadius: 30, style: .continuous))
-                        .shadow(color: .black.opacity(0.08), radius: 12, y: 6)
-                        .padding(.horizontal, 12)
+                        // === SERVICE DETAILS CARD ===
+                        serviceDetailsCard
 
-                        Spacer().frame(height: 40)
+                        // === PERSONAL INFORMATION CARD ===
+                        personalInformationCard
+
+                        Spacer().frame(height: 100)
                     }
+                    .padding(.horizontal, 20)
                 }
             }
 
@@ -71,7 +63,6 @@ struct BookingStep2View: View {
                     if canContinue {
                         goToStep3 = true
                     } else {
-                        // Haptique
                         UIImpactFeedbackGenerator(style: .rigid).impactOccurred()
 
                         if fullName.isEmpty || phone.isEmpty || email.isEmpty || address.isEmpty {
@@ -88,14 +79,14 @@ struct BookingStep2View: View {
                     }
                 } label: {
                     Text(R.string.localizable.bookingContinue())
-                        .font(.system(size: 19, weight: .semibold))
+                        .font(.system(size: 18, weight: .semibold))
                         .foregroundColor(.white)
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 18)
                         .background(canContinue ? Color.black : Color.gray.opacity(0.4))
-                        .cornerRadius(40)
+                        .cornerRadius(16)
                 }
-                .padding(.horizontal, 24)
+                .padding(.horizontal, 20)
                 .padding(.bottom, 20)
                 .alert(isPresented: $showAlert) {
                     Alert(
@@ -113,13 +104,109 @@ struct BookingStep2View: View {
             ) {
                 EmptyView()
             }
-        } // ✅ FERMETURE DU ZSTACK
-
+        }
         .navigationBarBackButtonHidden(true)
         .toolbar(.hidden, for: .navigationBar)
         .toolbar(.hidden, for: .tabBar)
-        .onAppear { tabBarVisibility.isHidden = true }
+        .onAppear {
+            tabBarVisibility.isHidden = true
+            prefillUserData()
+        }
         .onDisappear { tabBarVisibility.isHidden = false }
+    }
+    
+    // MARK: - Prefill User Data
+    private func prefillUserData() {
+        guard let user = AppSession.shared.user else { return }
+        
+        // Full name from customer profile
+        if let customerProfile = user.customerProfile {
+            let firstName = customerProfile.firstName.isEmpty ? "" : customerProfile.firstName
+            let lastName = customerProfile.lastName.isEmpty ? "" : customerProfile.lastName
+            let fullNameValue = "\(firstName) \(lastName)".trimmingCharacters(in: .whitespaces)
+            if !fullNameValue.isEmpty && fullName.isEmpty {
+                fullName = fullNameValue
+            }
+            
+            // Address
+            if let defaultAddress = customerProfile.defaultAddress, !defaultAddress.isEmpty && address.isEmpty {
+                address = defaultAddress
+            }
+        }
+        
+        // Phone
+        if let userPhone = user.phone, !userPhone.isEmpty && phone.isEmpty {
+            phone = userPhone
+        }
+        
+        // Email
+        if !user.email.isEmpty && email.isEmpty {
+            email = user.email
+        }
+    }
+    
+    // MARK: - Header Section
+    private var headerSection: some View {
+        VStack(spacing: 0) {
+            HStack {
+                // Back button
+                Button(action: { dismiss() }) {
+                    ZStack {
+                        Circle()
+                            .fill(Color.gray.opacity(0.2))
+                            .frame(width: 40, height: 40)
+                        Image(systemName: "arrow.left")
+                            .font(.system(size: 16, weight: .semibold))
+                            .foregroundColor(.black)
+                    }
+                }
+                
+                Spacer()
+                
+                // Step indicator
+                VStack(spacing: 8) {
+                    HStack(spacing: 6) {
+                        // Step 1 - completed
+                        Circle()
+                            .fill(Color.black)
+                            .frame(width: 8, height: 8)
+                        
+                        // Step 2 - active
+                        Circle()
+                            .fill(Color.black)
+                            .frame(width: 8, height: 8)
+                        
+                        // Step 3 - inactive
+                        Circle()
+                            .fill(Color.gray.opacity(0.3))
+                            .frame(width: 8, height: 8)
+                    }
+                    
+                    Text("Étape 2/3")
+                        .font(.system(size: 14, weight: .medium))
+                        .foregroundColor(.gray)
+                }
+                
+                Spacer()
+                
+                // Spacer pour équilibrer
+                Color.clear
+                    .frame(width: 40, height: 40)
+            }
+            .padding(.horizontal, 20)
+            .padding(.top, 60)
+            .padding(.bottom, 12)
+            
+            // Title
+            HStack {
+                Text("Vos coordonnées")
+                    .font(.system(size: 28, weight: .bold))
+                    .foregroundColor(.black)
+                Spacer()
+            }
+            .padding(.horizontal, 20)
+            .padding(.bottom, 20)
+        }
     }
 
     private var destinationStep3: some View {
@@ -155,17 +242,3 @@ struct BookingStep2View: View {
 
 }
 
-
-// MARK: - Validation helpers
-
-extension String {
-    var isValidEmail: Bool {
-        let regex = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}"
-        return NSPredicate(format: "SELF MATCHES %@", regex).evaluate(with: self)
-    }
-
-    var isValidPhone: Bool {
-        let digits = self.filter { $0.isNumber }
-        return digits.count >= 8 && digits.count <= 12
-    }
-}

@@ -11,7 +11,7 @@ struct MapSearchView: View {
 
     // MARK: - Init
     init(engine: Engine) {
-        let loc = LocationManager()
+        let loc = LocationManager.shared
         _locationManager = StateObject(wrappedValue: loc)
         _viewModel = StateObject(
             wrappedValue: MapSearchViewModel(

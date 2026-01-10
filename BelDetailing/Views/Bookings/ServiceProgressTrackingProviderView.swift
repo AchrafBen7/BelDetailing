@@ -17,6 +17,9 @@ struct ServiceProgressTrackingProviderView: View {
     @EnvironmentObject var tabBarVisibility: TabBarVisibility
     
     @State private var showCompleteConfirmation = false
+    @State private var showNoShowProtection = false
+    @State private var isCareModeEnabled = false // TODO: Récupérer depuis le booking
+    @State private var expandedStepId: String? // Pour afficher les photos d'un step
     
     init(booking: Booking, engine: Engine) {
         self.booking = booking
@@ -37,6 +40,11 @@ struct ServiceProgressTrackingProviderView: View {
                         
                         // Steps List
                         stepsList
+                        
+                        // No-Show Protection Button (si service confirmé mais pas encore commencé)
+                        if booking.status == .confirmed {
+                            noShowProtectionButton
+                        }
                         
                         // Complete Button (if all steps done)
                         if viewModel.isAllStepsCompleted {
@@ -91,6 +99,28 @@ struct ServiceProgressTrackingProviderView: View {
             .onDisappear {
                 tabBarVisibility.isHidden = false
             }
+            .fullScreenCover(isPresented: $showNoShowProtection) {
+                NoShowProtectionView(booking: booking, engine: engine)
+            }
+        }
+    }
+    
+    // MARK: - No-Show Protection Button
+    
+    private var noShowProtectionButton: some View {
+        Button {
+            showNoShowProtection = true
+        } label: {
+            HStack {
+                Image(systemName: "location.circle.fill")
+                Text("Client absent ?")
+            }
+            .font(.system(size: 17, weight: .semibold))
+            .foregroundColor(.white)
+            .frame(maxWidth: .infinity)
+            .padding(.vertical, 16)
+            .background(Color.orange)
+            .clipShape(RoundedRectangle(cornerRadius: 14))
         }
     }
     
@@ -127,20 +157,53 @@ struct ServiceProgressTrackingProviderView: View {
                 .font(.system(size: 20, weight: .bold))
             
             ForEach(viewModel.steps) { step in
-                StepRowProvider(
-                    step: step,
-                    isCurrent: step.id == viewModel.currentStep?.id,
-                    onComplete: {
-                        Task {
-                            await viewModel.completeStep(stepId: step.id)
+                VStack(spacing: 12) {
+                    StepRowProvider(
+                        step: step,
+                        isCurrent: step.id == viewModel.currentStep?.id,
+                        onComplete: {
+                            Task {
+                                await viewModel.completeStep(stepId: step.id)
+                            }
                         }
+                    )
+                    
+                    // Care Mode: Photos du step (si activé et step complété ou en cours)
+                    if isCareModeEnabled && (step.isCompleted || step.id == viewModel.currentStep?.id) {
+                        CareModeStepPhotoView(
+                            step: step,
+                            bookingId: booking.id,
+                            engine: engine
+                        )
                     }
-                )
+                }
             }
         }
         .padding(20)
         .background(Color.white)
         .clipShape(RoundedRectangle(cornerRadius: 20))
+    }
+    
+    // MARK: - Care Mode Toggle
+    private var careModeToggle: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            HStack {
+                Image(systemName: "sparkles")
+                    .foregroundColor(.purple)
+                Text("NIOS Care Mode")
+                    .font(.system(size: 18, weight: .bold))
+                Spacer()
+                Toggle("", isOn: $isCareModeEnabled)
+                    .labelsHidden()
+            }
+            
+            Text("Photos intermédiaires et messages automatiques pour une transparence maximale")
+                .font(.system(size: 14))
+                .foregroundColor(.gray)
+        }
+        .padding(16)
+        .background(Color.purple.opacity(0.1))
+        .clipShape(RoundedRectangle(cornerRadius: 16))
     }
     
     // MARK: - Complete Button

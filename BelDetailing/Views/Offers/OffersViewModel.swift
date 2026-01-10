@@ -48,17 +48,21 @@ final class OffersViewModel: ObservableObject {
 
         switch res {
         case .success(let list):
+            print("✅ [OffersViewModel] Loaded \(list.count) offers")
             allOffersBackup = list
             recomputeVisibleOffers()
+            print("✅ [OffersViewModel] After filtering: \(offers.count) visible offers")
             StorageManager.shared.saveCachedOffers(list)
 
         case .failure(let err):
+            print("❌ [OffersViewModel] Error loading offers: \(err)")
             let cache = StorageManager.shared.getCachedOffers()
             if !cache.isEmpty {
                 allOffersBackup = cache
                 recomputeVisibleOffers()
                 errorText = R.string.localizable.apiErrorOfflineFallback()
             } else {
+                // Use the localized description which already handles decoding errors
                 errorText = err.localizedDescription
             }
         }
@@ -85,30 +89,39 @@ final class OffersViewModel: ObservableObject {
     // MARK: - Combine tous les filtres locaux
     private func recomputeVisibleOffers() {
         var base = allOffersBackup
+        print("🔍 [OffersViewModel] recomputeVisibleOffers - Starting with \(base.count) offers")
 
         // 1) Quick filter
         switch selectedQuickFilter {
         case .all:
+            print("🔍 [OffersViewModel] Quick filter: all")
             break
 
         case .open:
+            print("🔍 [OffersViewModel] Quick filter: open")
             base = base.filter { $0.status == .open }
+            print("🔍 [OffersViewModel] After open filter: \(base.count) offers")
 
         case .recent:
+            print("🔍 [OffersViewModel] Quick filter: recent")
             // createdAt est en ISO → tri lexicographique fonctionne
             base = base.sorted { $0.createdAt > $1.createdAt }
+            print("🔍 [OffersViewModel] After recent sort: \(base.count) offers")
         }
 
         // 2) Filtre ville / code postal
         let query = locationQuery.trimmingCharacters(in: .whitespacesAndNewlines)
         if !query.isEmpty {
+            print("🔍 [OffersViewModel] Location filter: '\(query)'")
             let lower = query.lowercased()
             base = base.filter { offer in
                 offer.city.lowercased().contains(lower)
                 || offer.postalCode.lowercased().contains(lower)
             }
+            print("🔍 [OffersViewModel] After location filter: \(base.count) offers")
         }
 
         offers = base
+        print("✅ [OffersViewModel] Final visible offers: \(offers.count)")
     }
 }

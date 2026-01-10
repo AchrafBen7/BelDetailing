@@ -25,10 +25,17 @@ struct OrderHistoryView: View {
                 Color.black.ignoresSafeArea()
                 
                 if viewModel.isLoading {
-                    ProgressView()
+                    LoadingView(message: R.string.localizable.commonLoading())
                         .tint(.white)
                 } else if viewModel.orders.isEmpty {
-                    emptyStateView
+                    ScrollView {
+                        EmptyStateView(
+                            title: R.string.localizable.shopNoOrders(),
+                            message: R.string.localizable.shopNoOrdersMessage(),
+                            systemIcon: "bag"
+                        )
+                        .padding(.top, 60)
+                    }
                 } else {
                     ScrollView(showsIndicators: false) {
                         VStack(spacing: 16) {
@@ -52,24 +59,6 @@ struct OrderHistoryView: View {
         }
         .sheet(item: $selectedOrder) { order in
             OrderDetailView(order: order, engine: engine)
-        }
-    }
-    
-    private var emptyStateView: some View {
-        VStack(spacing: 16) {
-            Image(systemName: "bag")
-                .font(.system(size: 64))
-                .foregroundColor(.gray)
-            
-            Text(R.string.localizable.shopNoOrders())
-                .font(.system(size: 20, weight: .semibold))
-                .foregroundColor(.white)
-            
-            Text(R.string.localizable.shopNoOrdersMessage())
-                .font(.system(size: 14))
-                .foregroundColor(.gray)
-                .multilineTextAlignment(.center)
-                .padding(.horizontal, 40)
         }
     }
 }

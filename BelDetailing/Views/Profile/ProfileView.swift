@@ -5,7 +5,8 @@ import RswiftResources
 
 struct ProfileView: View {
     @StateObject private var vm: ProfileViewModel
-    private let engine: Engine           // 👈 on garde l’engine pour pousser les vues
+    @EnvironmentObject var tabBarVisibility: TabBarVisibility
+    private let engine: Engine           // 👈 on garde l'engine pour pousser les vues
     @State private var showProfileDetail = false
     
     init(engine: Engine) {
@@ -87,13 +88,51 @@ struct ProfileView: View {
                                         )
                                     }
                                     
-                                    // MARK: - Login & Security
+                                    // MARK: - Support
+                                    NavigationLink {
+                                        SupportView(engine: engine)
+                                    } label: {
+                                        ProfileSettingRow(
+                                            systemIcon: "questionmark.circle",
+                                            title: "Assistance"
+                                        )
+                                    }
+                                    
+                                    // MARK: - Legal Documents
+                                    NavigationLink {
+                                        PrivacyPolicyView()
+                                    } label: {
+                                        ProfileSettingRow(
+                                            systemIcon: "lock.shield",
+                                            title: "Politique de Confidentialité"
+                                        )
+                                    }
+                                    
+                                    NavigationLink {
+                                        TermsOfServiceView()
+                                    } label: {
+                                        ProfileSettingRow(
+                                            systemIcon: "doc.text",
+                                            title: "Conditions d'Utilisation"
+                                        )
+                                    }
+                                    
+                                    NavigationLink {
+                                        LegalNoticeView()
+                                    } label: {
+                                        ProfileSettingRow(
+                                            systemIcon: "info.circle",
+                                            title: "Mentions Légales"
+                                        )
+                                    }
+                                    
+                                    // MARK: - Settings
                                     NavigationLink {
                                         LoginSecurityView(engine: engine)
                                     } label: {
                                         ProfileSettingRow(
-                                            systemIcon: "lock.shield",
-                                            title: R.string.localizable.profileSettingsLoginSecurity()
+                                            systemIcon: "gearshape",
+                                            title: R.string.localizable.settingsTitle()
                                         )
                                     }
                                 }
@@ -124,6 +163,9 @@ struct ProfileView: View {
                 }
             }
             .toolbar(.hidden, for: .navigationBar)
+        }
+        .onAppear {
+            tabBarVisibility.isHidden = false
         }
         .task {
             await vm.load()
