@@ -9,9 +9,7 @@ import Foundation
 import UserNotifications
 import UIKit
 import Combine
-#if canImport(OneSignal)
-import OneSignal
-#endif
+import OneSignalFramework
 
 @MainActor
 final class NotificationsManager: NSObject, ObservableObject {
@@ -78,21 +76,15 @@ final class NotificationsManager: NSObject, ObservableObject {
     func didRegisterForRemoteNotifications(deviceToken: Data) {
         // ✅ OneSignal SDK gère automatiquement le device token
         // On peut juste logger le Player ID si disponible (optionnel, pour debug)
-        #if canImport(OneSignal)
         if let playerId = OneSignal.User.pushSubscription.id {
             print("✅ [NotificationsManager] OneSignal Player ID: \(playerId)")
-            
-            // Optionnel : Envoyer Player ID au backend pour référence
-            // (OneSignal.login(userId) fait déjà l'association automatiquement)
+            // Envoyer le Player ID au backend pour associer avec l'utilisateur
             Task {
                 await sendPlayerIdToBackend(playerId: playerId)
             }
         } else {
             print("⚠️ [NotificationsManager] OneSignal Player ID not yet available")
         }
-        #else
-        print("ℹ️ [NotificationsManager] OneSignal not integrated, skipping Player ID retrieval")
-        #endif
         
         // Garder le device token APNs pour compatibilité (logs uniquement)
         let tokenParts = deviceToken.map { data in String(format: "%02.2hhx", data) }
@@ -101,45 +93,25 @@ final class NotificationsManager: NSObject, ObservableObject {
         print("✅ [NotificationsManager] APNs Device token: \(token)")
     }
     
-    // ✅ NOUVEAU : Envoyer Player ID au backend (optionnel)
+    // Envoyer un identifiant push au backend
     private func sendPlayerIdToBackend(playerId: String) async {
         guard let notificationService = notificationService else {
-            print("⚠️ [NotificationsManager] NotificationService not configured")
+            print("⚠️ [NotificationsManager] NotificationService not configured, skipping Player ID send")
             return
         }
         
-        // Envoyer le Player ID au backend pour référence
-        // (OneSignal.login(userId) fait déjà l'association automatiquement, donc c'est optionnel)
-        let result = await notificationService.subscribeToTopic(playerId)
-        
-        switch result {
-        case .success:
-            print("✅ [NotificationsManager] Player ID registered with backend")
-        case .failure(let error):
-            print("❌ [NotificationsManager] Failed to register Player ID: \(error.localizedDescription)")
+        do {
+            try await notificationService.subscribeDeviceToken(playerId: playerId)
+            print("✅ [NotificationsManager] Player ID sent to backend: \(playerId)")
+        } catch {
+            print("❌ [NotificationsManager] Failed to send Player ID to backend: \(error)")
         }
     }
     
     // ✅ NOUVEAU : Fonction helper pour appeler OneSignal.login(userId)
     func loginOneSignal(userId: String) {
-        #if canImport(OneSignal)
-        OneSignal.login(userId) { error in
-            if let error = error {
-                print("❌ [NotificationsManager] OneSignal.login failed: \(error.localizedDescription)")
-            } else {
-                print("✅ [NotificationsManager] OneSignal logged in with userId: \(userId)")
-                
-                // Optionnel : Envoyer Player ID au backend
-                Task { @MainActor in
-                    if let playerId = OneSignal.User.pushSubscription.id {
-                        await self.sendPlayerIdToBackend(playerId: playerId)
-                    }
-                }
-            }
-        }
-        #else
-        print("ℹ️ [NotificationsManager] OneSignal not integrated, skipping login")
-        #endif
+        OneSignal.login(userId)
+        print("✅ [NotificationsManager] OneSignal login called for userId: \(userId)")
     }
     
     func didFailToRegisterForRemoteNotifications(error: Error) {

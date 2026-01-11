@@ -1,0 +1,6 @@
+framework module Pods_BelDetailingUITests {
+  umbrella header "Pods-BelDetailingUITests-umbrella.h"
+
+  export *
+  module * { export * }
+}

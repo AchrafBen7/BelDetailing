@@ -7,11 +7,10 @@
 
 import UIKit
 import UserNotifications
-#if canImport(OneSignal)
-import OneSignal
-#endif
+import OneSignalFramework
 
-class AppDelegate: NSObject, UIApplicationDelegate {
+
+class AppDelegate: NSObject, UIApplicationDelegate, OSNotificationClickListener {
     func application(
         _ application: UIApplication,
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil
@@ -19,7 +18,6 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         // ✅ INITIALISER ONESIGNAL SDK (selon documentation officielle OneSignal)
         // ⚠️ IMPORTANT : L'initialisation doit être dans AppDelegate.didFinishLaunchingWithOptions
         // avec launchOptions pour gérer correctement les notifications au démarrage
-        #if canImport(OneSignal)
         if let oneSignalAppId = Bundle.main.object(forInfoDictionaryKey: "OneSignalAppID") as? String {
             // Enable verbose logging for debugging (retirer en production)
             OneSignal.Debug.setLogLevel(.LL_VERBOSE)
@@ -34,20 +32,10 @@ class AppDelegate: NSObject, UIApplicationDelegate {
             }, fallbackToSettings: true)
             
             // Écouter les notifications OneSignal pour routing
-            OneSignal.Notifications.addClickListener { notification in
-                print("🔔 [OneSignal] Notification tapped: \(notification.notificationId ?? "unknown")")
-                if let userInfo = notification.additionalData {
-                    Task { @MainActor in
-                        NotificationRouter.shared.handleNotification(userInfo: userInfo)
-                    }
-                }
-            }
+            OneSignal.Notifications.addClickListener(self)
         } else {
             print("⚠️ [OneSignal] OneSignalAppID manquant dans Info.plist")
         }
-        #else
-        print("ℹ️ [OneSignal] SDK not integrated. Skipping OneSignal initialization.")
-        #endif
         
         // Le delegate des notifications est déjà configuré dans NotificationsManager
         return true
@@ -68,6 +56,17 @@ class AppDelegate: NSObject, UIApplicationDelegate {
     ) {
         Task { @MainActor in
             NotificationsManager.shared.didFailToRegisterForRemoteNotifications(error: error)
+        }
+    }
+    
+    // MARK: - OSNotificationClickListener
+    
+    func onClick(event: OSNotificationClickEvent) {
+        print("🔔 [OneSignal] Notification tapped: \(event.notification.notificationId ?? "unknown")")
+        if let userInfo = event.notification.additionalData {
+            Task { @MainActor in
+                NotificationRouter.shared.handleNotification(userInfo: userInfo)
+            }
         }
     }
 }

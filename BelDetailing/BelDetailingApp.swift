@@ -3,9 +3,7 @@ import GoogleSignIn
 import StripePaymentSheet
 import UserNotifications
 import FirebaseCore
-#if canImport(OneSignal)
-import OneSignal
-#endif
+import OneSignalFramework
 
 @main
 struct BelDetailingApp: App {

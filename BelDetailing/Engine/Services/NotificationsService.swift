@@ -20,6 +20,7 @@ protocol NotificationService {
     func getNotifications() async -> APIResponse<[NotificationItem]>
     func markAsRead(id: String) async -> APIResponse<Bool>
     func subscribeToTopic(_ topic: String) async -> APIResponse<Bool>
+    func subscribeDeviceToken(playerId: String) async throws
 }
 
 final class NotificationServiceNetwork: NotificationService {
@@ -36,6 +37,25 @@ final class NotificationServiceNetwork: NotificationService {
 
     func subscribeToTopic(_ topic: String) async -> APIResponse<Bool> {
         await networkClient.call(endPoint: .notificationSubscribe(topic: topic))
+    }
+    
+    func subscribeDeviceToken(playerId: String) async throws {
+        // Le backend retourne {"success": 1}, on doit décoder avec une structure wrapper
+        struct SuccessResponse: Decodable {
+            let success: Int  // Le backend retourne 1 (Int) au lieu de true (Bool)
+        }
+        
+        let result: APIResponse<SuccessResponse> = await networkClient.call(
+            endPoint: .notificationSubscribe(topic: ""),
+            dict: ["player_id": playerId]
+        )
+        
+        switch result {
+        case .success:
+            return
+        case .failure(let error):
+            throw error
+        }
     }
 }
 
@@ -56,5 +76,10 @@ final class NotificationServiceMock: MockService, NotificationService {
     func subscribeToTopic(_ topic: String) async -> APIResponse<Bool> {
         await randomWait()
         return .success(true)
+    }
+    
+    func subscribeDeviceToken(playerId: String) async throws {
+        await randomWait()
+        // Mock: toujours réussir
     }
 }
